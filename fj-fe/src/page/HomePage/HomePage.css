@@ -1,0 +1,27 @@
+.navBar {
+    position: relative;
+    width: 100%;
+}
+
+.bannerBar {
+    position: relative;
+    width: 100%;
+}
+
+.bannerAdBar {
+    margin: 32px 0;
+}
+
+.employList {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+footer {
+    margin-top: 60px;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}

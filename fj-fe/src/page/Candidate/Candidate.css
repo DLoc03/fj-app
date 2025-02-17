@@ -1,0 +1,20 @@
+.navBar {
+    width: 100%;
+    position: relative;
+}
+
+.footer {
+    width: 100%;
+    position: relative;
+}
+
+.bannerEmploy {
+    position: relative;
+    width: 100%;
+}
+
+.employContainer {
+    position: relative;
+    margin-top: 40px;
+    width: 100%;
+}

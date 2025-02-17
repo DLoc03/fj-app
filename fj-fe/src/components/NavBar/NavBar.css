@@ -1,0 +1,54 @@
+.nav-bar {
+    background-color: var(--main-color);
+    height: 80px;
+    width: 100%;
+    display: flex;
+    padding: 0 40px;
+    box-sizing: border-box;
+}
+
+.logo {
+    flex: 1;
+    margin: auto;
+}
+
+.logo img {
+    width: 60px;
+    border-radius: 50%;
+}
+
+.top-bar {
+    display: flex;
+    flex: 3;
+    justify-content: flex-end;
+    margin: auto;
+}
+
+.top-bar p {
+    margin: 0 32px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.top-bar p:hover {
+    color: rgb(255, 166, 0);
+}
+
+.log-bar {
+    flex: 1;
+    margin: auto;
+}
+
+.log-bar p {
+    font-size: 16px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+}
+
+.log-bar p:hover {
+    color: rgb(255, 166, 0);
+}
