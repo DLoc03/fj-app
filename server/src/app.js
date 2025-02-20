@@ -18,9 +18,9 @@ const START_SERVER = () => {
     const app = express()
     const PORT = process.env.APP_PORT || 3000
     const HOST = process.env.APP_HOST
+    app.use(morgan('dev'))
     app.use(express.json())
     app.use('/api/v1', API_ROUTE)
-    app.use(morgan('dev'))
     app.use(errorHandler)
     app.listen(PORT, () => {
         console.log(`Server is running on http://${HOST}:${PORT}`);
