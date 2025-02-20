@@ -1,5 +1,6 @@
 import express from "express";
 import { authController } from "../../controller/auth.controller.js";
+import { verifyToken } from "../../middleware/authToken.js";
 
 const Router = express.Router()
 
@@ -8,4 +9,12 @@ Router.route('/register')
 
 Router.route('/login')
     .post(authController.loginUser)
+
+Router.route('/token')
+    .post(authController.refreshAccessToken)
+
+Router.route('/logout')
+    .delete(verifyToken, authController.logout)
+Router.route('/me')
+    .get(verifyToken, authController.getMe)
 export const authRoutes = Router
