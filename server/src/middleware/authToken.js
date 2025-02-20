@@ -20,8 +20,14 @@ export const verifyToken = (req, res, next) => {
 export const authorizeAdmin = (...roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {
-            return res.status(403).josn({ message: 'Unauthorize' })
+            return res.status(403).json({ message: 'Unauthorize' })
         }
         next()
     }
+}
+
+export const isOwnerId = (req, res, next) => {
+    if (req.user.id !== req.params.id && req.user.role != 'admin')
+        return res.status(403).json({ message: 'Unauthorize' })
+    next()
 }
