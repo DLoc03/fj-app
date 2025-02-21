@@ -4,6 +4,9 @@ import { CONNNECT_DB } from './config/mongo.js'
 import { API_ROUTE } from './routes/v1/index.js'
 import { errorHandler } from './middleware/errorHandling.js'
 import morgan from 'morgan'
+import cors from 'cors'
+import { corsOption } from './config/cors.js'
+import { Server } from 'socket.io'
 // const app = express()
 // const PORT = process.env.APP_PORT || 3000
 // const HOST = process.env.APP_HOST
@@ -14,10 +17,17 @@ import morgan from 'morgan'
 //     console.log(`Server is running on http://${HOST}:${PORT}`);
 // })
 
+// const io = new Server()
+// io.on('auth', (socket) => {
+
+// })
+
+
 const START_SERVER = () => {
     const app = express()
     const PORT = process.env.APP_PORT || 3000
     const HOST = process.env.APP_HOST
+    app.use(cors(corsOption))
     app.use(morgan('dev'))
     app.use(express.json())
     app.use('/api/v1', API_ROUTE)
