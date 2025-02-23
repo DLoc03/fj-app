@@ -1,7 +1,7 @@
 .footer-container {
     width: 100%;
     height: fit-content;
-    background-color: var(--main-color);
+    background-color: var(--strong-brown);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -58,7 +58,7 @@
 
 .footer-copyright {
     height: 32px;
-    background-color: rgb(48, 48, 48);
+    background-color: var(--strong-gray);
     font-size: 14px;
     display: flex;
     justify-content: center;
@@ -66,4 +66,8 @@
     align-items: center;
     bottom: 0;
     width: 100%;
+}
+
+.social-icon i {
+    color: white;
 }

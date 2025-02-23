@@ -1,21 +1,17 @@
 import React from "react";
 import "./Procedure.css";
-import NavBar from "../../components/NavBar/NavBar";
-import Footer from "../../components/Footer/Footer";
 import BannerEmploy from "../../components/Banner/BannerEmploy/BannerEmploy";
+import ProduceImage from "../../assets/recruitment.png";
 
 function Procedure() {
   return (
     <div className="procedurePage">
-      <div className="navBar">
-        <NavBar />
-      </div>
-      <div className="bannerProduce">
+      <div className="bannerEmploy">
         <BannerEmploy />
       </div>
-      <footer>
-        <Footer />
-      </footer>
+      <div className="produceImage">
+        <img src={ProduceImage} alt="produce-image" />
+      </div>
     </div>
   );
 }

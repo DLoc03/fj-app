@@ -1,6 +1,7 @@
 .App {
   font-family: var(--font-text);
   width: 100%;
+  min-width: 1102px;
   max-width: 1322px;
   background-color: #fffecd  ;
   z-index: -100;

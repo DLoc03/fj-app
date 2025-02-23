@@ -1,0 +1,33 @@
+.profile-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.avt-profile {
+    height:300px;
+    width: 300px;
+    background-color: aliceblue;
+    border-radius: 50%;
+    box-shadow: var(--main-shadow);
+    border: 8px solid var(--main-color);
+    box-sizing: border-box;
+    background-image: url('../../assets/employ.jpg');
+    background-size: cover;
+}
+
+.info-profile {
+    height: 300px;
+    width: 600px;
+    border-radius: 8px;
+    box-shadow: var(--main-shadow);
+    background-color: white;
+    padding: 20px 32px;
+    box-sizing: border-box;
+}
+
+.info-profile p {
+    font-size: 18px;
+    border-bottom: 1px solid rgb(228, 228, 228);
+    padding: 4px 0;
+    box-sizing: border-box;
+}

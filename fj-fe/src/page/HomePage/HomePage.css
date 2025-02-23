@@ -1,15 +1,20 @@
-.navBar {
-    position: relative;
+.navBarHome {
+    position: fixed;
+    top: 0;
     width: 100%;
+    z-index: 1000;
 }
 
 .bannerBar {
+    top: 80px;
     position: relative;
     width: 100%;
 }
 
 .bannerAdBar {
-    margin: 32px 0;
+    position: relative;
+    margin-top: 112px;
+    margin-bottom: 32px;
 }
 
 .employList {

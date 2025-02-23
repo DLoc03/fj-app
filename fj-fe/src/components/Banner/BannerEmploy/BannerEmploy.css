@@ -3,6 +3,7 @@
     width: 100%;
     background-image: url('/src/assets/banner-slogan-1.png');
     display: flex;
+    background-size: cover;
 }
 
 .overlay-employ {
@@ -29,7 +30,7 @@
 
 .slogan-title {
     font-weight: 600;
-    font-size: 32px;
+    font-size: clamp(16px, 2vw,32px);
 }
 
 .slogan-content {
@@ -41,6 +42,10 @@
 .slogan-text {
     text-wrap: wrap;
     width: 60%;
+}
+
+.slogan-text p {
+    font-size: clamp(12px, 2vw, 16px);
 }
 
 .slogan-logo {

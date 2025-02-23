@@ -1,7 +1,7 @@
 .bannerAd-container {
     width: 100%;
     height: 360px;
-    background-color: rgb(255, 224, 124);
+    background-color: var(--light-color);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 -1px 6px rgba(0, 0, 0, 0.2);
     display: flex;
     padding: 0 40px;
@@ -32,13 +32,13 @@
 .lisence-btn {
     height: 40px;
     font-weight: 600;
-    font-size: clamp(10px, 1vw, 20px);
+    font-size: clamp(10px, 2vw, 16px);
     cursor: pointer;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-    padding: 12px 32px;
+    text-align: center;
     border: 0;
     border-radius: 4px;
-    background-color: var(--main-color);
+    background-color: var(--strong-brown);
     color: white;
 }
 
@@ -83,8 +83,14 @@
     width: 100%;
     margin-top: -8px;
     border-radius: 4px;
-    padding: 20px;
+    text-align: left;
+    padding: 0 20px;
+    float: left;
+    align-content: center;
     box-sizing: border-box;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-    font-size: clamp(8px, 2vw, 16px);
+}
+
+.serving-content p {
+    font-size: clamp(6px, 2vw, 14px);
 }

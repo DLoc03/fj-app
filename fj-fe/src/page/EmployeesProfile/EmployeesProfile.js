@@ -1,19 +1,19 @@
 import React from "react";
-import "./Candidate.css";
+import "./EmployeesProfile.css";
 import BannerEmploy from "../../components/Banner/BannerEmploy/BannerEmploy";
-import EmployerList from "../../components/Employees/EmployerList/EmployerList";
+import EmployerProfile from "../../components/Employees/EmployerProfile/EmployerProfile";
 
-function Candidate() {
+function EmployeesProfile() {
   return (
-    <div>
+    <div className="employPage">
       <div className="bannerEmploy">
         <BannerEmploy />
       </div>
       <div className="employContainer">
-        <EmployerList />
+        <EmployerProfile />
       </div>
     </div>
   );
 }
 
-export default Candidate;
+export default EmployeesProfile;

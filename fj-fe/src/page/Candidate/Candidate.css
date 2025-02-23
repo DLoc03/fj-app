@@ -1,6 +1,8 @@
 .navBar {
     width: 100%;
-    position: relative;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
 }
 
 .footer {
@@ -11,10 +13,11 @@
 .bannerEmploy {
     position: relative;
     width: 100%;
+    top: 80px;
 }
 
 .employContainer {
     position: relative;
-    margin-top: 40px;
+    margin-top: 120px;
     width: 100%;
 }
