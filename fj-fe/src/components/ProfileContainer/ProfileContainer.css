@@ -1,6 +1,24 @@
 .profile-container {
     display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.user-container {
+    display: flex;
     justify-content: space-evenly;
+}
+
+.user-avt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .avt-profile {
@@ -15,7 +33,7 @@
     background-size: cover;
 }
 
-.info-profile {
+.user-infoLine {
     height: 300px;
     width: 600px;
     border-radius: 8px;
@@ -25,9 +43,48 @@
     box-sizing: border-box;
 }
 
-.info-profile p {
+.user-infoLine p {
     font-size: 18px;
     border-bottom: 1px solid rgb(228, 228, 228);
     padding: 4px 0;
     box-sizing: border-box;
 }
+
+.shop-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 36px;
+}
+
+.shop-info {
+    height: 300px;
+    width: 90%;
+    border-radius: 8px;
+    box-shadow: var(--main-shadow);
+    background-color: white;
+    padding: 20px 32px;
+    box-sizing: border-box;
+    margin: auto;
+}
+
+.shop-info p {
+    font-size: 18px;
+    border-bottom: 1px solid rgb(228, 228, 228);
+    padding: 4px 0;
+    box-sizing: border-box;
+}
+
+.btn-info, .btn-upload {
+    width: 200px;
+    height: 52px;
+    background-color: var(--strong-brown);
+    border: 0;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+}
+

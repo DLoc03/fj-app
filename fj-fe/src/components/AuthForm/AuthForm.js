@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./AuthForm.css";
 import { useCustomNavigate } from "../../utils/utils";
+import { UserLogin, UserRegister } from "../../services/userService";
 
 function AuthForm({ type, onSubmit }) {
   const navigate = useCustomNavigate();
@@ -8,10 +9,11 @@ function AuthForm({ type, onSubmit }) {
     email: "",
     password: "",
     username: "",
-    businessName: "",
-    hotline: "",
-    address: "",
+    phone: "",
   });
+
+  const [message, setMessage] = useState("");
+
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
@@ -26,30 +28,56 @@ function AuthForm({ type, onSubmit }) {
     }
   }
 
-  function handleLogin(data) {
-    let user = { username: "Phuc Long", password: "123" };
-    localStorage.setItem("user", JSON.stringify(user));
-    navigate("/");
-    window.location.reload();
+  async function handleLogin(e) {
+    e.preventDefault();
+    const { email, password } = formData;
+
+    try {
+      let response = await UserLogin({ email, password });
+      if (response.data.loggedUser.errCode === 0) {
+        const { accessToken, refreshToken } = response.data.loggedUser;
+
+        sessionStorage.setItem("accessToken", accessToken);
+
+        setMessage(response.data.loggedUser.message);
+
+        setTimeout(() => {
+          navigate("/");
+          window.location.reload();
+        }, 1000);
+      } else {
+        setMessage(response.data.loggedUser.message);
+      }
+    } catch (error) {
+      setMessage("Đã xảy ra lỗi. Vui lòng thử lại!");
+      console.log(error);
+    }
   }
 
-  function handleRegister(e) {
+  async function handleRegister(e) {
     e.preventDefault();
-    const { email, password, username, businessName, hotline, address } =
-      formData;
-
-    localStorage.setItem(
-      "newUser",
-      JSON.stringify({
+    const { email, password, username, phone, address } = formData;
+    try {
+      let response = await UserRegister({
         email,
         password,
         username,
-        businessName,
-        hotline,
+        phone,
         address,
-      })
-    );
-    navigate("/login");
+      });
+      if (response.data.errCode === 1 || response.data.errCode === 2) {
+        setMessage(response.data.message);
+      } else {
+        setMessage(response.data.message);
+        setTimeout(() => {
+          navigate("/login");
+          window.location.reload();
+        }, 1000);
+      }
+    } catch (error) {
+      setMessage("Đã xảy ra lỗi. Vui lòng thử lại!");
+      console.log(error);
+    }
   }
 
   return (
@@ -89,25 +117,9 @@ function AuthForm({ type, onSubmit }) {
             />
             <input
               type="text"
-              name="businessName"
-              placeholder="Tên cơ sở"
-              value={formData.businessName}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              name="hotline"
+              name="phone"
               placeholder="Số điện thoại"
-              value={formData.hotline}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              name="address"
-              placeholder="Địa chỉ"
-              value={formData.address}
+              value={formData.phone}
               onChange={handleChange}
               required
             />
@@ -121,6 +133,7 @@ function AuthForm({ type, onSubmit }) {
         >
           {type === "login" ? "Đăng nhập" : "Đăng ký"}
         </button>
+        <p className="abort-detail">{message}</p>
       </form>
       {type === "login" ? (
         <p className="title-switch">

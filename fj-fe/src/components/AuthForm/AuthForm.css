@@ -58,3 +58,8 @@ span {
     cursor: pointer;
     font-weight: bold;
 }
+
+.abort-detail {
+    color: red;
+    font-weight: 600;
+}
