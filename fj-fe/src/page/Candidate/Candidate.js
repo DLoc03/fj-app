@@ -5,13 +5,8 @@ import EmployerList from "../../components/Employees/EmployerList/EmployerList";
 
 function Candidate() {
   return (
-    <div>
-      <div className="bannerEmploy">
-        <BannerEmploy />
-      </div>
-      <div className="employContainer">
-        <EmployerList />
-      </div>
+    <div className="employContainer">
+      <EmployerList />
     </div>
   );
 }

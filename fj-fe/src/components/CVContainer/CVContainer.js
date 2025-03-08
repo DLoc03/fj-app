@@ -5,7 +5,7 @@ import CVChild from "../CVChild/CVChild";
 function CVContainer() {
   return (
     <div className="cv-container">
-      <h1 style={{ color: "white" }}>Danh sach CV ung tuyen</h1>
+      <h1 style={{ color: "white" }}>Danh sách nhân sự ứng tuyển</h1>
       <div className="cv-section">
         <div className="cv-list">
           <CVChild />

@@ -6,6 +6,7 @@ import Login from "../page/Login/Login";
 import Register from "../page/Register/Register";
 import Account from "../page/Account/Account";
 import CVManage from "../page/CVManage/CVManage";
+import Recruitment from "../page/Recruitment/Recruitment";
 
 export const routes = [
   {
@@ -39,5 +40,9 @@ export const routes = [
   {
     path: "/cv",
     page: CVManage,
+  },
+  {
+    path: "/recruitment",
+    page: Recruitment,
   },
 ];

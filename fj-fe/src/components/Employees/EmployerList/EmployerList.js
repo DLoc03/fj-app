@@ -1,10 +1,9 @@
 import React from "react";
 import "./EmployerList.css";
 import EmployerBox from "../EmployerBox/EmployerBox";
-import { useCustomNavigate } from "../../../utils/utils";
+import Button from "../../../commons/Button/Button";
 
 function EmployerList() {
-  const navigate = useCustomNavigate();
   return (
     <div className="employer-list">
       <div className="list-title">Tuyển dụng hàng đầu</div>
@@ -15,9 +14,7 @@ function EmployerList() {
         <EmployerBox />
       </div>
       <div className="button-list">
-        <button className="btn-more" onClick={() => navigate("/candidate")}>
-          Xem thêm
-        </button>
+        <Button btn_title="Xem thêm" path_navigate="candidate" />
       </div>
     </div>
   );

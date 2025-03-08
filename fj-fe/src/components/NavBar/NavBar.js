@@ -12,20 +12,23 @@ function NavBar() {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = sessionStorage.getItem("accessToken");
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      // setUser(JSON.parse(storedUser));
+      setUser({
+        name: "Loc",
+        password: "123",
+      });
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
     setUser(null);
     setIsDropdownOpen(false);
     navigate("/");
   };
 
-  // Đóng dropdown khi click ra ngoài
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -58,18 +61,29 @@ function NavBar() {
               className="dropdown-toggle"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              Xin chào, {user.username} ▼
+              Xin chào, {user.name} ▼
             </button>
             {isDropdownOpen && (
               <div className="dropdown-menu">
                 <Link to="/account">Quản lý tài khoản</Link>
                 <Link to="/cv">Quản lý CV</Link>
-                <button onClick={handleLogout}>Đăng xuất</button>
+                <Link to="/recruitment">Tuyển dụng nhân sự</Link>
+                <button className="btn-logout" onClick={handleLogout}>
+                  Đăng xuất
+                </button>
               </div>
             )}
           </div>
         ) : (
-          <Link to="/login" style={{ textDecoration: "none", color: "white" }}>
+          <Link
+            to="/login"
+            style={{
+              textDecoration: "none",
+              color: "white",
+              fontFamily: "var(--main-font)",
+              fontSize: "20px",
+            }}
+          >
             Đăng nhập/Đăng ký
           </Link>
         )}

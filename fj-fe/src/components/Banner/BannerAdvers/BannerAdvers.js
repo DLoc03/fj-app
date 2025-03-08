@@ -2,9 +2,8 @@ import React from "react";
 import "./BannerAdvers.css";
 import Manager from "../../../assets/employees-photo.png";
 import Serving from "../../../assets/serving-photo.png";
-import { useCustomNavigate } from "../../../utils/utils";
+import Button from "../../../commons/Button/Button";
 function BannerAdvers() {
-  const navigate = useCustomNavigate();
   return (
     <div className="bannerAd-container">
       <div className="img-manager">
@@ -12,9 +11,7 @@ function BannerAdvers() {
       </div>
       <div className="candidate-section">
         <h3>Quy trình tuyển dụng của chúng tôi</h3>
-        <button className="lisence-btn" onClick={() => navigate("/procedure")}>
-          Tìm hiểu thêm
-        </button>
+        <Button btn_title="Tìm hiểu thêm" path_navigate="procedure" />
       </div>
       <div className="ad-section">
         <div className="bubble-ad">Nhanh chóng</div>

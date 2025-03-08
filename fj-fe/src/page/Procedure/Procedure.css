@@ -3,11 +3,12 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 120px;
+    margin-top: 80px;
 }
 
 .produceImage img {
     min-width: 100px;
     border-radius: 12px;
     box-shadow: var(--main-shadow);
+    max-width: 800px;
 }
