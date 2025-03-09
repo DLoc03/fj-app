@@ -14,7 +14,12 @@ function CVContainer() {
           <CVChild />
           <CVChild />
         </div>
-        <div className="cv-data"></div>
+        <div className="cv-data">
+          <h1>Dữ liệu thống kê</h1>
+          <p>Số ứng viên ứng tuyển: 10</p>
+          <p>Số ứng viên đạt yêu cầu cao: 2</p>
+          <p>Số ứng viên đã nhận: 2</p>
+        </div>
       </div>
     </div>
   );
