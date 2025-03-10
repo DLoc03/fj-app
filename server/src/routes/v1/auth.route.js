@@ -14,7 +14,7 @@ Router.route('/token')
     .patch(authController.refreshAccessToken)
 
 Router.route('/logout')
-    .delete(authController.logout)
+    .delete(verifyToken, authController.logout)
 
 Router.route('/me')
     .get(verifyToken, authController.getMe)

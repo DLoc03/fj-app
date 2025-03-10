@@ -42,7 +42,7 @@ export const refreshAccessToken = async (req, res) => {
     try {
         const refreshToken = req.cookies.refreshToken;
         const response = await authService.refreshAccessToken(refreshToken);
-        return res.status(200).json(response.accessToken);
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ message: "Server error" });
     }
@@ -51,9 +51,12 @@ export const refreshAccessToken = async (req, res) => {
 export const logout = async (req, res) => {
     try {
         const response = await authService.logout(req.user.id);
+        console.log(req.user.id);
         if (response.errCode === 0) return res.status(200).json(response)
         return res.status(403).json(response);
     } catch (error) {
+        console.log(error);
+
         return res.status(500).json({ message: "Server error" });
     }
 };

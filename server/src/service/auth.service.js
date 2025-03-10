@@ -6,7 +6,7 @@ const SALT = 10
 
 const login = async (email, password) => {
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email })
         if (!user) return { errCode: 1, message: "User not found" };
 
         const isMatchPassword = bcrypt.compare(password, user.password);
@@ -28,7 +28,6 @@ const login = async (email, password) => {
             }
         };
     } catch (error) {
-        console.error(error);
         throw new Error("Internal Server Error")
     }
 }
@@ -66,7 +65,10 @@ const register = async (data) => {
 };
 
 const logout = async (id) => {
-    await User.findByIdAndUpdate(id, { refreshToken: null });
+    const user = await User.findById(id);
+    if (!user) {
+        return { errCode: 1, message: "User not found" }
+    }
     return { errCode: 0, message: "Logged out successfully" };
 }
 
