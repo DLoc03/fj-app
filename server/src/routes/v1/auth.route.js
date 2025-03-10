@@ -11,10 +11,12 @@ Router.route('/login')
     .post(authController.loginUser)
 
 Router.route('/token')
-    .post(authController.refreshAccessToken)
+    .patch(authController.refreshAccessToken)
 
 Router.route('/logout')
     .delete(verifyToken, authController.logout)
+
 Router.route('/me')
     .get(verifyToken, authController.getMe)
+
 export const authRoutes = Router

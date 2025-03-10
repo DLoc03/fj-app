@@ -6,6 +6,7 @@ import { errorHandler } from './middleware/errorHandling.js'
 import morgan from 'morgan'
 import cors from 'cors'
 import { corsOption } from './config/cors.js'
+import cookieParser from 'cookie-parser'
 import { Server } from 'socket.io'
 // const app = express()
 // const PORT = process.env.APP_PORT || 3000
@@ -28,6 +29,7 @@ const START_SERVER = () => {
     const PORT = process.env.APP_PORT || 3000
     const HOST = process.env.APP_HOST
     app.use(cors(corsOption))
+    app.use(cookieParser())
     app.use(morgan('dev'))
     app.use(express.json())
     app.use('/api/v1', API_ROUTE)
