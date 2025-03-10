@@ -65,7 +65,7 @@ const register = async (data) => {
 };
 
 const logout = async (id) => {
-    const user = await User.findById(id);
+    const user = await User.findByIdAndUpdate(id, { refreshToken: null });
     if (!user) {
         return { errCode: 1, message: "User not found" }
     }
