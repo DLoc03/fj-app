@@ -36,13 +36,16 @@ export const routes = [
   {
     path: "/account",
     page: Account,
+    protected: true,
   },
   {
     path: "/cv",
     page: CVManage,
+    protected: true,
   },
   {
     path: "/recruitment",
     page: Recruitment,
+    protected: true,
   },
 ];
