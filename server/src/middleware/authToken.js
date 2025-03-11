@@ -11,8 +11,10 @@ export const verifyToken = (req, res, next) => {
         if (err) {
             return res.status(403).json({ message: "Invalid or expired token!" });
         }
-
-        req.user = decoded;
+        if (!decoded.id) {
+            return res.status(403).json({ message: "Invalid token payload!" });
+        }
+        req.user = { id: decoded.id };
         next();
     });
 }

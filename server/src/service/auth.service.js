@@ -7,26 +7,28 @@ const SALT = 10;
 const login = async (email, password) => {
   try {
     const user = await User.findOne({ email });
-    if (!user)
-      return { errCode: 1, message: "Thông tin người dùng chưa được đăng ký" };
+    if (!user) return { errCode: 1, message: "User not found" };
 
-    const isMatchPassword = bcrypt.compareSync(password, user.password);
-    if (!isMatchPassword) return { errCode: 2, message: "Sai mật khẩu" };
+    const isMatchPassword = bcrypt.compare(password, user.password);
+    if (!isMatchPassword) return { errCode: 2, message: "Incorrect password" };
 
     const accessToken = generateToken(user);
     const refreshToken = generateRefreshToken(user);
-
     user.refreshToken = refreshToken;
     await user.save();
-
     return {
-      errCode: 0,
-      message: "Đăng nhập thành công",
       accessToken,
       refreshToken,
+      user: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone,
+        role: user.role,
+      },
     };
   } catch (error) {
-    console.error(error);
+    throw new Error("Internal Server Error");
   }
 };
 
@@ -62,23 +64,38 @@ const register = async (data) => {
 };
 
 const logout = async (id) => {
-  await User.findByIdAndUpdate(id, { refreshToken: null });
-  return { errCode: 0, message: "Đăng xuất" };
+  const user = await User.findByIdAndUpdate(id, { refreshToken: null });
+  if (!user) {
+    return { errCode: 1, message: "User not found" };
+  }
+  return { errCode: 0, message: "Logged out successfully" };
 };
 
 const refreshAccessToken = async (refreshToken) => {
-  const user = await User.findOne({ refreshToken });
-  if (!user) return { errCode: 1, message: "Invalid refresh token" };
+  if (!refreshToken) {
+    return {
+      errCode: 1,
+      message: "No refresh token provided",
+    };
+  }
+  const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
-  jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
-    if (err) return { errCode: 2, message: "Token expired" };
-  });
+  if (!decoded || !decoded.id) {
+    return { errCode: 2, message: "Invalid refresh token" };
+  }
 
+  const user = await User.findById({ _id: decoded.id });
+  if (!user || user.refreshToken !== refreshToken) {
+    return {
+      errCode: 3,
+      message: "Invalid refresh token",
+    };
+  }
   const newAccessToken = generateToken(user);
   return {
     errCode: 0,
+    message: "Re-new access-token succeed",
     accessToken: newAccessToken,
-    refreshToken: refreshToken,
   };
 };
 
