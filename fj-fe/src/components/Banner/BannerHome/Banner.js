@@ -1,8 +1,9 @@
 import React from "react";
 import "./Banner.css";
 import { useCustomNavigate } from "../../../utils/utils";
-
+import { useAuth } from "../../../context/AuthContext";
 function Banner() {
+  const { user } = useAuth();
   const navigate = useCustomNavigate();
   return (
     <div className="banner">
@@ -21,7 +22,9 @@ function Banner() {
         <div className="banner-txt employer">Nhà tuyển dụng</div>
         <button
           className="bn-btn employer-btn"
-          onClick={() => navigate("/register")}
+          onClick={() => {
+            user ? navigate("/account") : navigate("/register");
+          }}
         >
           Đăng ký ngay
         </button>

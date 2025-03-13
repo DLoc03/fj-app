@@ -8,7 +8,7 @@ function AuthForm({ type, onSubmit }) {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    username: "",
+    name: "",
     phone: "",
   });
 
@@ -19,12 +19,11 @@ function AuthForm({ type, onSubmit }) {
   }
   function handleSubmit(e) {
     e.preventDefault();
-    const { email, password, username, businessName, hotline, address } =
-      formData;
+    const { email, password, name, phone } = formData;
     if (type === "login") {
       onSubmit({ email, password });
     } else {
-      onSubmit({ email, password, username, businessName, hotline, address });
+      onSubmit({ email, password, name, phone });
     }
   }
 
@@ -34,19 +33,20 @@ function AuthForm({ type, onSubmit }) {
 
     try {
       let response = await UserLogin({ email, password });
-      if (response.data.loggedUser.errCode === 0) {
-        const { accessToken, refreshToken } = response.data.loggedUser;
+      if (response.data.errCode === 0) {
+        const user = response.data;
+        console.log("User data login: ", user);
 
-        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("User", JSON.stringify(user));
 
-        setMessage(response.data.loggedUser.message);
+        setMessage(response.data.message);
 
         setTimeout(() => {
           navigate("/");
           window.location.reload();
         }, 1000);
       } else {
-        setMessage(response.data.loggedUser.message);
+        setMessage(response.data.message);
       }
     } catch (error) {
       setMessage("Đã xảy ra lỗi. Vui lòng thử lại!");
@@ -56,14 +56,14 @@ function AuthForm({ type, onSubmit }) {
 
   async function handleRegister(e) {
     e.preventDefault();
-    const { email, password, username, phone, address } = formData;
+    console.log("Dữ liệu trước khi đăng ký: ", formData);
+    const { email, password, name, phone } = formData;
     try {
       let response = await UserRegister({
         email,
         password,
-        username,
+        name,
         phone,
-        address,
       });
       if (response.data.errCode === 1 || response.data.errCode === 2) {
         setMessage(response.data.message);
@@ -109,9 +109,9 @@ function AuthForm({ type, onSubmit }) {
           <>
             <input
               type="text"
-              name="username"
+              name="name"
               placeholder="Tên người đăng ký"
-              value={formData.username}
+              value={formData.name}
               onChange={handleChange}
               required
             />

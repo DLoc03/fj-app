@@ -4,28 +4,16 @@ import "./NavBar.css";
 import { Link } from "react-router-dom";
 import { useCustomNavigate } from "../../utils/utils";
 import Logo from "../../assets/Logo FJ.png";
+import { useAuth } from "../../context/AuthContext";
 
 function NavBar() {
   const navigate = useCustomNavigate();
-  const [user, setUser] = useState(null);
+  const { user, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    const storedUser = sessionStorage.getItem("accessToken");
-    if (storedUser) {
-      // setUser(JSON.parse(storedUser));
-      setUser({
-        name: "Loc",
-        password: "123",
-      });
-    }
-  }, []);
-
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    setUser(null);
-    setIsDropdownOpen(false);
+    logout();
     navigate("/");
   };
 
@@ -61,7 +49,7 @@ function NavBar() {
               className="dropdown-toggle"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              Xin chào, {user.name} ▼
+              Xin chào, {user.user.name} ▼
             </button>
             {isDropdownOpen && (
               <div className="dropdown-menu">

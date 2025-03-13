@@ -9,35 +9,29 @@ import { AuthProvider } from "./context/AuthContext";
 function App() {
   return (
     <AuthProvider>
-      <div className="App">
-        <Router>
+      <Router>
+        <div className="App">
           <Routes>
-            {routes.map((route) => {
-              const Page = route.page;
-              const Layout = DefaultComponent;
-              return (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={
-                    route.protected ? (
+            {routes.map(({ path, page: Page, protected: isProtected }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <DefaultComponent>
+                    {isProtected ? (
                       <ProtectedRoute>
-                        <Layout>
-                          <Page />
-                        </Layout>
+                        <Page />
                       </ProtectedRoute>
                     ) : (
-                      <Layout>
-                        <Page />
-                      </Layout>
-                    )
-                  }
-                />
-              );
-            })}
+                      <Page />
+                    )}
+                  </DefaultComponent>
+                }
+              />
+            ))}
           </Routes>
-        </Router>
-      </div>
+        </div>
+      </Router>
     </AuthProvider>
   );
 }

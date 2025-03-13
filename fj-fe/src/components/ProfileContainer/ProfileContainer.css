@@ -1,90 +1,106 @@
 .profile-container {
-    display: flex;
-    flex-direction: column;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .user-container {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .user-avt {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .avt-profile {
-    height:300px;
-    width: 300px;
-    background-color: aliceblue;
-    border-radius: 50%;
-    box-shadow: var(--main-shadow);
-    border: 8px solid var(--main-color);
-    box-sizing: border-box;
-    background-image: url('../../assets/employ.jpg');
-    background-size: cover;
+  height: 300px;
+  width: 300px;
+  background-color: aliceblue;
+  border-radius: 50%;
+  box-shadow: var(--main-shadow);
+  border: 8px solid var(--main-color);
+  box-sizing: border-box;
+  background-image: url("../../assets/employ.jpg");
+  background-size: cover;
 }
 
 .user-infoLine {
-    height: 300px;
-    width: 600px;
-    border-radius: 8px;
-    box-shadow: var(--main-shadow);
-    background-color: white;
-    padding: 20px 32px;
-    box-sizing: border-box;
-}
-
-.user-infoLine p {
-    font-size: 18px;
-    border-bottom: 1px solid rgb(228, 228, 228);
-    padding: 4px 0;
-    box-sizing: border-box;
+  height: 300px;
+  width: 600px;
+  border-radius: 8px;
+  box-shadow: var(--main-shadow);
+  background-color: white;
+  padding: 20px 32px;
+  box-sizing: border-box;
 }
 
 .shop-profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 36px;
 }
 
 .shop-info {
-    height: 300px;
-    width: 90%;
-    border-radius: 8px;
-    box-shadow: var(--main-shadow);
-    background-color: white;
-    padding: 20px 32px;
-    box-sizing: border-box;
-    margin: auto;
+  height: 300px;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: var(--main-shadow);
+  background-color: white;
+  padding: 20px 32px;
+  box-sizing: border-box;
+  margin: auto;
 }
 
 .shop-info p {
-    font-size: 18px;
-    border-bottom: 1px solid rgb(228, 228, 228);
-    padding: 4px 0;
-    box-sizing: border-box;
+  font-size: 18px;
+  border-bottom: 1px solid rgb(228, 228, 228);
+  padding: 4px 0;
+  box-sizing: border-box;
 }
 
-.btn-info, .btn-upload {
-    width: 200px;
-    height: 52px;
-    background-color: var(--strong-brown);
-    border: 0;
-    border-radius: 4px;
-    color: white;
-    font-size: 14px;
-    font-weight: 600;
-    margin-top: 20px;
-    cursor: pointer;
+.btn-info,
+.btn-upload {
+  width: 200px;
+  height: 52px;
+  background-color: var(--strong-brown);
+  border: 0;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
 }
 
+.userInfo-table {
+  width: 100%;
+  font-size: 18px;
+}
+
+th {
+  text-align: start;
+  height: 40px;
+  font-weight: 200;
+  font-size: 22px;
+}
+
+.userInfo-inp {
+  border: 0;
+  outline: 0;
+  font-size: 22px;
+  height: 100%;
+  padding-top: 6px;
+  border-bottom: 1px solid gray;
+  background-color: white;
+  width: 100%;
+}

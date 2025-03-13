@@ -3,7 +3,9 @@ import "./QuizChild.css";
 
 function QuizChild({ id, onDelete }) {
   function handleDeleteQuiz() {
-    onDelete(id);
+    if (window.confirm("Xoá câu hỏi?")) {
+      onDelete(id);
+    }
   }
   return (
     <div className="quiz-child">
