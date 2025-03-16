@@ -2,14 +2,15 @@ import { User } from "../model/user.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
-const SALT = 10
+import { SALT } from "../utils/constant.js";
+
 
 const login = async (email, password) => {
     try {
         const user = await User.findOne({ email })
         if (!user) return { errCode: 1, message: "User not found" };
 
-        const isMatchPassword = bcrypt.compare(password, user.password);
+        const isMatchPassword = await bcrypt.compare(password, user.password);
         if (!isMatchPassword) return { errCode: 2, message: "Incorrect password" };
 
         const accessToken = generateToken(user);
@@ -17,6 +18,8 @@ const login = async (email, password) => {
         user.refreshToken = refreshToken;
         await user.save();
         return {
+            errCode: 0,
+            message: "Login successful",
             accessToken,
             refreshToken,
             user: {
@@ -28,7 +31,10 @@ const login = async (email, password) => {
             }
         };
     } catch (error) {
-        throw new Error("Internal Server Error")
+        return {
+            errCode: 2,
+            message: "An error occurred"
+        };
     }
 }
 

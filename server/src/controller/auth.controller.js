@@ -15,26 +15,21 @@ const loginUser = async (req, res, next) => {
     const { email, password } = req.body
     try {
         const result = await authService.login(email, password)
-        res.cookie('refreshToken', result.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        })
-        return res.status(200).json({
-            errCode: 0,
-            message: "Login successful",
-            accessToken: result.accessToken,
-            user: {
-                id: result.user.id,
-                email: result.user.email,
-                name: result.user.name,
-                phone: result.user.phone,
-                role: result.user.role
-            }
-        })
+        const { errCode, message, accessToken, user } = result
+        if (result.errCode === 0) {
+
+            res.cookie('refreshToken', result.refreshToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            })
+            return res.status(200).json({ errCode, message, accessToken, user })
+        }
+        return res.status(200).json({ ...result })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: error.message })
     }
 }
 
@@ -51,7 +46,6 @@ export const refreshAccessToken = async (req, res) => {
 export const logout = async (req, res) => {
     try {
         const response = await authService.logout(req.user.id);
-        console.log(req.user.id);
         if (response.errCode === 0) return res.status(200).json(response)
         return res.status(403).json(response);
     } catch (error) {
