@@ -15,7 +15,6 @@ const loginUser = async (req, res, next) => {
     const { email, password } = req.body
     try {
         const result = await authService.login(email, password)
-        // console.log(result);
         const { errCode, message, accessToken, user } = result
         if (result.errCode === 0) {
 
