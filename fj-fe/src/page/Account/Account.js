@@ -1,0 +1,13 @@
+import React from "react";
+import "./Account.css";
+import ProfileContainer from "../../components/ProfileContainer/ProfileContainer";
+
+function Account() {
+  return (
+    <div className="profileContainer">
+      <ProfileContainer />
+    </div>
+  );
+}
+
+export default Account;

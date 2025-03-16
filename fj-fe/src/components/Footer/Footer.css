@@ -1,69 +1,73 @@
 .footer-container {
-    width: 100%;
-    height: fit-content;
-    background-color: var(--main-color);
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  background-color: var(--strong-brown);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .footer-title {
-    color: white;
-    font-weight: 600;
-    padding: 28px;
-    box-sizing: border-box;
-    border-left: 1px solid white;
-    flex: 1;
-    padding-bottom: 0;
+  color: white;
+  font-weight: 600;
+  padding: 28px;
+  box-sizing: border-box;
+  border-left: 1px solid white;
+  flex: 1;
+  padding-bottom: 0;
 }
 
 .footer-title h2 {
-    font-size: 16px;
-    padding: 0 0 4px 0;
-    border-bottom: 1px solid white;
+  font-size: 22px;
+  padding: 0 0 4px 0;
+  border-bottom: 1px solid white;
 }
 
 .footer-title p {
-    font-size: 14px;
-    font-weight: 100;
+  font-size: 18px;
+  font-weight: 100;
 }
 
 .footer-title i {
-    font-size: 32px;
-    margin-right: 20px;
-    cursor: pointer;
-    margin-bottom: 12px;
+  font-size: 32px;
+  margin-right: 20px;
+  cursor: pointer;
+  margin-bottom: 12px;
 }
 
 .footer-info {
-    display: flex;
-    justify-content: space-around;
-    position: relative;
-    flex-wrap: wrap;
-    padding: 32px 60px;
-    box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+  flex-wrap: wrap;
+  padding: 32px 60px;
+  box-sizing: border-box;
 }
 
 .footer-logo {
-    display: flex;
-    margin: auto;
-    padding: 20px;
-    box-sizing: border-box;
+  display: flex;
+  margin: auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .footer-logo img {
-    border-radius: 50%;
-    width: 120px;
+  border-radius: 50%;
+  width: 120px;
 }
 
 .footer-copyright {
-    height: 32px;
-    background-color: rgb(48, 48, 48);
-    font-size: 14px;
-    display: flex;
-    justify-content: center;
-    color: white;
-    align-items: center;
-    bottom: 0;
-    width: 100%;
+  height: 32px;
+  background-color: var(--strong-gray);
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  color: white;
+  align-items: center;
+  bottom: 0;
+  width: 100%;
+}
+
+.social-icon i {
+  color: white;
 }

@@ -1,0 +1,10 @@
+.quizBtn {
+  width: 200px;
+  height: 40px;
+  border: 0;
+  border-radius: 4px;
+  background-color: var(--strong-brown);
+  color: white;
+  margin-right: 20px;
+  cursor: pointer;
+}

@@ -1,0 +1,17 @@
+.navBar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.footer {
+    margin-top: 60px;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+.bannerContainer {
+    margin-top: 80px;
+}

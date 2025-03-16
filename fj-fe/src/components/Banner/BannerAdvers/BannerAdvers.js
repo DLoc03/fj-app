@@ -2,7 +2,7 @@ import React from "react";
 import "./BannerAdvers.css";
 import Manager from "../../../assets/employees-photo.png";
 import Serving from "../../../assets/serving-photo.png";
-
+import Button from "../../../commons/Button/Button";
 function BannerAdvers() {
   return (
     <div className="bannerAd-container">
@@ -11,7 +11,7 @@ function BannerAdvers() {
       </div>
       <div className="candidate-section">
         <h3>Quy trình tuyển dụng của chúng tôi</h3>
-        <button className="lisence-btn">Tìm hiểu thêm</button>
+        <Button btn_title="Tìm hiểu thêm" path_navigate="procedure" />
       </div>
       <div className="ad-section">
         <div className="bubble-ad">Nhanh chóng</div>
@@ -23,8 +23,10 @@ function BannerAdvers() {
           <img src={Serving} alt="serving-photo" />
         </div>
         <div className="serving-content">
-          FJ là ứng dụng hỗ trợ tuyển dụng F&B nhanh chóng và tiện lợi. Đăng ký
-          ngay!
+          <p>
+            FJ là ứng dụng hỗ trợ tuyển dụng F&B nhanh chóng và tiện lợi. Đăng
+            ký ngay!
+          </p>
         </div>
       </div>
     </div>
