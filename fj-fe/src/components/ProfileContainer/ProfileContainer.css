@@ -6,7 +6,6 @@
 
 .user-container {
   display: flex;
-  justify-content: space-evenly;
 }
 
 .user-avt {
@@ -19,6 +18,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 600px;
+  margin-left: 100px;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 .avt-profile {
@@ -85,6 +88,11 @@
 .userInfo-table {
   width: 100%;
   font-size: 18px;
+  background-color: white;
+  padding: 32px 60px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: var(--main-shadow);
 }
 
 th {

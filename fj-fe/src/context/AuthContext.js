@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { GetUserInfo } from "../services/userService";
 
 const AuthContext = createContext();
 
@@ -6,26 +7,45 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("User");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const fetchUser = async () => {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      if (accessToken) {
+        const userData = await GetUserInfo();
+        if (userData) {
+          setUser(userData);
+        }
+      }
+    };
+
+    fetchUser();
   }, []);
 
-  const login = (userData) => {
-    sessionStorage.setItem("User", JSON.stringify(userData));
-    setUser(userData);
-  };
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      if (accessToken) {
+        GetUserInfo().then(setUser);
+      } else {
+        setUser(null);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   const logout = () => {
-    sessionStorage.removeItem("User");
+    sessionStorage.removeItem("accessToken");
     setUser(null);
+    window.dispatchEvent(new Event("storage"));
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, isAuthenticated: !!user, login, logout }}
-    >
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, logout }}>
       {children}
     </AuthContext.Provider>
   );

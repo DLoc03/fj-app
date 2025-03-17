@@ -7,44 +7,45 @@ import Register from "../page/Register/Register";
 import Account from "../page/Account/Account";
 import CVManage from "../page/CVManage/CVManage";
 import Recruitment from "../page/Recruitment/Recruitment";
+import { endpoint } from "../utils/constant";
 
 export const routes = [
   {
-    path: "/",
+    path: endpoint.HOME,
     page: HomePage,
   },
   {
-    path: "/candidate",
+    path: endpoint.CANDIDATE,
     page: Candidate,
   },
   {
-    path: "/procedure",
+    path: endpoint.PROCEDURE,
     page: Procedure,
   },
   {
-    path: "/job-desp",
+    path: endpoint.JOBDECS,
     page: EmployeesProfile,
   },
   {
-    path: "/login",
+    path: endpoint.LOGIN,
     page: Login,
   },
   {
-    path: "/register",
+    path: endpoint.REGISTER,
     page: Register,
   },
   {
-    path: "/account",
+    path: endpoint.ACCOUNT,
     page: Account,
     protected: true,
   },
   {
-    path: "/cv",
+    path: endpoint.CVMANAGE,
     page: CVManage,
     protected: true,
   },
   {
-    path: "/recruitment",
+    path: endpoint.RECRUITMENT,
     page: Recruitment,
     protected: true,
   },

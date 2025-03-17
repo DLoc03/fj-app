@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./AuthForm.css";
 import { useCustomNavigate } from "../../utils/utils";
 import { UserLogin, UserRegister } from "../../services/userService";
+import { endpoint } from "../../utils/constant";
 
 function AuthForm({ type, onSubmit }) {
   const navigate = useCustomNavigate();
@@ -33,21 +34,12 @@ function AuthForm({ type, onSubmit }) {
 
     try {
       let response = await UserLogin({ email, password });
-      if (response.data.errCode === 0) {
-        const user = response.data;
-        console.log("User data login: ", user);
-
-        sessionStorage.setItem("User", JSON.stringify(user));
-
-        setMessage(response.data.message);
-
-        setTimeout(() => {
-          navigate("/");
-          window.location.reload();
-        }, 1000);
-      } else {
-        setMessage(response.data.message);
-      }
+      console.log("DATA RESPONSE: ", response);
+      setMessage(response.data.message);
+      setTimeout(() => {
+        navigate(endpoint.HOME);
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       setMessage("Đã xảy ra lỗi. Vui lòng thử lại!");
       console.log(error);
@@ -70,7 +62,7 @@ function AuthForm({ type, onSubmit }) {
       } else {
         setMessage(response.data.message);
         setTimeout(() => {
-          navigate("/login");
+          navigate(endpoint.LOGIN);
           window.location.reload();
         }, 1000);
       }
@@ -138,14 +130,20 @@ function AuthForm({ type, onSubmit }) {
       {type === "login" ? (
         <p className="title-switch">
           Chưa có tài khoản?{" "}
-          <span onClick={() => navigate("/register")} className="switch-link">
+          <span
+            onClick={() => navigate(endpoint.REGISTER)}
+            className="switch-link"
+          >
             Đăng ký
           </span>
         </p>
       ) : (
         <p className="title-switch">
           Đã có tài khoản?{" "}
-          <span onClick={() => navigate("/login")} className="switch-link">
+          <span
+            onClick={() => navigate(endpoint.LOGIN)}
+            className="switch-link"
+          >
             Đăng nhập
           </span>
         </p>

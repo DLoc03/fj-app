@@ -2,6 +2,7 @@ import React from "react";
 import "./EmployerBox.css";
 import AvtEmploy from "../../../assets/employ.jpg";
 import { useNavigate } from "react-router-dom";
+import { endpoint } from "../../../utils/constant";
 
 function EmployerBox() {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ function EmployerBox() {
   return (
     <div
       className="employ-box"
-      onClick={() => handleNavigateEmpProfile("/job-desp")}
+      onClick={() => handleNavigateEmpProfile(endpoint.JOBDECS)}
     >
       <div className="employ-avt">
         <img src={AvtEmploy} alt="avt-employ" />

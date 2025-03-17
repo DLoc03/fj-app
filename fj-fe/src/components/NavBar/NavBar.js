@@ -2,20 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import "../../global.css";
 import "./NavBar.css";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { useCustomNavigate } from "../../utils/utils";
 import Logo from "../../assets/Logo FJ.png";
-import { useAuth } from "../../context/AuthContext";
+import { endpoint } from "../../utils/constant";
 
 function NavBar() {
   const navigate = useCustomNavigate();
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -35,12 +31,12 @@ function NavBar() {
         <img src={Logo} alt="Logo" />
       </div>
       <div className="top-bar">
-        <Link to="/">Trang chủ</Link>
-        <Link to="/candidate">Ứng tuyển</Link>
-        <Link to="/procedure">Quy trình tuyển dụng</Link>
+        <Link to={endpoint.HOME}>Trang chủ</Link>
+        <Link to={endpoint.CANDIDATE}>Ứng tuyển</Link>
+        <Link to={endpoint.PROCEDURE}>Quy trình tuyển dụng</Link>
       </div>
       <div className="log-bar">
-        {user ? (
+        {isAuthenticated ? (
           <div
             ref={dropdownRef}
             className={`dropdown ${isDropdownOpen ? "open" : ""}`}
@@ -49,14 +45,20 @@ function NavBar() {
               className="dropdown-toggle"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              Xin chào, {user.user.name} ▼
+              Xin chào, {user.name} ▼
             </button>
             {isDropdownOpen && (
               <div className="dropdown-menu">
-                <Link to="/account">Quản lý tài khoản</Link>
-                <Link to="/cv">Quản lý CV</Link>
-                <Link to="/recruitment">Tuyển dụng nhân sự</Link>
-                <button className="btn-logout" onClick={handleLogout}>
+                <Link to={endpoint.ACCOUNT}>Quản lý tài khoản</Link>
+                <Link to={endpoint.CVMANAGE}>Quản lý CV</Link>
+                <Link to={endpoint.RECRUITMENT}>Tuyển dụng nhân sự</Link>
+                <button
+                  className="btn-logout"
+                  onClick={() => {
+                    logout();
+                    navigate(endpoint.LOGIN);
+                  }}
+                >
                   Đăng xuất
                 </button>
               </div>
@@ -64,7 +66,7 @@ function NavBar() {
           </div>
         ) : (
           <Link
-            to="/login"
+            to={endpoint.LOGIN}
             style={{
               textDecoration: "none",
               color: "white",
