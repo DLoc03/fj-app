@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { GetUserInfo } from "../services/userService";
+import { GetUserInfo } from "../services/user.service";
 
 const AuthContext = createContext();
 
@@ -24,10 +24,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const handleStorageChange = () => {
       const accessToken = sessionStorage.getItem("accessToken");
-
-      if (accessToken) {
-        GetUserInfo().then(setUser);
-      } else {
+      if (!accessToken) {
         setUser(null);
       }
     };
@@ -41,7 +38,6 @@ export function AuthProvider({ children }) {
   const logout = () => {
     sessionStorage.removeItem("accessToken");
     setUser(null);
-    window.dispatchEvent(new Event("storage"));
   };
 
   return (

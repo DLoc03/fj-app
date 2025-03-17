@@ -34,7 +34,7 @@ export const UserRegister = async (data) => {
 };
 
 export const GetUserInfo = async () => {
-  const accessToken = sessionStorage.getItem("accessToken");
+  let accessToken = sessionStorage.getItem("accessToken");
 
   console.log("Access Token: ", accessToken);
 
@@ -65,17 +65,9 @@ export const GetUserInfo = async () => {
 };
 
 export const UserUpdate = async (id, data) => {
-  const userData = sessionStorage.getItem("User");
-  if (!userData) {
-    console.error("User data is missing! User needs to log in.");
-    return;
-  }
-
-  const parsedUserData = JSON.parse(userData);
-  const accessToken = parsedUserData.accessToken;
-
+  let accessToken = sessionStorage.getItem("accessToken");
   if (!accessToken) {
-    console.error("AccessToken is missing! User needs to log in.");
+    console.error("Access token is missing! User needs to log in.");
     return;
   }
 
@@ -92,14 +84,7 @@ export const UserUpdate = async (id, data) => {
     );
 
     if (res.data.errCode === 0) {
-      const updatedUserData = {
-        ...parsedUserData,
-        user: { ...parsedUserData.user, ...data },
-      };
-
-      sessionStorage.setItem("User", JSON.stringify(updatedUserData));
-
-      console.log("User data updated successfully:", updatedUserData);
+      console.log("User data updated successfully:", data);
     }
 
     return res;
@@ -108,6 +93,25 @@ export const UserUpdate = async (id, data) => {
       "Error updating user:",
       error.response?.data || error.message
     );
+    throw error;
+  }
+};
+
+export const UserLogout = async () => {
+  const accessToken = sessionStorage.getItem("accessToken");
+  try {
+    const res = await axios.delete(
+      `${process.env.REACT_APP_API_URL}/auth/logout`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return sessionStorage.removeItem("accessToken");
+  } catch (error) {
+    console.error("Error logout user:", error.response?.data || error.message);
     throw error;
   }
 };

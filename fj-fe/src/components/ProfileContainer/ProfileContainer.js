@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./ProfileContainer.css";
 import { useAuth } from "../../context/AuthContext";
-import { UserUpdate } from "../../services/userService";
+import { UserUpdate } from "../../services/user.service";
 
-function ProfileContainer() {
+function ProfileContainer(profileType) {
   const { user, isAuthenticated } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
@@ -33,10 +33,13 @@ function ProfileContainer() {
 
   async function handleUpdateUser() {
     try {
-      const response = await UserUpdate(user.id, formData);
+      const response = await UserUpdate(user._id, formData);
       if (response.data.errCode === 0) {
         alert("Cập nhật thông tin thành công");
         setIsEdit(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       }
     } catch (error) {
       console.error("Cập nhật thất bại:", error);

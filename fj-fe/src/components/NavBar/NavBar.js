@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useCustomNavigate } from "../../utils/utils";
 import Logo from "../../assets/Logo FJ.png";
 import { endpoint } from "../../utils/constant";
+import { UserLogout } from "../../services/user.service";
 
 function NavBar() {
   const navigate = useCustomNavigate();
@@ -24,6 +25,14 @@ function NavBar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  async function handleLogout() {
+    logout();
+    setTimeout(() => {
+      navigate(endpoint.HOME);
+      window.location.reload();
+    }, 1000);
+  }
 
   return (
     <div className="nav-bar">
@@ -52,13 +61,7 @@ function NavBar() {
                 <Link to={endpoint.ACCOUNT}>Quản lý tài khoản</Link>
                 <Link to={endpoint.CVMANAGE}>Quản lý CV</Link>
                 <Link to={endpoint.RECRUITMENT}>Tuyển dụng nhân sự</Link>
-                <button
-                  className="btn-logout"
-                  onClick={() => {
-                    logout();
-                    navigate(endpoint.LOGIN);
-                  }}
-                >
+                <button className="btn-logout" onClick={handleLogout}>
                   Đăng xuất
                 </button>
               </div>

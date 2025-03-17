@@ -3,5 +3,7 @@ import 'dotenv/config'
 export const corsOption = {
     origin: WHITE_LIST,
     optionsSuccessStatus: 200,
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }

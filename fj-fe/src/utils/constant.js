@@ -11,4 +11,5 @@ export const endpoint = {
   LOGIN_API: "/auth/login",
   REGISTER_API: "/auth/register",
   USERINFO: "/auth/me",
+  //   USER_UPDATE: "/user/:id"
 };

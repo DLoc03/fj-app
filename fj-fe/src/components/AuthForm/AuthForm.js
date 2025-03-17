@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./AuthForm.css";
 import { useCustomNavigate } from "../../utils/utils";
-import { UserLogin, UserRegister } from "../../services/userService";
+import { UserLogin, UserRegister } from "../../services/user.service";
 import { endpoint } from "../../utils/constant";
 
 function AuthForm({ type, onSubmit }) {
@@ -34,12 +34,15 @@ function AuthForm({ type, onSubmit }) {
 
     try {
       let response = await UserLogin({ email, password });
-      console.log("DATA RESPONSE: ", response);
-      setMessage(response.data.message);
-      setTimeout(() => {
-        navigate(endpoint.HOME);
-        window.location.reload();
-      }, 1000);
+      if (response.data.errCode === 0) {
+        setMessage(response.data.message);
+        setTimeout(() => {
+          navigate(endpoint.HOME);
+          window.location.reload();
+        }, 1000);
+      } else {
+        setMessage(response.data.message);
+      }
     } catch (error) {
       setMessage("Đã xảy ra lỗi. Vui lòng thử lại!");
       console.log(error);

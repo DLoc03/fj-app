@@ -2,7 +2,7 @@ import { User } from "../model/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-const SALT = 10;
+import { SALT } from "../utils/constant.js";
 
 const login = async (email, password) => {
   try {
@@ -30,7 +30,10 @@ const login = async (email, password) => {
       },
     };
   } catch (error) {
-    throw new Error("Internal Server Error");
+    return {
+      errCode: 2,
+      message: "An error occurred",
+    };
   }
 };
 
