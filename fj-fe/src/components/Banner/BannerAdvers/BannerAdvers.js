@@ -3,7 +3,7 @@ import "./BannerAdvers.css";
 import Manager from "../../../assets/employees-photo.png";
 import Serving from "../../../assets/serving-photo.png";
 import Button from "../../../commons/Button/Button";
-import { endpoint } from "../../../utils/constant";
+import { client_path, server_path } from "../../../utils/constant";
 function BannerAdvers() {
   return (
     <div className="bannerAd-container">
@@ -12,7 +12,10 @@ function BannerAdvers() {
       </div>
       <div className="candidate-section">
         <h3>Quy trình tuyển dụng của chúng tôi</h3>
-        <Button btn_title="Tìm hiểu thêm" path_navigate={endpoint.PROCEDURE} />
+        <Button
+          btn_title="Tìm hiểu thêm"
+          path_navigate={client_path.PROCEDURE}
+        />
       </div>
       <div className="ad-section">
         <div className="bubble-ad">Nhanh chóng</div>

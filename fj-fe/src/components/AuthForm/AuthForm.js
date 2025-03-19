@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./AuthForm.css";
 import { useCustomNavigate } from "../../utils/utils";
 import { UserLogin, UserRegister } from "../../services/user.service";
-import { endpoint } from "../../utils/constant";
+import { client_path } from "../../utils/constant";
 
 function AuthForm({ type, onSubmit }) {
   const navigate = useCustomNavigate();
@@ -34,14 +34,16 @@ function AuthForm({ type, onSubmit }) {
 
     try {
       let response = await UserLogin({ email, password });
-      if (response.data.errCode === 0) {
-        setMessage(response.data.message);
+      if (response.errCode === 0) {
+        setMessage("Đăng nhập thành công!");
         setTimeout(() => {
-          navigate(endpoint.HOME);
+          navigate(client_path.HOME);
           window.location.reload();
         }, 1000);
+      } else if (response.errCode === 1) {
+        setMessage("Tài khoản tuyển dụng chưa đăng ký!");
       } else {
-        setMessage(response.data.message);
+        setMessage("Sai mật khẩu! Vui lòng thử lại!");
       }
     } catch (error) {
       setMessage("Đã xảy ra lỗi. Vui lòng thử lại!");
@@ -60,12 +62,12 @@ function AuthForm({ type, onSubmit }) {
         name,
         phone,
       });
-      if (response.data.errCode === 1 || response.data.errCode === 2) {
-        setMessage(response.data.message);
+      if (response.errCode === 1 || response.errCode === 2) {
+        setMessage("Thông tin đã có tài khoản đăng ký! Vui lòng thử lại!");
       } else {
-        setMessage(response.data.message);
+        setMessage("Đăng ký thành công!");
         setTimeout(() => {
-          navigate(endpoint.LOGIN);
+          navigate(client_path.LOGIN);
           window.location.reload();
         }, 1000);
       }
@@ -134,7 +136,7 @@ function AuthForm({ type, onSubmit }) {
         <p className="title-switch">
           Chưa có tài khoản?{" "}
           <span
-            onClick={() => navigate(endpoint.REGISTER)}
+            onClick={() => navigate(client_path.REGISTER)}
             className="switch-link"
           >
             Đăng ký
@@ -144,7 +146,7 @@ function AuthForm({ type, onSubmit }) {
         <p className="title-switch">
           Đã có tài khoản?{" "}
           <span
-            onClick={() => navigate(endpoint.LOGIN)}
+            onClick={() => navigate(client_path.LOGIN)}
             className="switch-link"
           >
             Đăng nhập

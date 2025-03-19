@@ -5,5 +5,6 @@ export function useCustomNavigate() {
 
   return (path) => {
     navigate(path);
+    window.scrollTo(0, 0);
   };
 }
