@@ -16,12 +16,12 @@ function DefaultComponent({ children }) {
     }
   };
   return (
-    <div>
+    <div className="container">
       <div className="navBar">
         <NavBar />
       </div>
       <div className="bannerContainer">{getBanner()}</div>
-      {children}
+      <div className="children-container">{children}</div>
       <footer>
         <Footer />
       </footer>

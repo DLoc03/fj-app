@@ -2,32 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import "../../global.css";
 import "./NavBar.css";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { useCustomNavigate } from "../../utils/utils";
 import Logo from "../../assets/Logo FJ.png";
+import { endpoint } from "../../utils/constant";
+import { UserLogout } from "../../services/user.service";
 
 function NavBar() {
   const navigate = useCustomNavigate();
-  const [user, setUser] = useState(null);
+  const { user, isAuthenticated, logout } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const storedUser = sessionStorage.getItem("accessToken");
-    if (storedUser) {
-      // setUser(JSON.parse(storedUser));
-      setUser({
-        name: "Loc",
-        password: "123",
-      });
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    setUser(null);
-    setIsDropdownOpen(false);
-    navigate("/");
-  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -41,18 +26,26 @@ function NavBar() {
     };
   }, []);
 
+  async function handleLogout() {
+    logout();
+    setTimeout(() => {
+      navigate(endpoint.HOME);
+      window.location.reload();
+    }, 1000);
+  }
+
   return (
     <div className="nav-bar">
       <div className="logo">
         <img src={Logo} alt="Logo" />
       </div>
       <div className="top-bar">
-        <Link to="/">Trang chủ</Link>
-        <Link to="/candidate">Ứng tuyển</Link>
-        <Link to="/procedure">Quy trình tuyển dụng</Link>
+        <Link to={endpoint.HOME}>Trang chủ</Link>
+        <Link to={endpoint.CANDIDATE}>Ứng tuyển</Link>
+        <Link to={endpoint.PROCEDURE}>Quy trình tuyển dụng</Link>
       </div>
       <div className="log-bar">
-        {user ? (
+        {isAuthenticated ? (
           <div
             ref={dropdownRef}
             className={`dropdown ${isDropdownOpen ? "open" : ""}`}
@@ -65,9 +58,9 @@ function NavBar() {
             </button>
             {isDropdownOpen && (
               <div className="dropdown-menu">
-                <Link to="/account">Quản lý tài khoản</Link>
-                <Link to="/cv">Quản lý CV</Link>
-                <Link to="/recruitment">Tuyển dụng nhân sự</Link>
+                <Link to={endpoint.ACCOUNT}>Quản lý tài khoản</Link>
+                <Link to={endpoint.CVMANAGE}>Quản lý CV</Link>
+                <Link to={endpoint.RECRUITMENT}>Tuyển dụng nhân sự</Link>
                 <button className="btn-logout" onClick={handleLogout}>
                   Đăng xuất
                 </button>
@@ -76,7 +69,7 @@ function NavBar() {
           </div>
         ) : (
           <Link
-            to="/login"
+            to={endpoint.LOGIN}
             style={{
               textDecoration: "none",
               color: "white",

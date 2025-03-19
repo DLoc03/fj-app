@@ -3,30 +3,36 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./global.css";
 import { routes } from "./routes/index";
 import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
+import { ProtectedRoute } from "./utils/ProtectRoutes";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <div className="App">
+    <AuthProvider>
       <Router>
-        <Routes>
-          {routes.map((route) => {
-            const Page = route.page;
-            const Layout = DefaultComponent;
-            return (
+        <div className="App">
+          <Routes>
+            {routes.map(({ path, page: Page, protected: isProtected }) => (
               <Route
-                key={route.path}
-                path={route.path}
+                key={path}
+                path={path}
                 element={
-                  <Layout>
-                    <Page />
-                  </Layout>
+                  <DefaultComponent>
+                    {isProtected ? (
+                      <ProtectedRoute>
+                        <Page />
+                      </ProtectedRoute>
+                    ) : (
+                      <Page />
+                    )}
+                  </DefaultComponent>
                 }
               />
-            );
-          })}
-        </Routes>
+            ))}
+          </Routes>
+        </div>
       </Router>
-    </div>
+    </AuthProvider>
   );
 }
 

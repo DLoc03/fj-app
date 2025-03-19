@@ -8,7 +8,7 @@ function Button({ btn_title, path_navigate }) {
     <div className="button">
       <button
         className="btn-active"
-        onClick={() => navigate(`/${path_navigate}`)}
+        onClick={() => navigate(`${path_navigate}`)}
       >
         {btn_title}
       </button>

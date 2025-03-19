@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./EmployerList.css";
 import EmployerBox from "../EmployerBox/EmployerBox";
 import Button from "../../../commons/Button/Button";
+import { endpoint } from "../../../utils/constant";
 
 function EmployerList() {
   return (
@@ -14,7 +15,7 @@ function EmployerList() {
         <EmployerBox />
       </div>
       <div className="button-list">
-        <Button btn_title="Xem thêm" path_navigate="candidate" />
+        <Button btn_title="Xem thêm" path_navigate={endpoint.CANDIDATE} />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 .App {
   font-family: var(--font-text);
   width: 100%;
-  min-width: 1102px;
-  max-width: 1322px;
+  /* min-width: 1102px;
+  max-width: 1322px; */
   background-color: var(--background-app);
   z-index: -100;
   position: absolute;
