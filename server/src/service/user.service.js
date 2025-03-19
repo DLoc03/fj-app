@@ -1,70 +1,38 @@
 import { User } from "../model/user.js";
+import { MasterResponse } from "../response/master.response.js";
+import { UserResponse } from "../response/user.response.js";
+import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
 const getUserList = async () => {
-    return {
-        errCode: 0,
-        message: 'Succeed',
-        result: {
-            list: await User.find().select('-password')
-        }
-    }
+    const list = await User.find().lean()
+    const validUser = list.map((item) => UserResponse.UserLogin(item))
+    return MasterResponse({ data: validUser })
 }
 
 const getUserById = async (id) => {
-    const user = await User.findById(id).select('-password')
-    if (!user) {
-        return {
-            errCode: 1,
-            message: "User wasn't existed"
-        }
-    } else {
-        return {
-            errCode: 0,
-            message: "Found user success",
-            user: user
-        }
-    }
+    const user = await User.findById(id).lean()
+    if (!user) return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST, message: "User not found" })
+    return MasterResponse({ data: UserResponse.UserInfo(user) })
 }
 
 const deleteUserById = async (id) => {
     const user = await User.findById(id)
-    if (!user) {
-        return {
-            errCode: 1,
-            message: 'User not found'
-        }
-    }
-    await User.findByIdAndDelete(user._id)
-    return {
-        errCode: 0,
-        message: "Delete user succeed"
-    }
+    if (!user) return MasterResponse({
+        status: STATUS.NOT_FOUND,
+        errCode: ERROR_CODE.BAD_REQUEST,
+        message: 'User not found'
+    })
+    await User.findByIdAndDelete(user._id).lean()
+    return MasterResponse({
+        message: "Deleted user successfully"
+    })
 }
 
 const updateUserById = async (id, data) => {
-    const user = await User.findById(id);
-    if (!user) {
-        return {
-            errCode: 1,
-            message: 'User not found'
-        };
-    }
-
-    if (!data || Object.keys(data).length === 0) {
-        return {
-            errCode: 2,
-            message: 'No update data provided'
-        };
-    }
-
-    Object.assign(user, data);
-    await user.save();
-
-    return {
-        errCode: 0,
-        message: "Update successful",
-        newInfo: user
-    };
+    const user = await User.findById(id)
+    if (!user) return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST })
+    const newData = await User.findByIdAndUpdate(id, data, { new: true })
+    return MasterResponse({ message: "Update successful", data: UserResponse.UserLogin(newData) })
 }
 
 export const userService = {

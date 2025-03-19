@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 const CompanySchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String },
-    recruiterId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    recruiterId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User' },
     dateOfEstablishment: { type: mongoose.Schema.Types.Date },
     address: { type: String, required: true },
-    status: { type: String, enum: ['Đang xét duyệt', 'Đã xét duyệt'], default: 'Đang xét duyệt', required: true },
+    status: { type: String, enum: ['Pending', 'Authenticated'], default: 'Pending', required: true },
     jobList: { type: Array, default: [] }
 },
     { timestamps: true }
