@@ -8,21 +8,6 @@ import cors from 'cors'
 import { corsOption } from './config/cors.js'
 import cookieParser from 'cookie-parser'
 import { Server } from 'socket.io'
-// const app = express()
-// const PORT = process.env.APP_PORT || 3000
-// const HOST = process.env.APP_HOST
-
-// CONNNECT_DB()
-
-// app.listen(PORT, () => {
-//     console.log(`Server is running on http://${HOST}:${PORT}`);
-// })
-
-// const io = new Server()
-// io.on('auth', (socket) => {
-
-// })
-
 
 const START_SERVER = () => {
     const app = express()
