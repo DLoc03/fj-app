@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -39,6 +39,13 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const { admin } = useAuth();
+  const [adminName, setAdminName] = useState("Đang tải...");
+
+  useEffect(() => {
+    if (admin) {
+      setAdminName(admin.name);
+    }
+  }, [admin]);
 
   return (
     <Box
@@ -95,7 +102,7 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={`../../assets/user.png`}
+                  src={`../../assets/dev.webp`}
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -106,7 +113,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  {admin ? admin.name : <p>Admin</p>}
+                  {adminName}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   Quản trị viên FJ

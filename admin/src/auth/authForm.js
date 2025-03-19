@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserLogin } from "../services/user.service";
+import "./auth.css";
 
 function AuthForm() {
   const [email, setEmail] = useState("");
@@ -21,39 +22,37 @@ function AuthForm() {
         sessionStorage.setItem("adminToken", response.accessToken);
         setTimeout(() => {
           navigate("/dashboard");
+          window.location.reload();
         }, 1000);
       }
     } catch (error) {
       console.log("Error login for admin: ", error);
       setMessage("Đã có lỗi xảy ra! Vui lòng thử lại!");
     }
-
-    // if (email === "admin@example.com" && password === "password") {
-    //   sessionStorage.setItem("adminToken", "fake-jwt-token");
-    //   navigate("/dashboard");
-    // } else {
-    //   alert("Sai tài khoản hoặc mật khẩu!");
-    // }
   }
 
   return (
-    <div>
-      <h2>Đăng nhập</h2>
-      <form onSubmit={handleLogin}>
+    <div className="auth-container">
+      <h2 className="auth-title">Đăng nhập</h2>
+      <form className="auth-form" onSubmit={handleLogin}>
         <input
+          className="auth-input"
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
+          className="auth-input"
           type="password"
           placeholder="Mật khẩu"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Đăng nhập</button>
-        <span>{message}</span>
+        <button className="auth-button" type="submit">
+          Đăng nhập
+        </button>
+        <span className="auth-message">{message}</span>
       </form>
     </div>
   );

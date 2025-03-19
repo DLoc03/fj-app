@@ -6,24 +6,28 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [admin, setAdmin] = useState(null);
 
-  useEffect(() => {
-    const fetchAdmin = async () => {
-      const adminToken = sessionStorage.getItem("adminToken");
-      if (adminToken) {
-        const adminData = await GetUserInfo();
-        if (adminData) {
-          setAdmin(adminData);
-        }
+  const fetchAdmin = async () => {
+    const adminToken = sessionStorage.getItem("adminToken");
+    if (adminToken) {
+      const adminData = await GetUserInfo();
+      if (adminData) {
+        setAdmin(adminData);
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchAdmin();
   }, []);
 
   useEffect(() => {
-    const handleStorageChange = () => {
-      const adminToken = sessionStorage.getItem("adminToken");
-      if (!adminToken) {
-        setAdmin(null);
+    const handleStorageChange = (event) => {
+      if (event.key === "adminToken") {
+        if (event.newValue) {
+          fetchAdmin();
+        } else {
+          setAdmin(null);
+        }
       }
     };
 
@@ -33,13 +37,20 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  const login = async (token) => {
+    sessionStorage.setItem("adminToken", token);
+    await fetchAdmin();
+  };
+
   const logout = () => {
     sessionStorage.removeItem("adminToken");
     setAdmin(null);
   };
 
   return (
-    <AuthContext.Provider value={{ admin, isAuthenticated: !!admin, logout }}>
+    <AuthContext.Provider
+      value={{ admin, isAuthenticated: !!admin, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
