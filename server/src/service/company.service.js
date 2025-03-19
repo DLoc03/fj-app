@@ -3,6 +3,7 @@ import { Companies, CompanyFound } from "../response/company.response.js"
 import { MasterResponse } from "../response/master.response.js"
 import { ERROR_CODE, STATUS } from "../utils/enum.js"
 import { User } from '../model/user.js'
+import { UserResponse } from '../response/user.response.js'
 const postCompany = async (id, data) => {
     const exitedComp = await Company.findOne({ recruiterId: id })
     if (exitedComp) return MasterResponse({
@@ -34,10 +35,15 @@ const getCompany = async (id) => {
 }
 
 const getCompanies = async () => {
-    const companies = await Company.find().populate('recruiterId', 'name email phone')
-    console.log(companies);
+    const companies = await Company.find().lean()
+    const users = await User.find().lean()
+    const usersInfo = users.map(user => UserResponse.UserLogin(user))
+    const companyWithUser = companies.map(({ recruiterId, ...company }) => ({
+        ...company,
+        recruiter: usersInfo.find(user => user.id.toString() === recruiterId.toString()) || null
+    }))
 
-    return MasterResponse({ data: [...companies] })
+    return MasterResponse({ data: [...companyWithUser] })
 }
 
 
