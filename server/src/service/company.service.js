@@ -39,9 +39,9 @@ const getCompanies = async () => {
     const companiesInfo = companies.map(item => Companies(item))
     const users = await User.find().lean()
     const usersInfo = users.map(user => UserResponse.UserLogin(user))
-    const companyWithUser = companiesInfo.map(({ recruiterId, ...company }) => ({
+    const companyWithUser = companiesInfo.map(({ recruiter, ...company }) => ({
         ...company,
-        recruiter: usersInfo.find(user => user.id.toString() === recruiterId.toString()) || null
+        recruiter: usersInfo.find(user => user.id.toString() === recruiter.toString()) || null
     }))
 
     return MasterResponse({ data: [...companyWithUser] })
