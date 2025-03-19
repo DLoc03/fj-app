@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./EmployerList.css";
 import EmployerBox from "../EmployerBox/EmployerBox";
 import Button from "../../../commons/Button/Button";
-import { endpoint } from "../../../utils/constant";
+import { client_path } from "../../../utils/constant";
 
 function EmployerList() {
   return (
@@ -15,7 +15,7 @@ function EmployerList() {
         <EmployerBox />
       </div>
       <div className="button-list">
-        <Button btn_title="Xem thêm" path_navigate={endpoint.CANDIDATE} />
+        <Button btn_title="Xem thêm" path_navigate={client_path.CANDIDATE} />
       </div>
     </div>
   );

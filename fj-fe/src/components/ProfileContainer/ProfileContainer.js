@@ -34,7 +34,7 @@ function ProfileContainer(profileType) {
   async function handleUpdateUser() {
     try {
       const response = await UserUpdate(user._id, formData);
-      if (response.data.errCode === 0) {
+      if (response.errCode === 0) {
         alert("Cập nhật thông tin thành công");
         setIsEdit(false);
         setTimeout(() => {
@@ -51,7 +51,11 @@ function ProfileContainer(profileType) {
   }
 
   if (!isAuthenticated) {
-    return <p>Vui lòng đăng nhập để xem thông tin cá nhân</p>;
+    return (
+      <h1 style={{ textAlign: "center", color: "var(--strong-brown)" }}>
+        Vui lòng đăng nhập để xem thông tin cá nhân
+      </h1>
+    );
   }
 
   return (
@@ -66,7 +70,7 @@ function ProfileContainer(profileType) {
           <table className="userInfo-table">
             <tbody>
               <tr>
-                <th>Họ và tên:</th>
+                <th>Tên người dùng:</th>
                 <td>
                   <input
                     ref={nameInputRef}
@@ -76,6 +80,8 @@ function ProfileContainer(profileType) {
                     value={formData.name}
                     onChange={handleChange}
                     disabled={!isEdit}
+                    placeholder="Tối đa 18 ký tự"
+                    maxLength={18}
                   />
                 </td>
               </tr>

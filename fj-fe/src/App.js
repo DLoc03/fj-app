@@ -5,11 +5,15 @@ import { routes } from "./routes/index";
 import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
 import { ProtectedRoute } from "./utils/ProtectRoutes";
 import { AuthProvider } from "./context/AuthContext";
+import ScrollToTop from "./utils/scrollToTop";
+import PageLoader from "./components/ComponentLoader/componentsLoader";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
+        <PageLoader />
         <div className="App">
           <Routes>
             {routes.map(({ path, page: Page, protected: isProtected }) => (

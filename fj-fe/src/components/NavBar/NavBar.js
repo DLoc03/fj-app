@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useCustomNavigate } from "../../utils/utils";
 import Logo from "../../assets/Logo FJ.png";
-import { endpoint } from "../../utils/constant";
-import { UserLogout } from "../../services/user.service";
+import { client_path } from "../../utils/constant";
 
 function NavBar() {
   const navigate = useCustomNavigate();
@@ -28,10 +27,15 @@ function NavBar() {
 
   async function handleLogout() {
     logout();
+    setIsDropdownOpen(false);
     setTimeout(() => {
-      navigate(endpoint.HOME);
+      navigate(client_path.HOME);
       window.location.reload();
     }, 1000);
+  }
+
+  function handleDropdownClick() {
+    setIsDropdownOpen(false);
   }
 
   return (
@@ -40,9 +44,9 @@ function NavBar() {
         <img src={Logo} alt="Logo" />
       </div>
       <div className="top-bar">
-        <Link to={endpoint.HOME}>Trang chủ</Link>
-        <Link to={endpoint.CANDIDATE}>Ứng tuyển</Link>
-        <Link to={endpoint.PROCEDURE}>Quy trình tuyển dụng</Link>
+        <Link to={client_path.HOME}>Trang chủ</Link>
+        <Link to={client_path.CANDIDATE}>Ứng tuyển</Link>
+        <Link to={client_path.PROCEDURE}>Quy trình tuyển dụng</Link>
       </div>
       <div className="log-bar">
         {isAuthenticated ? (
@@ -58,9 +62,18 @@ function NavBar() {
             </button>
             {isDropdownOpen && (
               <div className="dropdown-menu">
-                <Link to={endpoint.ACCOUNT}>Quản lý tài khoản</Link>
-                <Link to={endpoint.CVMANAGE}>Quản lý CV</Link>
-                <Link to={endpoint.RECRUITMENT}>Tuyển dụng nhân sự</Link>
+                <Link to={client_path.ACCOUNT} onClick={handleDropdownClick}>
+                  Quản lý tài khoản
+                </Link>
+                <Link to={client_path.CVMANAGE} onClick={handleDropdownClick}>
+                  Quản lý CV
+                </Link>
+                <Link
+                  to={client_path.RECRUITMENT}
+                  onClick={handleDropdownClick}
+                >
+                  Tuyển dụng nhân sự
+                </Link>
                 <button className="btn-logout" onClick={handleLogout}>
                   Đăng xuất
                 </button>
@@ -69,7 +82,7 @@ function NavBar() {
           </div>
         ) : (
           <Link
-            to={endpoint.LOGIN}
+            to={client_path.LOGIN}
             style={{
               textDecoration: "none",
               color: "white",

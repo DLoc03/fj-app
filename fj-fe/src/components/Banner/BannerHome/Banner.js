@@ -2,7 +2,7 @@ import React from "react";
 import "./Banner.css";
 import { useCustomNavigate } from "../../../utils/utils";
 import { useAuth } from "../../../context/AuthContext";
-import { endpoint } from "../../../utils/constant";
+import { client_path } from "../../../utils/constant";
 function Banner() {
   const { user } = useAuth();
   const navigate = useCustomNavigate();
@@ -14,7 +14,7 @@ function Banner() {
         <div className="banner-txt candidate">Nhận sự tìm việc</div>
         <button
           className="bn-btn candidate-btn"
-          onClick={() => navigate(endpoint.CANDIDATE)}
+          onClick={() => navigate(client_path.CANDIDATE)}
         >
           Ứng tuyển ngay
         </button>
@@ -24,7 +24,9 @@ function Banner() {
         <button
           className="bn-btn employer-btn"
           onClick={() => {
-            user ? navigate(endpoint.ACCOUNT) : navigate(endpoint.REGISTER);
+            user
+              ? navigate(client_path.ACCOUNT)
+              : navigate(client_path.REGISTER);
           }}
         >
           Đăng ký ngay
