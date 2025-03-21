@@ -1,63 +1,64 @@
 .employProfile {
-    display: flex;
-    background-color: var(--light-yellow);
-    padding: 32px 48px;
-    box-sizing: border-box;
-    border-radius: 12px;
-    box-shadow: var(--main-shadow);
+  display: flex;
+  background-color: var(--light-yellow);
+  padding: 32px 48px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  box-shadow: var(--main-shadow);
 }
 
 .employAvt {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    width: 100vh;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  width: 100vh;
 }
 
 .employImgAvt {
-    width: 280px;
-    border-radius: 50%;
-    box-shadow: var(--main-shadow);
-    max-width: 100%;
-    height: auto;
+  width: 280px;
+  border-radius: 50%;
+  box-shadow: var(--main-shadow);
+  max-width: 100%;
+  height: auto;
 }
 
 .employDetail {
-    flex: 2;
-    margin-left: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+  flex: 2;
+  margin-left: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .employ-name {
-    color: var(--strong-brown);
-    font-weight: 600;
-    font-size: clamp(16px ,2vw, 28px);
+  color: var(--strong-brown);
+  font-weight: 600;
+  font-size: clamp(16px, 2vw, 28px);
 }
 
 .employ-detail {
-    background-color: var(--strong-gray);
-    padding: 12px 32px;
-    box-sizing: border-box;
-    border-radius: 12px;
-    box-shadow: var(--main-shadow);
-    max-width: 500px;
+  background-color: var(--strong-gray);
+  padding: 12px 32px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  box-shadow: var(--main-shadow);
+  max-width: 500px;
 }
 
 .employ-detail p {
-    color: white;
-    font-size: clamp(12px, 2vw, 16px);
+  color: white;
+  font-size: clamp(12px, 2vw, 20px);
+  border-bottom: 1px solid white;
 }
 
 .btn-cv {
-    width: 200px;
-    height: 40px;
-    color: white;
-    background-color: var(--strong-brown);
-    border: 0;
-    border-radius: 4px;
-    font-weight: 600;
-    box-shadow: var(--main-shadow);
-    cursor: pointer;
+  width: 200px;
+  height: 40px;
+  color: white;
+  background-color: var(--strong-brown);
+  border: 0;
+  border-radius: 4px;
+  font-weight: 600;
+  box-shadow: var(--main-shadow);
+  cursor: pointer;
 }

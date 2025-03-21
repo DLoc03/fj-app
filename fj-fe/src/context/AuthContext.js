@@ -37,6 +37,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     sessionStorage.removeItem("accessToken");
+    localStorage.removeItem("User");
     setUser(null);
   };
 

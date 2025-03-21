@@ -1,9 +1,10 @@
-import axios from "axios";
 import { server_path } from "../utils/constant";
 import { postData, getDataByToken, updateData } from "../api/base.service";
 
 export const UserLogin = async (data) => {
-  return await postData(server_path.LOGIN_API, data);
+  const res = await postData(server_path.LOGIN_API, data);
+  localStorage.setItem("User", JSON.stringify(res.result.data.user));
+  return res;
 };
 
 export const UserRegister = async (data) => {

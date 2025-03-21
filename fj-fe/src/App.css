@@ -41,3 +41,7 @@ textarea {
   font-family: var(--font-text);
   font-size: 18px;
 }
+
+span {
+  font-weight: 100;
+}

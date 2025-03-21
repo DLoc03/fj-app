@@ -19,7 +19,6 @@ function AuthForm() {
         setMessage("Sai mật khẩu");
       } else {
         setMessage("Đăng nhập thành công!");
-        sessionStorage.setItem("adminToken", response.accessToken);
         setTimeout(() => {
           navigate("/dashboard");
           window.location.reload();

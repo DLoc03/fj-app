@@ -22,9 +22,8 @@ const User = () => {
     const fetchUsers = async () => {
       try {
         const response = await GetUsers();
-        console.log("List users: ", response?.list?.result?.list);
-        if (Array.isArray(response?.list?.result?.list)) {
-          const formattedUsers = response.list.result.list
+        if (Array.isArray(response?.result?.data)) {
+          const formattedUsers = response.result.data
             .filter((user) => user.role === "user")
             .map((user, index) => ({
               id: user.id || index,

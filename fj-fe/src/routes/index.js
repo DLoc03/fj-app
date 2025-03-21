@@ -23,7 +23,7 @@ export const routes = [
     page: Procedure,
   },
   {
-    path: client_path.JOBDECS,
+    path: "/candidate/:id",
     page: EmployeesProfile,
   },
   {

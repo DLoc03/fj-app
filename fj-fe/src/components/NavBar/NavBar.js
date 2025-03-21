@@ -58,7 +58,7 @@ function NavBar() {
               className="dropdown-toggle"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              Xin chào, {user.name} ▼
+              Xin chào, {user.result.data.name} ▼
             </button>
             {isDropdownOpen && (
               <div className="dropdown-menu">

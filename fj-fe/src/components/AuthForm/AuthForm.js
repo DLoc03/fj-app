@@ -3,6 +3,7 @@ import "./AuthForm.css";
 import { useCustomNavigate } from "../../utils/utils";
 import { UserLogin, UserRegister } from "../../services/user.service";
 import { client_path } from "../../utils/constant";
+import { ERROR_CODE, STATUS } from "../../utils/enum";
 
 function AuthForm({ type, onSubmit }) {
   const navigate = useCustomNavigate();
@@ -34,13 +35,16 @@ function AuthForm({ type, onSubmit }) {
 
     try {
       let response = await UserLogin({ email, password });
-      if (response.errCode === 0) {
+      if (
+        response.result.errCode === ERROR_CODE.DONE &&
+        response.status === STATUS.DONE
+      ) {
         setMessage("Đăng nhập thành công!");
         setTimeout(() => {
           navigate(client_path.HOME);
           window.location.reload();
         }, 1000);
-      } else if (response.errCode === 1) {
+      } else if (response.status === STATUS.NOT_FOUND) {
         setMessage("Tài khoản tuyển dụng chưa đăng ký!");
       } else {
         setMessage("Sai mật khẩu! Vui lòng thử lại!");
@@ -62,7 +66,7 @@ function AuthForm({ type, onSubmit }) {
         name,
         phone,
       });
-      if (response.errCode === 1 || response.errCode === 2) {
+      if (response.data.result.errCode !== ERROR_CODE.DONE) {
         setMessage("Thông tin đã có tài khoản đăng ký! Vui lòng thử lại!");
       } else {
         setMessage("Đăng ký thành công!");

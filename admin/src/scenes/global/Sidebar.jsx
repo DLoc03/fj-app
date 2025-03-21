@@ -43,7 +43,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (admin) {
-      setAdminName(admin.name);
+      setAdminName(admin.result.data.name);
     }
   }, [admin]);
 

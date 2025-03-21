@@ -5,6 +5,7 @@
   position: relative;
   background-color: white;
   padding: 28px 28px;
+  padding-bottom: 0;
   box-sizing: border-box;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 -1px 6px rgba(0, 0, 0, 0.2);
 }
@@ -25,23 +26,12 @@
   box-sizing: border-box;
 }
 
-/* .list-line {
-    position: absolute;
-    height: 6px;
-    background-color: var(--main-color);
-    justify-self: center;
-    z-index: -10;
-    margin-top: 16px;
-    width: 100%;
-} */
-
 .employer-lstbody {
   margin-top: 16px;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
   padding: 0 28px;
-  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
 }
 
 .button-list {

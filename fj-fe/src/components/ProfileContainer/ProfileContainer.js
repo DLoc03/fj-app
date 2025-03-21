@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import "./ProfileContainer.css";
 import { useAuth } from "../../context/AuthContext";
 import { UserUpdate } from "../../services/user.service";
+import { ERROR_CODE, STATUS } from "../../utils/enum";
 
-function ProfileContainer(profileType) {
+function ProfileContainer({ profileType }) {
   const { user, isAuthenticated } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
@@ -15,11 +16,12 @@ function ProfileContainer(profileType) {
   const nameInputRef = useRef(null);
 
   useEffect(() => {
+    console.log("User data:", user);
     if (user) {
       setFormData({
-        email: user.email,
-        name: user.name,
-        phone: user.phone,
+        email: user.result.data.email,
+        name: user.result.data.name,
+        phone: user.result.data.phone,
       });
     }
   }, [user]);
@@ -33,8 +35,11 @@ function ProfileContainer(profileType) {
 
   async function handleUpdateUser() {
     try {
-      const response = await UserUpdate(user._id, formData);
-      if (response.errCode === 0) {
+      const response = await UserUpdate(user.data._id, formData);
+      if (
+        response.status === STATUS.DONE &&
+        response.result.errCode === ERROR_CODE.DONE
+      ) {
         alert("Cập nhật thông tin thành công");
         setIsEdit(false);
         setTimeout(() => {

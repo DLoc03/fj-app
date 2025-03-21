@@ -4,7 +4,7 @@ import AvtEmploy from "../../../assets/employ.jpg";
 import { useNavigate } from "react-router-dom";
 import { client_path } from "../../../utils/constant";
 
-function EmployerBox() {
+function EmployerBox({ name, position, id }) {
   const navigate = useNavigate();
   function handleNavigateEmpProfile(path) {
     navigate(path);
@@ -12,15 +12,15 @@ function EmployerBox() {
   return (
     <div
       className="employ-box"
-      onClick={() => handleNavigateEmpProfile(client_path.JOBDECS)}
+      onClick={() => handleNavigateEmpProfile(`/candidate/${id}`)}
     >
       <div className="employ-avt">
         <img src={AvtEmploy} alt="avt-employ" />
       </div>
       <div className="employ-info">
-        <div className="store-name">Phuc Long Coffee & Tea</div>
+        <div className="store-name">{name}</div>
         <div className="employ-pos">
-          Vị trí tuyển: Pha chế, Phục vụ, Quản lý
+          Vị trí tuyển: {position ? position : "Pha chế, phục vụ"}
         </div>
       </div>
     </div>

@@ -2,4 +2,6 @@
   width: 90%;
   margin: 0 auto;
   margin-top: 120px;
+  padding: 0 40px;
+  box-sizing: border-box;
 }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_URL, headersAuth } from "../authConfig/config";
+import { ERROR_CODE } from "../utils/enum";
 
 export const getData = async (path) => {
   try {
@@ -8,6 +9,19 @@ export const getData = async (path) => {
   } catch (error) {
     console.error(
       "Error when fetching data:",
+      error.response?.result || error.message
+    );
+    return null;
+  }
+};
+
+export const getDataByID = async (path, id) => {
+  try {
+    const res = await axios.get(`${API_URL}${path}/${id}`);
+    return res.data || null;
+  } catch (error) {
+    console.error(
+      "Error when fetching user data:",
       error.response?.data || error.message
     );
     return null;
@@ -19,7 +33,7 @@ export const getDataByToken = async (path) => {
     const res = await axios.get(`${API_URL}${path}`, {
       headers: headersAuth(),
     });
-    return res.data.user || null;
+    return res.data || null;
   } catch (error) {
     console.error(
       "Error when fetching user data:",
@@ -34,9 +48,8 @@ export const postData = async (path, data, useAuth = false) => {
     const res = await axios.post(`${API_URL}${path}`, data, {
       headers: headersAuth(),
     });
-    console.log("Res data: ", res.data);
-    if (res.data.errCode === 0) {
-      sessionStorage.setItem("accessToken", res.data.accessToken);
+    if (res.data.result.errCode === ERROR_CODE.DONE) {
+      sessionStorage.setItem("accessToken", res.data.result.data.accessToken);
     }
     return res.data;
   } catch (error) {
@@ -53,11 +66,12 @@ export const updateData = async (id, data) => {
     const res = await axios.put(`${API_URL}/user/${id}`, data, {
       headers: headersAuth(),
     });
+    console.log("Data update: ", res);
     return res.data;
   } catch (error) {
     console.error(
       "Error when updating data:",
-      error.response?.data || error.message
+      error.response?.result.data || error.message
     );
     return null;
   }
