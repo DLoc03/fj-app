@@ -7,4 +7,5 @@ export const JobResponse = {
         jobDescription,
         salary
     })
+
 }
