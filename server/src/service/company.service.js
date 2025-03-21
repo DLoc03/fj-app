@@ -1,11 +1,12 @@
 import Company from "../model/company.js";
-import { Companies, CompanyFound } from "../response/company.response.js";
+import { CompanyResponse } from "../response/company.response.js";
 import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
 import { User } from "../model/user.js";
 import { UserResponse } from "../response/user.response.js";
+import Job from "../model/job.js";
 const postCompany = async (id, data) => {
-  const exitedComp = await Company.findOne({ recruiterId: id });
+  const exitedComp = await Company.findOne({ recruiterId: id }).lean();
   if (exitedComp)
     return MasterResponse({
       errCode: ERROR_CODE.BAD_REQUEST,
@@ -18,13 +19,21 @@ const postCompany = async (id, data) => {
   await newComp.save();
   return MasterResponse({
     message: "Company registered was succeed",
-    data: CompanyFound(newComp),
+    data: CompanyResponse.CompanyFound(newComp),
   });
 };
 
 const getCompany = async (id) => {
-  const company = await Company.findOne({ _id: id });
-
+  const company = await Company.findOne({ _id: id }).lean();
+  const user = await User.findOne({ _id: company.recruiterId });
+  const list = await Job.find({ companyId: company._id });
+  const validCompany = CompanyResponse.CompanyFound(company);
+  const { recruiterId, ...companyData } = validCompany;
+  const result = {
+    ...companyData,
+    recruiter: UserResponse.UserInfo(user),
+    jobList: list,
+  };
   if (!company) {
     return MasterResponse({
       status: STATUS.NOT_FOUND,
@@ -32,18 +41,20 @@ const getCompany = async (id) => {
       message: "Company not found",
     });
   }
-  return MasterResponse({ data: CompanyFound(company) });
+  return MasterResponse({ data: result });
 };
 
 const getCompanies = async () => {
   const companies = await Company.find().lean();
-  const companiesInfo = companies.map((item) => CompanyFound(item));
+  const companiesInfo = companies.map((item) =>
+    CompanyResponse.CompanyFound(item)
+  );
   const users = await User.find().lean();
   const usersInfo = users.map((user) => UserResponse.UserLogin(user));
-  const companyWithUser = companiesInfo.map(({ recruiter, ...company }) => ({
+  const companyWithUser = companiesInfo.map(({ recruiterId, ...company }) => ({
     ...company,
     recruiter:
-      usersInfo.find((user) => user.id.toString() === recruiter.toString()) ||
+      usersInfo.find((user) => user.id.toString() === recruiterId.toString()) ||
       null,
   }));
 

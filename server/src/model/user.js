@@ -7,7 +7,8 @@ const UserSchema = mongoose.Schema(
         name: { type: String },
         phone: { type: String },
         role: { type: String, enum: ['admin', 'user'], default: 'user', required: true },
-        refreshToken: { type: String, default: null }
+        refreshToken: { type: String, default: null },
+        avatar: { type: String, default: null }
     },
     {
         timestamps: true

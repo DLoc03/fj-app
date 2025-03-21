@@ -7,7 +7,7 @@ const CompanySchema = new mongoose.Schema({
     dateOfEstablishment: { type: mongoose.Schema.Types.Date },
     address: { type: String, required: true },
     status: { type: String, enum: ['Pending', 'Authenticated'], default: 'Pending', required: true },
-    jobList: { type: Array, default: [] }
+    avatar: { type: String, default: null }
 },
     { timestamps: true }
 )
