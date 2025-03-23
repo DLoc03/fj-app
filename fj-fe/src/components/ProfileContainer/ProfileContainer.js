@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { UserUpdate } from "../../services/user.service";
 import { ERROR_CODE, STATUS } from "../../utils/enum";
 
-function ProfileContainer({ profileType }) {
+function ProfileContainer() {
   const { user, isAuthenticated } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
@@ -13,10 +13,10 @@ function ProfileContainer({ profileType }) {
     phone: user?.phone || "",
   });
 
+  const userData = JSON.parse(localStorage.getItem("User"));
   const nameInputRef = useRef(null);
 
   useEffect(() => {
-    console.log("User data:", user);
     if (user) {
       setFormData({
         email: user.result.data.email,
@@ -35,7 +35,7 @@ function ProfileContainer({ profileType }) {
 
   async function handleUpdateUser() {
     try {
-      const response = await UserUpdate(user.data._id, formData);
+      const response = await UserUpdate(userData.id, formData);
       if (
         response.status === STATUS.DONE &&
         response.result.errCode === ERROR_CODE.DONE

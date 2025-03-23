@@ -35,6 +35,7 @@ function AuthForm({ type, onSubmit }) {
 
     try {
       let response = await UserLogin({ email, password });
+      console.log("Response data: ", response);
       if (
         response.result.errCode === ERROR_CODE.DONE &&
         response.status === STATUS.DONE

@@ -50,6 +50,7 @@ export const postData = async (path, data, useAuth = false) => {
     });
     if (res.data.result.errCode === ERROR_CODE.DONE) {
       sessionStorage.setItem("accessToken", res.data.result.data.accessToken);
+      localStorage.setItem("User", JSON.stringify(res.data.result.data.user));
     }
     return res.data;
   } catch (error) {

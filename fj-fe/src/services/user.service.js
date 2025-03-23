@@ -3,7 +3,6 @@ import { postData, getDataByToken, updateData } from "../api/base.service";
 
 export const UserLogin = async (data) => {
   const res = await postData(server_path.LOGIN_API, data);
-  localStorage.setItem("User", JSON.stringify(res.result.data.user));
   return res;
 };
 
