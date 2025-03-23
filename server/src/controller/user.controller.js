@@ -35,14 +35,31 @@ const deleteUserById = async (req, res) => {
 }
 
 const updateUserById = async (req, res) => {
-    const { id } = req.params;
     const data = req.body;
     if (!data || Object.keys(data).length === 0) {
         return res.status(200).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.BAD_REQUEST, message: "No update data provided" }));
     }
     try {
-        const result = await userService.updateUserById(id, data);
+        const result = await userService.updateUserById(req.user.id, data);
         return res.status(200).json(result);
+    } catch (error) {
+        return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
+    }
+}
+
+const uploadAvatarById = async (req, res) => {
+    try {
+        const response = await userService.updateUserById(req.user.id, { avatar: req.file.path })
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
+    }
+}
+
+const deleteAvatarById = async (req, res) => {
+    try {
+        const response = await userService.updateUserById(req.user.id, { avatar: null })
+        return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
     }
@@ -52,5 +69,7 @@ export const userController = {
     getUsers,
     getUserById,
     deleteUserById,
-    updateUserById
+    updateUserById,
+    uploadAvatarById,
+    deleteAvatarById
 }
