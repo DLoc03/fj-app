@@ -2,7 +2,6 @@ import { User } from "../model/user.js";
 import { MasterResponse } from "../response/master.response.js";
 import { UserResponse } from "../response/user.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
-
 const getUserList = async () => {
     const list = await User.find().lean()
     const validUser = list.map((item) => UserResponse.UserLogin(item))
