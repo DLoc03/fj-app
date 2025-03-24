@@ -8,7 +8,6 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import QuizIcon from "@mui/icons-material/Quiz";
 import StoreIcon from "@mui/icons-material/Store";
@@ -18,13 +17,19 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  const handleClick = () => {
+    setSelected(title);
+    window.location.href = to;
+    setTimeout(() => window.location.reload(), 100);
+  };
+
   return (
     <MenuItem
       active={selected === title}
       style={{
         color: colors.grey[100],
       }}
-      onClick={() => setSelected(title)}
+      onClick={() => handleClick()}
       icon={icon}
     >
       <Typography>{title}</Typography>
@@ -166,13 +171,12 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
-            <Typography
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Thông tin
+              Tạo mới thông tin
             </Typography>
             <Item
               title="Thông tin người dùng"
@@ -183,19 +187,11 @@ const Sidebar = () => {
             />
             <Item
               title="Thông tin cơ sở"
-              to="/calendar"
+              to="/comp-form"
               icon={<StoreIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
-            <Item
-              title="FAQ Page"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
+            /> */}
             {/* <Typography
               variant="h6"
               color={colors.grey[300]}

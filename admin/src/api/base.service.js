@@ -32,12 +32,26 @@ export const getDataByToken = async (path) => {
   }
 };
 
+export const getDataById = async (path, id) => {
+  try {
+    const res = await axios.get(`${API_URL}${path}/${id}`, {
+      headers: headersAuth(),
+    });
+    return res.data || null;
+  } catch (error) {
+    console.error(
+      "Error when fetching user data:",
+      error.response?.data || error.message
+    );
+    return null;
+  }
+};
+
 export const postData = async (path, data, useAuth = false) => {
   try {
     const res = await axios.post(`${API_URL}${path}`, data, {
       headers: headersAuth(),
     });
-    console.log("Res data post: ", res.data.result.data);
     if (res.data.result.errCode === ERROR_CODE.DONE) {
       sessionStorage.setItem("adminToken", res.data.result.data.accessToken);
     }
@@ -60,6 +74,21 @@ export const updateData = async (id, data) => {
   } catch (error) {
     console.error(
       "Error when updating data:",
+      error.response?.result.data || error.message
+    );
+    return null;
+  }
+};
+
+export const deleteDataById = async (path, id) => {
+  try {
+    const res = await axios.delete(`${API_URL}${path}/${id}`, {
+      headers: headersAuth(),
+    });
+    return res.data;
+  } catch (error) {
+    console.error(
+      "Error when deleting data:",
       error.response?.result.data || error.message
     );
     return null;

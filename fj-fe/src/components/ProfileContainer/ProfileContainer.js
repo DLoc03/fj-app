@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "./ProfileContainer.css";
 import { useAuth } from "../../context/AuthContext";
 import { UserUpdate } from "../../services/user.service";
+import { getCompanyById } from "../../services/company.service";
 import { ERROR_CODE, STATUS } from "../../utils/enum";
 
 function ProfileContainer() {
@@ -35,7 +36,7 @@ function ProfileContainer() {
 
   async function handleUpdateUser() {
     try {
-      const response = await UserUpdate(userData.id, formData);
+      const response = await UserUpdate(userData, formData);
       if (
         response.status === STATUS.DONE &&
         response.result.errCode === ERROR_CODE.DONE
@@ -68,7 +69,7 @@ function ProfileContainer() {
       <div className="user-container">
         <div className="user-avt">
           <div className="avt-profile"></div>
-          <button className="btn-upload">Cập nhật ảnh đại diện</button>
+          <button className="btn-upload">Cập nhật ảnh đại diện cơ sở</button>
         </div>
         <div className="user-info">
           <h1>Thông tin người đại diện đăng ký cơ sở</h1>

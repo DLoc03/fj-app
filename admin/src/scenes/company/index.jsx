@@ -2,10 +2,23 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
-import { useTheme } from "@mui/material";
+import {
+  useTheme,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getAllCompanies } from "../../services/company.service";
+import {
+  deleteCompanyById,
+  getAllCompanies,
+} from "../../services/company.service";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { IconButton } from "@mui/material";
 
 const Company = () => {
   const theme = useTheme();
@@ -13,6 +26,9 @@ const Company = () => {
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedCompany, setSelected] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,9 +63,31 @@ const Company = () => {
   }, []);
 
   const handleRowClick = (params) => {
-    localStorage.setItem("selectedCompany", JSON.stringify(params.row));
-    console.log("Thông tin công ty:", params.row);
-    navigate("/form");
+    const id = params.row.id;
+    navigate(`comp-form/${id}`);
+  };
+
+  const handleOpenDialog = (id) => {
+    setSelected(id);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelected(null);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedCompany) return;
+    try {
+      await deleteCompanyById(selectedCompany);
+      setCompanies((prevUsers) =>
+        prevUsers.filter((user) => user.id !== selectedCompany)
+      );
+      handleCloseDialog();
+    } catch (error) {
+      console.error("Xóa thất bại:", error);
+    }
   };
 
   const columns = [
@@ -59,6 +97,36 @@ const Company = () => {
     { field: "phone", headerName: "Hotline", flex: 1 },
     { field: "status", headerName: "Trạng thái đăng ký", flex: 1 },
     { field: "position", headerName: "Vị trí tuyển", flex: 1 },
+    {
+      field: "view",
+      headerName: "Xem thông tin",
+      flex: 1,
+      renderCell: (params) => (
+        <p
+          style={{
+            cursor: "pointer",
+            textDecoration: "none",
+            fontWeight: "800",
+          }}
+          onClick={() => handleRowClick(params)}
+        >
+          Xem thông tin
+        </p>
+      ),
+    },
+    {
+      field: "del",
+      headerName: "Xóa",
+      flex: 1,
+      renderCell: (params) => (
+        <IconButton
+          color="error"
+          onClick={() => handleOpenDialog(params.row.id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
@@ -78,7 +146,6 @@ const Company = () => {
             rows={companies}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
-            onRowClick={handleRowClick}
             sx={{
               "& .MuiDataGrid-root": { border: "none" },
               "& .MuiDataGrid-cell": { borderBottom: "none" },
@@ -95,6 +162,22 @@ const Company = () => {
           />
         )}
       </Box>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có chắc chắn muốn xóa người dùng này không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Hủy
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

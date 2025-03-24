@@ -1,21 +1,29 @@
-import { Box, Typography, useTheme, CircularProgress } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
-import Header from "../../components/Header";
-import { useEffect, useState } from "react";
-import { GetUsers } from "../../services/user.service";
-import { GridToolbar } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import {
+  Box,
+  Typography,
+  useTheme,
+  CircularProgress,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { GetUsers, UserDelete } from "../../services/user.service";
 
 const User = () => {
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -46,20 +54,32 @@ const User = () => {
     fetchUsers();
   }, []);
 
-  const handleEdit = (id) => {
-    console.log(`Chỉnh sửa dòng ${id + 1}`);
+  const handleOpenDialog = (id) => {
+    setSelectedUserId(id);
+    setOpenDialog(true);
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này không?")) {
-      console.log("Xóa người dùng có ID:", id);
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedUserId(null);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedUserId) return;
+    try {
+      await UserDelete(selectedUserId);
+      setUsers((prevUsers) =>
+        prevUsers.filter((user) => user.id !== selectedUserId)
+      );
+      handleCloseDialog();
+    } catch (error) {
+      console.error("Xóa thất bại:", error);
     }
   };
 
   const handleRowClick = (params) => {
-    localStorage.setItem("selectedUser", JSON.stringify(params.row));
-    console.log("Thông tin người dùng: ", params.row);
-    navigate("/form");
+    const id = params.row.id;
+    if (id) navigate(`form/${id}`);
   };
 
   const columns = [
@@ -67,13 +87,20 @@ const User = () => {
     { field: "phone", headerName: "Hotline ban tuyển dụng", flex: 2 },
     { field: "email", headerName: "Email", flex: 2 },
     {
-      field: "edit",
-      headerName: "Sửa",
+      field: "view",
+      headerName: "Xem thông tin",
       flex: 1,
       renderCell: (params) => (
-        <IconButton color="primary" onClick={() => handleEdit(params.row.id)}>
-          <EditIcon />
-        </IconButton>
+        <p
+          style={{
+            cursor: "pointer",
+            textDecoration: "none",
+            fontWeight: "800",
+          }}
+          onClick={() => handleRowClick(params)}
+        >
+          Xem thông tin
+        </p>
       ),
     },
     {
@@ -81,7 +108,10 @@ const User = () => {
       headerName: "Xóa",
       flex: 1,
       renderCell: (params) => (
-        <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+        <IconButton
+          color="error"
+          onClick={() => handleOpenDialog(params.row.id)}
+        >
           <DeleteIcon />
         </IconButton>
       ),
@@ -90,10 +120,7 @@ const User = () => {
 
   return (
     <Box m="20px">
-      <Header
-        title="Danh sách người dùng"
-        subtitle="Quản lý danh sách người dùng"
-      />
+      <Typography variant="h4">Danh sách người dùng</Typography>
 
       <Box m="40px 0 0 0" height="75vh">
         {loading ? (
@@ -105,29 +132,26 @@ const User = () => {
             rows={users}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
-            onRowClick={handleRowClick}
-            sx={{
-              "& .MuiDataGrid-root": { border: "none" },
-              "& .MuiDataGrid-cell": { borderBottom: "none" },
-              "& .name-column--cell": { color: colors.greenAccent[300] },
-              "& .MuiDataGrid-columnHeaders": {
-                backgroundColor: colors.blueAccent[700],
-                borderBottom: "none",
-              },
-              "& .MuiDataGrid-virtualScroller": {
-                backgroundColor: colors.primary[400],
-              },
-              "& .MuiDataGrid-footerContainer": {
-                borderTop: "none",
-                backgroundColor: colors.blueAccent[700],
-              },
-              "& .MuiCheckbox-root": {
-                color: `${colors.greenAccent[200]} !important`,
-              },
-            }}
           />
         )}
       </Box>
+
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có chắc chắn muốn xóa người dùng này không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Hủy
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

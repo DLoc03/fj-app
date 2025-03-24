@@ -1,7 +1,11 @@
 .profileContainer {
   width: 90%;
-  margin: 0 auto;
-  margin-top: 120px;
-  padding: 0 40px;
+  margin-top: 40px;
   box-sizing: border-box;
+  display: flex;
+  z-index: 99999;
+}
+
+.profileBar {
+  margin-left: 80px;
 }

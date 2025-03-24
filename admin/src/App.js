@@ -13,7 +13,7 @@ import FAQ from "./scenes/faq";
 import Geography from "./scenes/geography";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import Calendar from "./scenes/calendar/calendar";
+import CompInfo from "./scenes/comp-info/index";
 import Company from "./scenes/company";
 import { AuthProvider } from "./auth/authContext";
 import AuthForm from "./auth/authForm";
@@ -51,11 +51,16 @@ function App() {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/user" element={<User />} />
                         <Route path="/company" element={<Company />} />
-                        <Route path="/invoices" element={<Invoices />} />
                         <Route path="/form" element={<Form />} />
+                        <Route path="comp-form/" element={<CompInfo />} />
+                        <Route path="user/form/:id" element={<Form />} />
+                        <Route
+                          path="company/comp-form/:id"
+                          element={<CompInfo />}
+                        />
+                        <Route path="/invoices" element={<Invoices />} />
                         <Route path="/bar" element={<Bar />} />
                         <Route path="/faq" element={<FAQ />} />
-                        <Route path="/calendar" element={<Calendar />} />
                       </Routes>
                     </AuthProtect>
                   }

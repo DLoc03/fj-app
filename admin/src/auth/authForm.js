@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserLogin } from "../services/user.service";
 import "./auth.css";
+import { STATUS } from "../utils/enum";
 
 function AuthForm() {
   const [email, setEmail] = useState("");
@@ -13,7 +14,10 @@ function AuthForm() {
     e.preventDefault();
     try {
       const response = await UserLogin({ email, password });
-      if (response === "block" || response.errCode === 1) {
+      if (
+        response.status === STATUS.NOT_FOUND ||
+        response.result.data.user.role !== "admin"
+      ) {
         setMessage("Bạn không có quyền đăng nhập quản trị viên!");
       } else if (response.errCode === 2) {
         setMessage("Sai mật khẩu");

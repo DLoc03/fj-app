@@ -63,9 +63,9 @@ function NavBar() {
             {isDropdownOpen && (
               <div className="dropdown-menu">
                 <Link to={client_path.ACCOUNT} onClick={handleDropdownClick}>
-                  Quản lý tài khoản
+                  Hồ sơ cá nhân
                 </Link>
-                <Link to={client_path.CVMANAGE} onClick={handleDropdownClick}>
+                {/* <Link to={client_path.CVMANAGE} onClick={handleDropdownClick}>
                   Quản lý CV
                 </Link>
                 <Link
@@ -73,7 +73,7 @@ function NavBar() {
                   onClick={handleDropdownClick}
                 >
                   Tuyển dụng nhân sự
-                </Link>
+                </Link> */}
                 <button className="btn-logout" onClick={handleLogout}>
                   Đăng xuất
                 </button>

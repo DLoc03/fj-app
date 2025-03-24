@@ -19,8 +19,38 @@ function AuthForm({ type, onSubmit }) {
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
+
+  function validateInput() {
+    const { email, phone, name } = formData;
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const phoneRegex = /^09\d{8}$/;
+    const nameRegex = /^\D/;
+
+    if (!emailRegex.test(email)) {
+      setMessage("Email không đúng định dạng!");
+      return false;
+    }
+
+    if (type === "register") {
+      if (!phoneRegex.test(phone)) {
+        setMessage("Số điện thoại phải có 10 số và bắt đầu bằng 09!");
+        return false;
+      }
+
+      if (!nameRegex.test(name)) {
+        setMessage("Tên không được bắt đầu bằng số!");
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
+    if (!validateInput()) return;
+
     const { email, password, name, phone } = formData;
     if (type === "login") {
       onSubmit({ email, password });
@@ -31,21 +61,30 @@ function AuthForm({ type, onSubmit }) {
 
   async function handleLogin(e) {
     e.preventDefault();
+    if (!validateInput()) return;
     const { email, password } = formData;
 
     try {
       let response = await UserLogin({ email, password });
-      console.log("Response data: ", response);
       if (
         response.result.errCode === ERROR_CODE.DONE &&
-        response.status === STATUS.DONE
+        response.status === STATUS.DONE &&
+        response.result.data.user.role !== "admin"
       ) {
         setMessage("Đăng nhập thành công!");
+        sessionStorage.setItem("accessToken", response.result.data.accessToken);
+        localStorage.setItem(
+          "User",
+          JSON.stringify(response.result.data.user.id)
+        );
         setTimeout(() => {
           navigate(client_path.HOME);
           window.location.reload();
         }, 1000);
-      } else if (response.status === STATUS.NOT_FOUND) {
+      } else if (
+        response.status === STATUS.NOT_FOUND ||
+        response.result.data.user.role === "admin"
+      ) {
         setMessage("Tài khoản tuyển dụng chưa đăng ký!");
       } else {
         setMessage("Sai mật khẩu! Vui lòng thử lại!");
@@ -58,7 +97,7 @@ function AuthForm({ type, onSubmit }) {
 
   async function handleRegister(e) {
     e.preventDefault();
-    console.log("Dữ liệu trước khi đăng ký: ", formData);
+    if (!validateInput()) return;
     const { email, password, name, phone } = formData;
     try {
       let response = await UserRegister({
@@ -67,7 +106,8 @@ function AuthForm({ type, onSubmit }) {
         name,
         phone,
       });
-      if (response.data.result.errCode !== ERROR_CODE.DONE) {
+      console.log("Response register: ", response);
+      if (response.result.errCode === ERROR_CODE.BAD_REQUEST) {
         setMessage("Thông tin đã có tài khoản đăng ký! Vui lòng thử lại!");
       } else {
         setMessage("Đăng ký thành công!");
