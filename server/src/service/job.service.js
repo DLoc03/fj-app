@@ -1,5 +1,6 @@
 import Company from "../model/company.js"
 import Job from "../model/job.js"
+import Question from "../model/question.js"
 import { CompanyResponse } from "../response/company.response.js"
 import { JobResponse } from "../response/job.response.js"
 import { MasterResponse } from "../response/master.response.js"
@@ -33,7 +34,7 @@ const updateJobById = async (userId, body) => {
     const company = await Company.findOne({ recruiterId: userId }).lean()
     if (!company) return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST, message: 'You need create company first' })
 
-    const job = await Job.findOne({ companyId: company._id })
+    const job = await Job.findOne({ companyId: company._id }).lean()
     if (!job) return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST, message: 'Job not found' })
 
     const validJob = JobResponse.Jobs(await Job.findOneAndUpdate({ companyId: company._id }, body, { new: true }))
