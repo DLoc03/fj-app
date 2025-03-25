@@ -2,19 +2,18 @@ import React, { useEffect, useState, useRef } from "react";
 import "./ProfileContainer.css";
 import { useAuth } from "../../context/AuthContext";
 import { UserUpdate } from "../../services/user.service";
-import { getCompanyById } from "../../services/company.service";
 import { ERROR_CODE, STATUS } from "../../utils/enum";
 
 function ProfileContainer() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, setUser, isAuthenticated } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
   const [formData, setFormData] = useState({
-    email: user?.email || "",
-    name: user?.name || "",
-    phone: user?.phone || "",
+    email: user?.result?.data?.email || "",
+    name: user?.result?.data?.name || "",
+    phone: user?.result?.data?.phone || "",
   });
+  const id = JSON.parse(localStorage.getItem("User"));
 
-  const userData = JSON.parse(localStorage.getItem("User"));
   const nameInputRef = useRef(null);
 
   useEffect(() => {
@@ -36,16 +35,18 @@ function ProfileContainer() {
 
   async function handleUpdateUser() {
     try {
-      const response = await UserUpdate(userData, formData);
+      const response = await UserUpdate(id, formData);
       if (
         response.status === STATUS.DONE &&
         response.result.errCode === ERROR_CODE.DONE
       ) {
         alert("Cập nhật thông tin thành công");
         setIsEdit(false);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+
+        setUser((prevUser) => ({
+          ...prevUser,
+          result: { data: { ...prevUser.result.data, ...formData } },
+        }));
       }
     } catch (error) {
       console.error("Cập nhật thất bại:", error);

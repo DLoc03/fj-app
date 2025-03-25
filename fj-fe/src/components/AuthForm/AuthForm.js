@@ -4,6 +4,7 @@ import { useCustomNavigate } from "../../utils/utils";
 import { UserLogin, UserRegister } from "../../services/user.service";
 import { client_path } from "../../utils/constant";
 import { ERROR_CODE, STATUS } from "../../utils/enum";
+import { getRefreshToken } from "../../api/base.service";
 
 function AuthForm({ type, onSubmit }) {
   const navigate = useCustomNavigate();
@@ -79,7 +80,6 @@ function AuthForm({ type, onSubmit }) {
         );
         setTimeout(() => {
           navigate(client_path.HOME);
-          window.location.reload();
         }, 1000);
       } else if (
         response.status === STATUS.NOT_FOUND ||

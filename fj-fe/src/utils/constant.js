@@ -14,4 +14,5 @@ export const server_path = {
   REGISTER_API: "/auth/register",
   USERINFO: "/auth/me",
   GETCOMPANIES: "/comp",
+  REFRESH_TOKEN_API: "auth/token",
 };
