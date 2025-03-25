@@ -78,6 +78,7 @@ function AuthForm({ type, onSubmit }) {
           "User",
           JSON.stringify(response.result.data.user.id)
         );
+
         setTimeout(() => {
           navigate(client_path.HOME);
         }, 1000);

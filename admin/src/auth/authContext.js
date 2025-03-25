@@ -1,33 +1,31 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { GetUserInfo } from "../services/user.service";
+import { GetUserInfo, UserLogout } from "../services/user.service";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [admin, setAdmin] = useState(null);
-
-  const fetchAdmin = async () => {
-    const adminToken = sessionStorage.getItem("adminToken");
-    if (adminToken) {
-      const adminData = await GetUserInfo();
-      if (adminData) {
-        setAdmin(adminData);
-      }
-    }
-  };
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetchAdmin();
+    const fetchUser = async () => {
+      const adminToken = sessionStorage.getItem("adminToken");
+
+      if (adminToken) {
+        const userData = await GetUserInfo();
+        if (userData) {
+          setUser(userData);
+        }
+      }
+    };
+
+    fetchUser();
   }, []);
 
   useEffect(() => {
-    const handleStorageChange = (event) => {
-      if (event.key === "adminToken") {
-        if (event.newValue) {
-          fetchAdmin();
-        } else {
-          setAdmin(null);
-        }
+    const handleStorageChange = () => {
+      const adminToken = sessionStorage.getItem("adminToken");
+      if (!adminToken) {
+        setUser(null);
       }
     };
 
@@ -37,19 +35,16 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
-  const login = async (token) => {
-    sessionStorage.setItem("adminToken", token);
-    await fetchAdmin();
-  };
-
-  const logout = () => {
+  const logout = async () => {
+    await UserLogout();
     sessionStorage.removeItem("adminToken");
-    setAdmin(null);
+    localStorage.removeItem("User");
+    setUser(null);
   };
 
   return (
     <AuthContext.Provider
-      value={{ admin, isAuthenticated: !!admin, login, logout }}
+      value={{ user, setUser, isAuthenticated: !!user, logout }}
     >
       {children}
     </AuthContext.Provider>

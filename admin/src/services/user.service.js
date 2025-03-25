@@ -1,13 +1,13 @@
+import { server_path } from "../api/path.service";
 import {
   getData,
   postData,
   getDataByToken,
+  getDataByID,
   updateData,
-  getDataById,
   deleteDataById,
+  logout,
 } from "../api/base.service";
-
-import { server_path } from "../api/path.service";
 
 export const GetUsers = async () => {
   return await getData(server_path.GETUSERS);
@@ -26,7 +26,7 @@ export const GetUserInfo = async () => {
 };
 
 export const GetUserByID = async (id) => {
-  return await getDataById(server_path.GETUSERS, id);
+  return await getDataByID(server_path.GETUSERS, id);
 };
 
 export const UserUpdate = async (id, data) => {
@@ -35,4 +35,8 @@ export const UserUpdate = async (id, data) => {
 
 export const UserDelete = async (id) => {
   return await deleteDataById(server_path.GETUSERS, id);
+};
+
+export const UserLogout = async () => {
+  return await logout();
 };

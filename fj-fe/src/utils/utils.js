@@ -8,3 +8,8 @@ export function useCustomNavigate() {
     window.scrollTo(0, 0);
   };
 }
+
+export function formatSalary(salary) {
+  if (!salary) return "";
+  return salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " VND";
+}

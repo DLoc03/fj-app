@@ -1,12 +1,11 @@
 import { Navigate } from "react-router-dom";
-// import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { client_path } from "./constant";
 
 export function ProtectedRoute({ children }) {
-  // const { isAuthenticated } = useAuth();
-  const accessToken = sessionStorage.getItem("accessToken");
+  const { user } = useAuth();
 
-  if (!accessToken) {
+  if (!user || user === null) {
     return <Navigate to={client_path.LOGIN} replace />;
   }
 

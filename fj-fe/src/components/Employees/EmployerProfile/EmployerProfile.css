@@ -9,21 +9,21 @@
 
 .employAvt {
   display: flex;
-  flex: 1;
+  flex: 2;
   justify-content: center;
   width: 100vh;
+  align-items: center;
 }
 
 .employImgAvt {
-  width: 280px;
+  width: 70%;
   border-radius: 50%;
   box-shadow: var(--main-shadow);
   max-width: 100%;
-  height: auto;
 }
 
 .employDetail {
-  flex: 2;
+  flex: 3;
   margin-left: 60px;
   display: flex;
   flex-direction: column;
@@ -42,16 +42,19 @@
   box-sizing: border-box;
   border-radius: 12px;
   box-shadow: var(--main-shadow);
-  max-width: 500px;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .employ-detail p {
   color: white;
-  font-size: clamp(12px, 2vw, 20px);
+  font-size: clamp(12px, 2vw, 18px);
   border-bottom: 1px solid white;
 }
 
-.btn-cv {
+.btn-cv,
+.btn-compInfo {
+  margin-top: 20px;
   width: 200px;
   height: 40px;
   color: white;
@@ -61,4 +64,20 @@
   font-weight: 600;
   box-shadow: var(--main-shadow);
   cursor: pointer;
+}
+
+.btn-compInfo {
+  margin-left: 40px;
+  background-color: var(--main-color);
+}
+
+.detail-recuitment {
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.employ-h2 {
+  color: white;
+  font-size: 20px;
 }

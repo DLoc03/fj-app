@@ -4,6 +4,7 @@ import EmployerBox from "../EmployerBox/EmployerBox";
 import Button from "../../../commons/Button/Button";
 import { client_path } from "../../../utils/constant";
 import { getAllCompanies } from "../../../services/company.service";
+import { getJobs } from "../../../services/job.service";
 
 function EmployerList() {
   const [companies, setCompanies] = useState([]);
@@ -13,9 +14,9 @@ function EmployerList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getAllCompanies();
-        console.log(response.result.data);
+        const response = await getJobs();
         setCompanies(response.result.data);
+        console.log("Company post job data: ", response.result.data);
       } catch (err) {
         setError("Dữ liệu không hợp lệ!");
       } finally {
@@ -25,6 +26,14 @@ function EmployerList() {
 
     fetchData();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchJobList = async () => {
+  //     const response = await getJobs();
+  //     console.log("Job list data: ", response);
+  //   };
+  //   fetchJobList();
+  // }, []);
 
   return (
     <div className="employer-list">
@@ -38,9 +47,11 @@ function EmployerList() {
           companies.map((company, compIndex) => (
             <EmployerBox
               key={compIndex}
-              name={company.name}
-              position={company.position}
-              id={company.id}
+              name={company.company.name}
+              position={company.jobName}
+              quantity={company.quantity}
+              salary={company.salary}
+              id={company._id}
             />
           ))
         ) : (

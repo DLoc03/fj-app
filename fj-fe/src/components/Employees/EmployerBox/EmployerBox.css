@@ -1,6 +1,6 @@
 .employ-box {
   width: 240px;
-  height: 300px;
+  height: 320px;
   cursor: pointer;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
@@ -34,7 +34,7 @@
   flex-direction: column;
   width: 100%;
   background-color: var(--strong-brown);
-  height: 72px;
+  height: 112px;
   align-self: flex-end;
   align-items: center;
   padding: 12px 16px 4px 16px;
@@ -52,11 +52,12 @@
   text-align: center;
 }
 
-.employ-pos {
+.employ-pos,
+.employ-sal {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-top: 4px;
+  margin-top: 8px;
   font-size: 18px;
   flex-wrap: nowrap;
   width: 240px;

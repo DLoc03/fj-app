@@ -19,10 +19,18 @@ function AuthForm() {
         response.result.data.user.role !== "admin"
       ) {
         setMessage("Bạn không có quyền đăng nhập quản trị viên!");
+        return;
       } else if (response.errCode === 2) {
         setMessage("Sai mật khẩu");
+        return;
       } else {
         setMessage("Đăng nhập thành công!");
+        sessionStorage.setItem("adminToken", response.result.data.accessToken);
+        localStorage.setItem(
+          "Admin",
+          JSON.stringify(response.result.data.user.id)
+        );
+
         setTimeout(() => {
           navigate("/dashboard");
           window.location.reload();

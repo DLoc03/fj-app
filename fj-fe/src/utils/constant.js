@@ -7,6 +7,7 @@ export const client_path = {
   RECRUITMENT: "/recruitment",
   LOGIN: "/login",
   REGISTER: "/register",
+  COMPANY: "/company",
 };
 
 export const server_path = {
@@ -15,4 +16,5 @@ export const server_path = {
   USERINFO: "/auth/me",
   GETCOMPANIES: "/comp",
   REFRESH_TOKEN_API: "auth/token",
+  JOB: "/job",
 };

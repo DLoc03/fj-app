@@ -1,13 +1,11 @@
-import { getAccessToken } from "../api/base.service";
-
 const API_URL = process.env.REACT_APP_API_URL;
 
 export { API_URL };
 
-export const headersAuth = async () => {
-  let token = getAccessToken();
-  return {
-    Authorization: token ? `Bearer ${token}` : "",
-    "Content-Type": "application/json",
-  };
+export const getAccessToken = () =>
+  sessionStorage.getItem("accessToken") || null;
+
+export const headersAuth = () => {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
 };

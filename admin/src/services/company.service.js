@@ -1,11 +1,4 @@
-import {
-  getData,
-  postData,
-  getDataByToken,
-  updateData,
-  getDataById,
-  deleteDataById,
-} from "../api/base.service";
+import { getData, getDataByID, deleteDataById } from "../api/base.service";
 
 import { server_path } from "../api/path.service";
 
@@ -14,7 +7,7 @@ export const getAllCompanies = async () => {
 };
 
 export const getCompanyById = async (id) => {
-  return await getDataById(server_path.GETCOMPANIES, id);
+  return await getDataByID(server_path.GETCOMPANIES, id);
 };
 
 export const deleteCompanyById = async (id) => {

@@ -12,9 +12,9 @@ function SideBarFJ() {
       </div>
       <div className="sidebar-item">
         <NavLink to={client_path.ACCOUNT}>Hồ sơ cá nhân</NavLink>
+        <NavLink to={client_path.ACCOUNT}>Thông tin cơ sở</NavLink>
         <NavLink to={client_path.CVMANAGE}>Quản lý CV</NavLink>
         <NavLink to={client_path.RECRUITMENT}>Tuyển dụng nhân sự</NavLink>
-        <NavLink to={client_path.ACCOUNT}>Thông tin cơ sở</NavLink>
       </div>
     </div>
   );

@@ -7,11 +7,11 @@ import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import QuizIcon from "@mui/icons-material/Quiz";
 import StoreIcon from "@mui/icons-material/Store";
 import { useAuth } from "../../auth/authContext";
+import { GetUserInfo } from "../../services/user.service";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -43,14 +43,20 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-  const { admin } = useAuth();
   const [adminName, setAdminName] = useState("Đang tải...");
 
   useEffect(() => {
-    if (admin) {
-      setAdminName(admin.result.data.name);
-    }
-  }, [admin]);
+    const fetchAdmin = async () => {
+      try {
+        const response = await GetUserInfo();
+        const adName = response.result.data.name;
+        setAdminName(adName);
+      } catch (error) {
+        console.error("Đã có lỗi xảy ra!");
+      }
+    };
+    fetchAdmin();
+  }, []);
 
   return (
     <Box
