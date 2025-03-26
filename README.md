@@ -38,7 +38,7 @@
     npm i
     npm run dev
     ```
-        or
+  or
 
     ```
     yarn
