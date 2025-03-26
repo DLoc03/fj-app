@@ -11,8 +11,10 @@
         npm start
         ```
   or
+  
         ```
         npm install
+  
         npm start
         ```
 ## Server
