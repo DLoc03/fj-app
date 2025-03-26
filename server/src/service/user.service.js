@@ -1,4 +1,7 @@
+import Company from "../model/company.js";
+import Job from "../model/job.js";
 import { User } from "../model/user.js";
+import { JobResponse } from "../response/job.response.js";
 import { MasterResponse } from "../response/master.response.js";
 import { UserResponse } from "../response/user.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
@@ -34,9 +37,36 @@ const updateUserById = async (id, data) => {
     return MasterResponse({ message: "Update successful", data: UserResponse.UserLogin(newData) })
 }
 
+const getUserWithComp = async (id) => {
+    const user = await User.findById(id).lean()
+    const company = await Company.findOne({ recruiterId: user._id }).lean()
+    if (!company) return MasterResponse({
+        status: STATUS.NOT_FOUND,
+        errCode: ERROR_CODE.BAD_REQUEST,
+        message: 'Company not found'
+    })
+    const jobs = await Job.find({ companyId: company._id }).lean()
+    if (!company) return MasterResponse({
+        status: STATUS.NOT_FOUND,
+        errCode: ERROR_CODE.BAD_REQUEST,
+        message: 'Job not found'
+    })
+    const validJobs = jobs.map(j => JobResponse.Jobs(j))
+    const { recruiterId, ...data } = company
+    const validUser = UserResponse.UserLogin(user)
+    const result = {
+        ...validUser,
+        company: data,
+        jobList: validJobs
+    }
+    return MasterResponse({ message: "OK", data: result })
+
+}
+
 export const userService = {
     getUserList,
     getUserById,
     deleteUserById,
-    updateUserById
+    updateUserById,
+    getUserWithComp
 }

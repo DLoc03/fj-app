@@ -7,7 +7,6 @@ import morgan from 'morgan'
 import cors from 'cors'
 import { corsOption } from './config/cors.js'
 import cookieParser from 'cookie-parser'
-import { Server } from 'socket.io'
 
 const START_SERVER = () => {
     const app = express()

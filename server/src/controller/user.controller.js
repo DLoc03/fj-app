@@ -65,11 +65,21 @@ const deleteAvatarById = async (req, res) => {
     }
 }
 
+const getUserWithComp = async (req, res) => {
+    try {
+        const response = await userService.getUserWithComp(req.user.id)
+        return res.status(200).json(response)
+    } catch (error) {
+        return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
+    }
+}
+
 export const userController = {
     getUsers,
     getUserById,
     deleteUserById,
     updateUserById,
     uploadAvatarById,
-    deleteAvatarById
+    deleteAvatarById,
+    getUserWithComp
 }
