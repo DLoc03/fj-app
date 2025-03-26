@@ -22,7 +22,7 @@ export const verifyToken = (req, res, next) => {
 
 export const authorizeAdmin = (...roles) => (req, res, next) => {
   if (!roles.includes(req.user.role)) {
-    return res.status(401).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.UNAUTHORIZED, message: "Unauthorized" }));
+    return res.status(403).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.UNAUTHORIZED, message: "Unauthorized" }));
   }
   next();
 };

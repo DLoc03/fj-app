@@ -6,10 +6,9 @@ const Router = express.Router()
 
 Router.route('/')
     .post(verifyToken, authorizeAdmin('user'), companyController.postCompany)
+    .get(companyController.getCompanies)
 
 Router.route('/:id')
     .get(companyController.getCompanyById)
 
-Router.route('/')
-    .get(companyController.getCompanies)
 export const companyRoute = Router
