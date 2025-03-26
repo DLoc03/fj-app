@@ -15,3 +15,7 @@ export const getAllCompanies = async () => {
 export const getCompanyById = async (id) => {
   return await getDataByID(server_path.GETCOMPANIES, id);
 };
+
+export const postComopany = async (data) => {
+  return await postData(server_path.GETCOMPANIES, data, true);
+};

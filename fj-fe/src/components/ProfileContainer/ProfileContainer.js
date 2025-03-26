@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./ProfileContainer.css";
 import { useAuth } from "../../context/AuthContext";
-import { UserUpdate } from "../../services/user.service";
 import { ERROR_CODE, STATUS } from "../../utils/enum";
+import { UserUpdate, UploadAvatarUser } from "../../services/user.service";
 
 function ProfileContainer() {
   const { user, setUser, isAuthenticated } = useAuth();
@@ -11,17 +11,19 @@ function ProfileContainer() {
     email: user?.result?.data?.email || "",
     name: user?.result?.data?.name || "",
     phone: user?.result?.data?.phone || "",
+    avatar: user?.result?.data?.avatar || "",
   });
   const id = JSON.parse(localStorage.getItem("User"));
 
   const nameInputRef = useRef(null);
 
   useEffect(() => {
-    if (user) {
+    if (user?.result?.data) {
       setFormData({
-        email: user.result.data.email,
-        name: user.result.data.name,
-        phone: user.result.data.phone,
+        email: user.result.data.email || "",
+        name: user.result.data.name || "",
+        phone: user.result.data.phone || "",
+        avatar: user.result.data.avatar || "",
       });
     }
   }, [user]);
@@ -53,8 +55,27 @@ function ProfileContainer() {
     }
   }
 
-  function handleChange(e) {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  async function handleUploadAvatar(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("avatar", file);
+
+      const response = await UploadAvatarUser(id, formData);
+      if (response.status === STATUS.DONE) {
+        alert("Cập nhật ảnh đại diện thành công!");
+        setUser((prevUser) => ({
+          ...prevUser,
+          result: {
+            data: { ...prevUser.result.data, avatar: response.data.url },
+          },
+        }));
+      }
+    } catch (error) {
+      console.error("Lỗi upload ảnh:", error);
+    }
   }
 
   if (!isAuthenticated) {
@@ -69,8 +90,27 @@ function ProfileContainer() {
     <div className="profile-container">
       <div className="user-container">
         <div className="user-avt">
-          <div className="avt-profile"></div>
-          <button className="btn-upload">Cập nhật ảnh đại diện cơ sở</button>
+          <div
+            className="avt-profile"
+            style={{
+              backgroundImage: `url(${formData.avatar || ""})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          ></div>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleUploadAvatar}
+            style={{ display: "none" }}
+            id="avatarInput"
+          />
+          <button
+            className="btn-upload"
+            onClick={() => document.getElementById("avatarInput").click()}
+          >
+            Cập nhật ảnh đại diện cơ sở
+          </button>
         </div>
         <div className="user-info">
           <h1>Thông tin người đại diện đăng ký cơ sở</h1>
@@ -85,7 +125,9 @@ function ProfileContainer() {
                     type="text"
                     name="name"
                     value={formData.name}
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
                     disabled={!isEdit}
                     placeholder="Tối đa 18 ký tự"
                     maxLength={18}
@@ -100,7 +142,9 @@ function ProfileContainer() {
                     type="text"
                     name="email"
                     value={formData.email}
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
                     disabled={!isEdit}
                   />
                 </td>
@@ -113,7 +157,9 @@ function ProfileContainer() {
                     type="text"
                     name="phone"
                     value={formData.phone}
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      setFormData({ ...formData, phone: e.target.value })
+                    }
                     disabled={!isEdit}
                   />
                 </td>

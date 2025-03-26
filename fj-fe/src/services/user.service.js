@@ -4,6 +4,8 @@ import {
   getDataByToken,
   updateData,
   logout,
+  getDataByID,
+  uploadImage,
 } from "../api/base.service";
 
 export const UserLogin = async (data) => {
@@ -25,4 +27,12 @@ export const UserUpdate = async (id, data) => {
 
 export const UserLogout = async () => {
   return await logout();
+};
+
+export const GetCompanyByUser = async () => {
+  return getDataByToken(server_path.USER_COMPANY);
+};
+
+export const UploadAvatarUser = async (id, data) => {
+  return uploadImage(id, data);
 };

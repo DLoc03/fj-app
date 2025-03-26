@@ -34,7 +34,8 @@
 .employ-name {
   color: var(--strong-brown);
   font-weight: 600;
-  font-size: clamp(16px, 2vw, 28px);
+  font-size: 32px;
+  /* font-size: clamp(16px, 2vw, 28px); */
 }
 
 .employ-detail {
@@ -45,7 +46,7 @@
   box-shadow: var(--main-shadow);
   width: 60%;
   margin-top: 20px;
-  text-align: center;
+  text-align: start;
 }
 
 .employ-detail p {

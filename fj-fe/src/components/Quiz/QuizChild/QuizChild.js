@@ -27,7 +27,7 @@ function QuizChild({ id, onDelete }) {
           ></textarea>
         </div>
       </div>
-      <button className="delete-quiz" onClick={handleDeleteQuiz}>
+      <button className="delete-btn" onClick={handleDeleteQuiz}>
         Xoá câu hỏi
       </button>
     </div>

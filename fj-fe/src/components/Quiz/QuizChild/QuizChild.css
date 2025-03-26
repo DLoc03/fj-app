@@ -42,7 +42,7 @@
   outline: none;
 }
 
-.delete-quiz {
+.delete-btn {
   color: white;
   border: 0;
   border-radius: 4px;
@@ -51,5 +51,5 @@
   cursor: pointer;
   height: 52px;
   align-self: center;
-  background-color: rgb(185, 0, 0);
+  background-color: var(--delete-color);
 }

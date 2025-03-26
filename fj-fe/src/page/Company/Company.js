@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import "./Company.css";
 import CompanyInfo from "../../components/CompanyInfo/CompanyInfo";
-import { getAllCompanies } from "../../services/company.service";
 
 function Company() {
-  const [company, setCompany] = useState();
-  const userId = localStorage.getItem("User");
   return (
-    <div>
+    <div className="companyContainer">
       <CompanyInfo />
     </div>
   );

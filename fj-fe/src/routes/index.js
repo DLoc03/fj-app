@@ -52,7 +52,7 @@ export const routes = [
     protected: true,
   },
   {
-    path: `${client_path.COMPANY}/:id`,
+    path: client_path.COMPANY,
     page: Company,
   },
   {
