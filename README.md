@@ -21,7 +21,7 @@
 ## Server
 ### 1. Configuration your environment
 - Install your environment with node version >= 14.0.0
-- Define your .env file by .env.example: 
+- Define your ```.env``` file by .env.example: 
     ```
     APP_HOST=
     APP_PORT=
