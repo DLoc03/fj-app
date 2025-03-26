@@ -1,9 +1,11 @@
 # How to use Documentation
+> [!NOTE]
+> © Copyright By Nghia Le Tuan & Lord Nguyen Duc Dai
 ## Client
-### 1. Config your environment
+### 1. Configuration your environment
 - Install your environment with node version >= 14.0.0
 - Define your .env file by .env.example
-### 2. Config your environment
+### 2. Commands
 - Run your client by commands: 
   ```
   cd fj-fe
@@ -17,7 +19,7 @@
    npm start
    ```
 ## Server
-### 1. Config your environment
+### 1. Configuration your environment
 - Install your environment with node version >= 14.0.0
 - Define your .env file by .env.example: 
     ```
@@ -32,7 +34,7 @@
     CLOUDINARY_API_KEY=
     CLOUDINARY_SECRET=
     ```
-### 2. Config your environment
+### 2. Commands
 - Run your server by commands:
     ```
     cd server
@@ -45,3 +47,4 @@
     yarn
     yarn dev
     ```
+![image](https://github.com/user-attachments/assets/d1d08dea-c212-4ceb-ae58-ccde61eaecf4)
