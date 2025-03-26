@@ -45,3 +45,5 @@
     yarn
     yarn dev
     ```
+> [!NOTE]
+> © Copyright By Nghia Le Tuan & Lord Nguyen Duc Dai
