@@ -4,7 +4,6 @@ import { questionController } from "../../controller/question.controller.js";
 const Route = express.Router()
 Route.route('/:id')
     .post(verifyToken, authorizeAdmin('user'), questionController.postQuestion)
-Route.route('/:id')
     .get(questionController.getQuestWithJob)
 
 export const questionRoute = Route

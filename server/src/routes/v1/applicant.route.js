@@ -6,8 +6,6 @@ const Router = express.Router()
 
 Router.route('/:id')
     .post(applicantController.postApplicant)
-
-Router.route('/:id')
     .get(applicantController.getApplicantWithResult)
 
 
