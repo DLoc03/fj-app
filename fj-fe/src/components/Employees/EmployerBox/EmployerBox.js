@@ -5,11 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { client_path } from "../../../utils/constant";
 import { formatSalary } from "../../../utils/utils";
 
-function EmployerBox({ name, position, quantity, salary, id }) {
+function EmployerBox({
+  name,
+  position,
+  quantity,
+  salary,
+  id,
+  companyID,
+  recruiterID,
+}) {
   const navigate = useNavigate();
-  function handleNavigateEmpProfile(path) {
-    navigate(path);
-  }
+  const handleNavigateEmpProfile = () => {
+    navigate(`${client_path.CANDIDATE}/${id}`, {
+      state: { name, position, quantity, salary, companyID, recruiterID },
+    });
+  };
   return (
     <div
       className="employ-box"

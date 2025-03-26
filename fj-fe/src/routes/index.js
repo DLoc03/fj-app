@@ -7,7 +7,9 @@ import Register from "../page/Register/Register";
 import Account from "../page/Account/Account";
 import CVManage from "../page/CVManage/CVManage";
 import Recruitment from "../page/Recruitment/Recruitment";
+import Test from "../page/Test/Test";
 import { client_path, server_path } from "../utils/constant";
+import Company from "../page/Company/Company";
 
 export const routes = [
   {
@@ -48,5 +50,13 @@ export const routes = [
     path: client_path.RECRUITMENT,
     page: Recruitment,
     protected: true,
+  },
+  {
+    path: `${client_path.COMPANY}/:id`,
+    page: Company,
+  },
+  {
+    path: client_path.TEST,
+    page: Test,
   },
 ];

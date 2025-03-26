@@ -8,6 +8,7 @@ export const client_path = {
   LOGIN: "/login",
   REGISTER: "/register",
   COMPANY: "/company",
+  TEST: "/test",
 };
 
 export const server_path = {
@@ -17,4 +18,5 @@ export const server_path = {
   GETCOMPANIES: "/comp",
   REFRESH_TOKEN_API: "auth/token",
   JOB: "/job",
+  QUESTION: "/question",
 };

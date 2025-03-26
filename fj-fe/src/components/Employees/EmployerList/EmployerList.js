@@ -52,6 +52,8 @@ function EmployerList() {
               quantity={company.quantity}
               salary={company.salary}
               id={company._id}
+              companyID={company.company.id}
+              recruiterID={company.company.recruiterId}
             />
           ))
         ) : (
