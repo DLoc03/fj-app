@@ -40,6 +40,6 @@
     ```
 or
     ```
-    yarn
+    yarn\
     yarn dev
     ```
