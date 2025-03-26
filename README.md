@@ -1,4 +1,6 @@
 # How to use Documentation
+> [!NOTE]
+> © Copyright By Nghia Le Tuan & Lord Nguyen Duc Dai
 ## Client
 ### 1. Config your environment
 - Install your environment with node version >= 14.0.0
@@ -45,5 +47,3 @@
     yarn
     yarn dev
     ```
-> [!NOTE]
-> © Copyright By Nghia Le Tuan & Lord Nguyen Duc Dai
