@@ -5,18 +5,17 @@
 - Define your .env file by .env.example
 ### 2. Config your environment
 - Run your client by commands: 
-        ```
-        cd fj-fe
-        npm i
-        npm start
-        ```
+  ```
+  cd fj-fe
+  npm i
+  npm start
+  ```
   or
+   ```
+   npm install
   
-        ```
-        npm install
-  
-        npm start
-        ```
+   npm start
+   ```
 ## Server
 ### 1. Config your environment
 - Install your environment with node version >= 14.0.0
