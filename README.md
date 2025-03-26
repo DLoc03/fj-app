@@ -39,7 +39,9 @@
     npm run dev
     ```
 or
+
     ```
-    yarn\
+    yarn
+    
     yarn dev
     ```
