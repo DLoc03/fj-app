@@ -14,6 +14,8 @@ function DefaultComponent({ children }) {
     client_path.ACCOUNT,
     client_path.CVMANAGE,
     client_path.RECRUITMENT,
+    client_path.COMPANY,
+    client_path.ADDJOB,
   ];
   const showSidebar = pathsWithSidebar.includes(location.pathname);
   const getBanner = () => {

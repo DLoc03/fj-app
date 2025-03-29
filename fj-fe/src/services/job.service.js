@@ -8,3 +8,7 @@ export const getJobs = async () => {
 export const getJobById = async (id) => {
   return await getDataByID(server_path.JOB, id);
 };
+
+export const postJob = async (data) => {
+  return await postData(server_path.JOB, data);
+};

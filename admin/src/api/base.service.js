@@ -78,7 +78,6 @@ export const updateData = async (id, data) => {
   try {
     const headers = headersAuth();
     const res = await api.put(`/user/${id}`, data, { headers });
-    console.log("Data updated:", res);
     return res.data;
   } catch (error) {
     console.error(

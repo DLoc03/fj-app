@@ -51,7 +51,6 @@ export const getDataByToken = async (path) => {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     };
-
     const res = await api.get(`${path}`, { headers });
     return res.data || null;
   } catch (error) {
@@ -83,7 +82,6 @@ export const updateData = async (id, data) => {
   try {
     const headers = headersAuth();
     const res = await api.put(`/user/${id}`, data, { headers });
-    console.log("Data updated:", res);
     return res.data;
   } catch (error) {
     console.error(
@@ -98,6 +96,20 @@ export const logout = async () => {
   try {
     const headers = headersAuth();
     const res = await api.delete(`auth/logout`, { headers });
+    return res.data;
+  } catch (error) {
+    console.error(
+      "Error when updating data:",
+      error.response?.data || error.message
+    );
+    return null;
+  }
+};
+
+export const uploadImage = async (id, data) => {
+  try {
+    const headers = headersAuth();
+    const res = await api.post(`user/${id}/avatar`, data, { headers });
     return res.data;
   } catch (error) {
     console.error(

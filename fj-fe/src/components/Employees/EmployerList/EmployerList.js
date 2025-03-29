@@ -16,7 +16,6 @@ function EmployerList() {
       try {
         const response = await getJobs();
         setCompanies(response.result.data);
-        console.log("Company post job data: ", response.result.data);
       } catch (err) {
         setError("Dữ liệu không hợp lệ!");
       } finally {
@@ -52,6 +51,8 @@ function EmployerList() {
               quantity={company.quantity}
               salary={company.salary}
               id={company._id}
+              companyID={company.company.id}
+              recruiterID={company.company.recruiterId}
             />
           ))
         ) : (

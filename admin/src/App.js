@@ -24,7 +24,6 @@ function App() {
   const [isSidebar, setIsSidebar] = useState(true);
   const location = useLocation();
 
-  // Kiểm tra xem có phải trang login không
   const isLoginPage = location.pathname === "/login";
 
   return (

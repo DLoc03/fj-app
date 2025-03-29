@@ -107,7 +107,6 @@ function AuthForm({ type, onSubmit }) {
         name,
         phone,
       });
-      console.log("Response register: ", response);
       if (response.result.errCode === ERROR_CODE.BAD_REQUEST) {
         setMessage("Thông tin đã có tài khoản đăng ký! Vui lòng thử lại!");
       } else {
