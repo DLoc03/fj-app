@@ -12,15 +12,3 @@ export const STATUS = {
     FAILED: 'Failed',
     NOT_FOUND: "Not found"
 }
-
-
-export const QUEUE_NAME = {
-    AUDIT: 'auditlogs',
-    SEARCH: 'searchlogs'
-}
-
-export const RABBIT_EVENTS = {
-    ERROR: 'error',
-    CLOSE: 'close',
-
-}
