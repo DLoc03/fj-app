@@ -1,15 +1,24 @@
+import { DateFormat } from "../utils/validation.js";
+
 export const UserResponse = {
-    UserLogin: ({ _id, email, name, phone, role }) => ({
+    UserLogin: ({ _id, email, name, phone, isDestroy, role, createdAt, updatedAt }) => ({
         id: _id,
         email,
         name,
         phone,
-        role
+        role,
+        isDestroy,
+        createdAt: DateFormat(createdAt),
+        updatedAt: DateFormat(updatedAt)
     }),
 
-    UserInfo: ({ email, name, phone }) => ({
+    UserInfo: ({ _id, email, name, phone, isDestroy, createdAt, updatedAt }) => ({
+        id: _id,
         email,
         name,
-        phone
+        phone,
+        isDestroy,
+        createdAt: DateFormat(createdAt),
+        updatedAt: DateFormat(updatedAt)
     })
 }

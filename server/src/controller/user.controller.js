@@ -1,3 +1,4 @@
+import redis from "../config/redis.config.js"
 import { MasterResponse } from "../response/master.response.js"
 import { userService } from "../service/user.service.js"
 import { ERROR_CODE, STATUS } from "../utils/enum.js"
@@ -14,10 +15,7 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res) => {
     try {
         const user = await userService.getUserById(req.params.id)
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' })
-        }
-        return res.status(200).json({ user })
+        return res.status(200).json(user)
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
     }
@@ -26,8 +24,7 @@ const getUserById = async (req, res) => {
 const deleteUserById = async (req, res) => {
     try {
         const result = await userService.deleteUserById(req.params.id);
-        if (result.errCode != 1)
-            return res.status(200).json(result);
+        await redis.del('/api/v1/user/:{}')
         return res.status(200).json(result)
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
@@ -41,6 +38,7 @@ const updateUserById = async (req, res) => {
     }
     try {
         const result = await userService.updateUserById(req.user.id, data);
+        await redis.del('/api/v1/user/:{}')
         return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
@@ -50,6 +48,7 @@ const updateUserById = async (req, res) => {
 const uploadAvatarById = async (req, res) => {
     try {
         const response = await userService.updateUserById(req.user.id, { avatar: req.file.path })
+        await redis.del('/api/v1/user/:{}')
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
@@ -59,20 +58,13 @@ const uploadAvatarById = async (req, res) => {
 const deleteAvatarById = async (req, res) => {
     try {
         const response = await userService.updateUserById(req.user.id, { avatar: null })
+        await redis.del('/api/v1/user/:{}')
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
     }
 }
 
-const getUserWithComp = async (req, res) => {
-    try {
-        const response = await userService.getUserWithComp(req.user.id)
-        return res.status(200).json(response)
-    } catch (error) {
-        return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
-    }
-}
 
 export const userController = {
     getUsers,
@@ -81,5 +73,4 @@ export const userController = {
     updateUserById,
     uploadAvatarById,
     deleteAvatarById,
-    getUserWithComp
 }

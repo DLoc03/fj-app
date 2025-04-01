@@ -5,7 +5,8 @@ const ApplicantSchema = new mongoose.Schema({
     name: { type: String, required: true },
     phone: { type: String, required: true },
     cv: { type: String, required: true },
-    jobId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Job' }
+    jobId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Job' },
+    isDestroy: { type: Boolean, default: false }
 }, { timestamps: true })
 const Applicant = mongoose.model('Applicant', ApplicantSchema)
 export default Applicant

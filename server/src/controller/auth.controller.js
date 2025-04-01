@@ -1,12 +1,14 @@
 import { authService } from '../service/auth.service.js'
 import { userService } from '../service/user.service.js'
 import { MasterResponse } from '../response/master.response.js'
+import redis from '../config/redis.config.js'
 import 'dotenv/config'
 import { ERROR_CODE, STATUS } from '../utils/enum.js'
 const registerUser = async (req, res) => {
     const { email, password, name, phone } = req.body
     try {
         const result = await authService.register({ email, password, name, phone })
+        await redis.del('/api/v1/user/:{}')
         return res.status(200).json(result)
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))
@@ -63,9 +65,6 @@ export const logout = async (req, res) => {
 export const getMe = async (req, res) => {
     try {
         const response = await userService.getUserById(req.user.id);
-        if (response.errCode === 1) {
-            return res.status(200).json(response);
-        }
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))

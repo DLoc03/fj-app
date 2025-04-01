@@ -3,7 +3,6 @@ import Job from '../model/job.js'
 import Question from '../model/question.js'
 import { MasterResponse } from '../response/master.response.js'
 import { ERROR_CODE, STATUS } from '../utils/enum.js'
-import { ApplicantResponse } from '../response/applicant.response.js'
 import Answer from '../model/answer.js'
 
 const postApplicant = async (jobId, data) => {

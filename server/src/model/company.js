@@ -7,7 +7,9 @@ const CompanySchema = new mongoose.Schema({
     dateOfEstablishment: { type: mongoose.Schema.Types.Date },
     address: { type: String, required: true },
     status: { type: String, enum: ['Pending', 'Authenticated'], default: 'Pending', required: true },
-    avatar: { type: String, default: null }
+    avatar: { type: String, default: null },
+    isDestroy: { type: Boolean, default: false }
+
 },
     { timestamps: true }
 )

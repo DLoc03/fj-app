@@ -38,17 +38,14 @@ export const auditLogger = async (req, res, next) => {
             requestParams: req.params || {},
             requestQuery: req.query || null,
             requestData: req.body ? omitSensitiveData(req.body) : null,
-            responseStatus: req.statusCode,
+            responseStatus: res.statusCode,
             ipAddress: req.ip,
             userAgent: req.headers['user-agent']
         }
-        // console.log(logData);
-
         const channel = getChannel(QUEUE_NAME.AUDIT)
         if (channel) {
             try {
                 channel.sendToQueue(QUEUE_NAME.AUDIT, Buffer.from(JSON.stringify(logData)), { persistent: true })
-                // console.log(`Audit log sent to RabbitMQ: ${logData.action}`);
             } catch (error) {
                 console.error(`Some thing went wrong: ${error}`);
             }
