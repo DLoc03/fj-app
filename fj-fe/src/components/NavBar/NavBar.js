@@ -16,23 +16,39 @@ function NavBar() {
   const [token, setToken] = useState(sessionStorage.getItem("accessToken"));
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
+    const fetchUser = async () => {
+      try {
+        const userInfo = await GetUserInfo();
+        if (userInfo && userInfo.result && userInfo.result.data) {
+          setUser(userInfo);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin người dùng:", error);
+        setUser(null);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+
+    fetchUser();
+
+    const tokenInterval = setInterval(() => {
+      const newToken = sessionStorage.getItem("accessToken");
+      if (newToken !== token) {
+        setToken(newToken);
+        fetchUser();
+      }
+    }, 1000);
+
+    return () => clearInterval(tokenInterval);
+  }, [token]);
 
   useEffect(() => {
     const fetchUser = async () => {
       const userInfo = await GetUserInfo();
       if (userInfo) {
         setUser(userInfo);
-      }
+      } else setUser(null);
     };
 
     fetchUser();
