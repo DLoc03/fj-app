@@ -5,7 +5,8 @@ import { ERROR_CODE, STATUS } from "../utils/enum.js"
 
 const getUsers = async (req, res) => {
     try {
-        const list = await userService.getUserList()
+        const isDestroy = req.query.isDestroy ? req.query.isDestroy === "true" : null;
+        const list = await userService.getUserList(isDestroy)
         return res.status(200).json(list)
     } catch (error) {
         return res.status(500).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.FAILED, message: error.message }))

@@ -32,7 +32,8 @@ const updateJobById = async (req, res) => {
 
 const getJobs = async (req, res) => {
     try {
-        const response = await jobService.getJobs()
+        const isDestroy = req.query.isDestroy ? req.query.isDestroy === "true" : null;
+        const response = await jobService.getJobs(isDestroy)
         return res.status(200).json(response)
     } catch (error) {
         return res.status(500).json(MasterResponse({ errCode: ERROR_CODE.FAILED, message: error.message }));
