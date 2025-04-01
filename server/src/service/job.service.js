@@ -40,13 +40,13 @@ const updateJobById = async (userId, body) => {
     const { companyId, ...data } = validJob
     const result = {
         ...data,
-        // company: CompanyResponse.Companies(company)
     }
     return MasterResponse({ status: STATUS.DONE, message: 'You were upload new job successfully', data: result })
 }
 
-const getJobs = async () => {
-    const jobs = await Job.find().lean()
+const getJobs = async (isDestroy) => {
+    const filter = isDestroy === null ? { isDestroy: false } : { isDestroy }
+    const jobs = await Job.find(filter).lean()
     const companies = await Company.find().lean()
     const result = jobs.map(({ companyId, ...data }) => ({
         ...data,
