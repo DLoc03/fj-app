@@ -1,18 +1,27 @@
+import { DateFormat } from "../utils/validation.js";
+
 export const CompanyResponse = {
-    CompanyFound: ({ _id, name, description, recruiterId, dateOfEstablishment, address, status, jobList }) => ({
+    CompanyFound: ({ _id, name, description, recruiterId, dateOfEstablishment, address, status, isDestroy, createdAt, updatedAt }) => ({
         id: _id,
         name,
         description,
         recruiterId,
-        dateOfEstablishment,
+        DOE: DateFormat(dateOfEstablishment),
         address,
         status,
+        isDestroy,
+        createdAt: DateFormat(createdAt),
+        updatedAt: DateFormat(createdAt)
     }),
 
-    Companies: ({ _id, name, description, recruiterId }) => ({
+    Companies: ({ _id, name, description, recruiterId, status, isDestroy, createdAt, updatedAt }) => ({
         id: _id,
         name,
         description,
-        recruiterId
+        recruiterId,
+        status,
+        isDestroy,
+        createdAt: DateFormat(createdAt),
+        updatedAt: DateFormat(updatedAt)
     })
 }

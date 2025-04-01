@@ -1,6 +1,5 @@
 import Company from "../model/company.js"
 import Job from "../model/job.js"
-import Question from "../model/question.js"
 import { CompanyResponse } from "../response/company.response.js"
 import { JobResponse } from "../response/job.response.js"
 import { MasterResponse } from "../response/master.response.js"
@@ -41,7 +40,7 @@ const updateJobById = async (userId, body) => {
     const { companyId, ...data } = validJob
     const result = {
         ...data,
-        company: CompanyResponse.Companies(company)
+        // company: CompanyResponse.Companies(company)
     }
     return MasterResponse({ status: STATUS.DONE, message: 'You were upload new job successfully', data: result })
 }

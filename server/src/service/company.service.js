@@ -2,25 +2,19 @@ import Company from "../model/company.js";
 import { CompanyResponse } from "../response/company.response.js";
 import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
-import { User } from "../model/user.js";
+import User from "../model/user.js";
 import { UserResponse } from "../response/user.response.js";
 import Job from "../model/job.js";
 const postCompany = async (id, data) => {
   const exitedComp = await Company.findOne({ recruiterId: id }).lean();
   if (exitedComp)
-    return MasterResponse({
-      errCode: ERROR_CODE.BAD_REQUEST,
-      message: "You're already registered a company",
-    });
+    return MasterResponse({ errCode: ERROR_CODE.BAD_REQUEST, message: "You're already registered a company", });
   const newComp = new Company({
     ...data,
     recruiterId: id,
   });
   await newComp.save();
-  return MasterResponse({
-    message: "Company registered was succeed",
-    data: CompanyResponse.CompanyFound(newComp),
-  });
+  return MasterResponse({ message: "Company registered was succeed", data: CompanyResponse.CompanyFound(newComp) });
 };
 
 const getCompany = async (id) => {
@@ -44,8 +38,8 @@ const getCompany = async (id) => {
   return MasterResponse({ data: result });
 };
 
-const getCompanies = async () => {
-  const companies = await Company.find().lean();
+const getCompanies = async (query) => {
+  const companies = await Company.find({ isDestroy: query || false }).lean()
   const companiesInfo = companies.map((item) =>
     CompanyResponse.CompanyFound(item)
   );
@@ -54,15 +48,24 @@ const getCompanies = async () => {
   const companyWithUser = companiesInfo.map(({ recruiterId, ...company }) => ({
     ...company,
     recruiter:
-      usersInfo.find((user) => user.id.toString() === recruiterId.toString()) ||
-      null,
+      usersInfo.find((user) => user.id.toString() === recruiterId.toString()) || null
   }));
 
   return MasterResponse({ data: [...companyWithUser] });
 };
 
+const updateCompany = async (id, data) => {
+  const company = await Company.findOne({ recruiterId: id }).lean()
+  if (!company) {
+    return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST, message: "Company not found" })
+  }
+  const newData = await Company.findOneAndUpdate(company._id, data, { new: true })
+  return MasterResponse({ status: STATUS.CREATED, data: CompanyResponse })
+}
+
 export const companyService = {
   postCompany,
   getCompany,
   getCompanies,
+  updateCompany
 };

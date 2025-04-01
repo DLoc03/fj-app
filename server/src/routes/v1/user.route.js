@@ -2,14 +2,12 @@ import express from "express";
 import { verifyToken, authorizeAdmin } from "../../middleware/authToken.js";
 import { userController } from "../../controller/user.controller.js";
 import { upload } from '../../config/cloudinary.js'
+import cacheMiddleware from "../../middleware/cache.middleware.js";
 
 const Router = express.Router();
 
 Router.route("/")
-  .get(verifyToken, authorizeAdmin('admin'), userController.getUsers)
-
-Router.route('/company')
-  .get(verifyToken, authorizeAdmin('user'), userController.getUserWithComp)
+  .get(verifyToken, authorizeAdmin('admin'), cacheMiddleware, userController.getUsers)
 
 Router.route("/:id")
   .get(verifyToken, authorizeAdmin('admin'), userController.getUserById)
