@@ -1,15 +1,15 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
-import bannerImage from "../../assets/Banner.jpg";
-import PATHS from "../../routes/path";
+
+import bannerAbout from "../../../assets/Banner-About.jpg";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 function Banner() {
   return (
     <Box
       sx={{
-        height: "100vh",
-        width: "100%",
-        backgroundImage: `url(${bannerImage})`,
+        height: "400px",
+        backgroundImage: `url(${bannerAbout})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -38,17 +38,8 @@ function Banner() {
           mb={4}
           sx={{ fontSize: { xs: "16px", md: "32px" } }}
         >
-          Giải pháp tuyển dụng thông minh cho đội ngũ nhân sự
+          Đồng hành cùng tìm đồng đội sáng giá
         </Typography>
-        <Button
-          variant="outlined"
-          color="white"
-          onClick={() => {
-            window.location.href = PATHS.ABOUT;
-          }}
-        >
-          Tìm hiểu thêm
-        </Button>
       </Box>
     </Box>
   );

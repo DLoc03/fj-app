@@ -11,11 +11,18 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import PATHS from "../../../routes/path";
+import useAuth from "../../../context/auth";
+import { Grid } from "@mui/system";
 
-const pages = ["Trang chủ", "Ứng tuyển", "Về chúng tôi"];
-const settings = ["Tài khoản", "Đăng xuất"];
+const pages = [
+  { name: "Trang chủ", url: `${PATHS.HOME}` },
+  { name: "Ứng tuyển", url: `${PATHS.JOB}` },
+  { name: "Về chúng tôi", url: `${PATHS.ABOUT}` },
+];
 
 function ResponsiveAppBar() {
+  const { isAuthenticated, logout } = useAuth();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isScrolled, setIsScrolled] = React.useState(false);
@@ -55,6 +62,7 @@ function ResponsiveAppBar() {
         backgroundColor: isScrolled ? "primary.main" : "transparent",
         boxShadow: isScrolled ? "0px 4px 10px rgba(0, 0, 0, 0.1)" : "none",
         transition: "background-color 0.3s ease-in-out",
+        zIndex: "9999",
       }}
     >
       <Container maxWidth="xl">
@@ -62,7 +70,14 @@ function ResponsiveAppBar() {
           <Avatar
             alt="Logo FJ"
             src="./logo.png"
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              window.location.href = PATHS.HOME;
+            }}
           />
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -80,9 +95,17 @@ function ResponsiveAppBar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ fontWeight: "700" }}>{page}</Typography>
+              {pages.map((page, pageIndex) => (
+                <MenuItem
+                  key={pageIndex}
+                  onClick={() => {
+                    handleCloseNavMenu();
+                    window.location.href = page.url;
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "700" }}>
+                    {page.name}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -104,10 +127,13 @@ function ResponsiveAppBar() {
               justifyContent: "center",
             }}
           >
-            {pages.map((page) => (
+            {pages.map((page, pageIndex) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={pageIndex}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  window.location.href = page.url;
+                }}
                 sx={{
                   my: 2,
                   mx: 2,
@@ -116,28 +142,55 @@ function ResponsiveAppBar() {
                   fontSize: "18px",
                 }}
               >
-                {page}
+                {page.name}
               </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            {isAuthenticated ? (
+              <>
+                <Tooltip title="Hồ sơ cá nhân">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="User Avatar"
+                      src="/static/images/avatar/2.jpg"
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                  sx={{ zIndex: "999999", mt: 1 }}
+                >
+                  <MenuItem onClick={() => (window.location.href = "/profile")}>
+                    <Typography>Hồ sơ cá nhân</Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      logout();
+                      window.location.href = "/";
+                    }}
+                  >
+                    <Typography>Đăng xuất</Typography>
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <>
+                <Grid container spacing={1} justifyContent="flex-end">
+                  <Grid item xs={6} md={3}>
+                    <Button
+                      onClick={() => (window.location.href = "/login")}
+                      sx={{ color: "white", fontWeight: 700, width: "100%" }}
+                    >
+                      Đăng nhập
+                    </Button>
+                  </Grid>
+                </Grid>
+              </>
+            )}
           </Box>
         </Toolbar>
       </Container>
