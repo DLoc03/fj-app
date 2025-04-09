@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import NavBar from "../NavBar";
 import Footer from "../Footer";
 import BannerHome from "../../ui/Banner";
-import BannerAbout from "../../common/Banner/Banner";
+import BannerAbout from "../../common/Banner";
 
 function DefaultLayout({ children }) {
   const location = useLocation();

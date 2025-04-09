@@ -1,3 +1,5 @@
 import { LoginAPI } from "./authAPI";
+import { CompaniesAPI } from "./CompaniesAPI";
+import { JobsAPI } from "./JobsAPI";
 
-export { LoginAPI };
+export { LoginAPI, CompaniesAPI, JobsAPI };

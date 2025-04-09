@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import { Button, Grid, IconButton } from "@mui/material";
+
+import { LoginAPI } from "../../services/authAPI";
+import PopupAlert from "../../components/common/PopUp";
 
 import imgBg from "../../assets/jobBg.jpg";
 import albumFJ from "../../assets/album-1.jpg";
@@ -15,21 +17,77 @@ import DisabledVisibleIcon from "@mui/icons-material/DisabledVisible";
 function Index() {
   const [isDisplay, setIsDisplay] = useState(false);
   const [isLoginPage, setIsLoginPage] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    name: "",
+    phone: "",
+  });
 
   useEffect(() => {
     const currentPath = window.location.pathname;
     setIsLoginPage(currentPath === "/login");
   }, []);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
   const togglePasswordVisibility = () => {
     setIsDisplay((prev) => !prev);
   };
 
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
+
+  const handleShowAlert = (message, callback) => {
+    setAlertMessage(message);
+    setAlertOpen(true);
+    if (callback) {
+      const timer = setTimeout(() => {
+        setAlertOpen(false);
+        callback();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  };
+
   const handleSubmit = () => {
     if (isLoginPage) {
-      window.location.href = "/";
+      LoginAPI.login(
+        { email: form.email, password: form.password },
+        (err, res) => {
+          if (err) {
+            handleShowAlert("Đăng nhập thất bại!");
+            return;
+          }
+          handleShowAlert("Đăng nhập thành công!", () => {
+            window.location.href = "/";
+          });
+        }
+      );
     } else {
-      window.location.href = "/login";
+      LoginAPI.register(
+        {
+          email: form.email,
+          password: form.password,
+          name: form.name,
+          phone: form.phone,
+        },
+        (err, res) => {
+          if (err) {
+            handleShowAlert("Đăng ký thất bại!");
+            return;
+          }
+          handleShowAlert("Đăng ký thành công!", () => {
+            window.location.href = "/login";
+          });
+        }
+      );
     }
   };
 
@@ -42,6 +100,11 @@ function Index() {
         px: 4,
       }}
     >
+      <PopupAlert
+        open={alertOpen}
+        message={alertMessage}
+        onClose={handleAlertClose}
+      />
       <Grid container spacing={4} py={8}>
         <Grid item size={{ xs: 12, md: 5 }}>
           <Paper
@@ -52,26 +115,28 @@ function Index() {
                 ? "Đăng nhập nhà tuyển dụng"
                 : "Đăng ký tài khoản nhà tuyển dụng"}
             </Typography>
-
-            {/* Email Input */}
             <Typography variant="body2" mt={2}>
               {isLoginPage ? "Email đăng nhập" : "Email đăng ký"}
             </Typography>
             <InputBase
+              name="email"
               placeholder={isLoginPage ? "Email đăng nhập" : "Email đăng ký"}
               fullWidth
+              value={form.email}
+              onChange={handleChange}
               sx={{ border: "1px solid gray", p: 1, borderRadius: 1, mt: 1 }}
             />
-
-            {/* Conditional inputs for register page */}
             {!isLoginPage && (
               <>
                 <Typography variant="body2" mt={2}>
                   Họ và tên
                 </Typography>
                 <InputBase
+                  name="name"
                   placeholder="Nhập họ và tên"
                   fullWidth
+                  value={form.name}
+                  onChange={handleChange}
                   sx={{
                     border: "1px solid gray",
                     p: 1,
@@ -83,8 +148,11 @@ function Index() {
                   Số điện thoại
                 </Typography>
                 <InputBase
+                  name="phone"
                   placeholder="Nhập số điện thoại"
                   fullWidth
+                  value={form.phone}
+                  onChange={handleChange}
                   sx={{
                     border: "1px solid gray",
                     p: 1,
@@ -94,15 +162,16 @@ function Index() {
                 />
               </>
             )}
-
-            {/* Password Input */}
             <Typography variant="body2" mt={2}>
               Mật khẩu
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <InputBase
+                name="password"
                 placeholder="Nhập mật khẩu"
                 fullWidth
+                value={form.password}
+                onChange={handleChange}
                 type={isDisplay ? "text" : "password"}
                 sx={{
                   border: "1px solid gray",
@@ -116,13 +185,9 @@ function Index() {
                 {isDisplay ? <RemoveRedEyeIcon /> : <DisabledVisibleIcon />}
               </IconButton>
             </Box>
-
-            {/* Submit Button */}
             <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
               {isLoginPage ? "Đăng nhập" : "Đăng ký"}
             </Button>
-
-            {/* Redirect Link */}
             <Typography>
               {isLoginPage ? (
                 <>

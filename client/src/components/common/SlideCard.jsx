@@ -1,25 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import slideBg from "../../../assets/slide.jpg";
-import CardDetail from "../Card/Card";
+import slideBg from "../../assets/slide.jpg";
+import CardDetail from "./Card";
 import { Button, Typography } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { useCustomNavigate } from "../../../utils";
-import PATHS from "../../../routes/path";
+import { useCustomNavigate } from "../../utils";
+import PATHS from "../../routes/path";
+import { JobsAPI } from "../../services";
 
 function SlideCard() {
   const navigate = useCustomNavigate();
-  const totalItems = 10;
   const itemsPerPage = 4;
+
+  const [jobList, setJobList] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
 
+  useEffect(() => {
+    JobsAPI.getJobs((err, res) => {
+      if (!err && res?.data) {
+        const allJobs = res.data;
+        const last8Jobs = allJobs.slice(-8);
+        setJobList(last8Jobs);
+      }
+    });
+  }, []);
+
   const handleNext = () => {
-    setStartIndex((prev) => (prev + 1 < totalItems ? prev + 1 : 0));
+    setStartIndex((prev) =>
+      prev + 1 < jobList.length - itemsPerPage + 1 ? prev + 1 : 0
+    );
   };
 
   const handlePrev = () => {
-    setStartIndex((prev) => (prev - 1 >= 0 ? prev - 1 : totalItems - 1));
+    setStartIndex((prev) =>
+      prev - 1 >= 0 ? prev - 1 : jobList.length - itemsPerPage
+    );
   };
 
   function handleGoJob() {
@@ -29,7 +45,7 @@ function SlideCard() {
   useEffect(() => {
     const interval = setInterval(handleNext, 3000);
     return () => clearInterval(interval);
-  }, [startIndex]);
+  }, [startIndex, jobList]);
 
   return (
     <Box
@@ -75,36 +91,35 @@ function SlideCard() {
           }}
         />
 
-        <Box
-          sx={{
-            width: "100%",
-            overflow: "hidden",
-          }}
-        >
+        <Box sx={{ width: "100%", overflow: "hidden" }}>
           <Box
             sx={{
               display: "flex",
               justifyContent: "center",
               transition: "transform 0.5s ease-in-out",
-              transform: `translateX(-${(startIndex * 100) / totalItems}%)`,
-              width: {
-                xs: `${(totalItems / 1) * 100}%`,
-                md: `${(totalItems / itemsPerPage) * 100}%`,
-              },
+              transform: `translateX(-${(startIndex * 100) / itemsPerPage}%)`,
+              width: `${(jobList.length / itemsPerPage) * 100}%`,
             }}
           >
-            {Array.from({ length: totalItems }).map((_, index) => (
+            {jobList.map((job, index) => (
               <Box
-                key={index}
+                key={job._id || index}
                 sx={{
-                  flex: `0 0 ${100 / totalItems}%`,
+                  flex: `0 0 ${100 / jobList.length}%`,
                   padding: "0 10px",
                   boxSizing: "border-box",
                   display: { xs: "flex", md: "flex" },
                   justifyContent: { xs: "center", md: "none" },
                 }}
               >
-                <CardDetail />
+                <CardDetail
+                  id={job._id}
+                  jobName={job.jobName}
+                  jobDesc={job.jobDescription}
+                  quantity={job.quantity}
+                  salary={job.salary}
+                  company={job.company}
+                />
               </Box>
             ))}
           </Box>
@@ -115,7 +130,8 @@ function SlideCard() {
           sx={{
             cursor: "pointer",
             fontSize: { xs: "20px", md: "60px" },
-            color: startIndex >= totalItems - 1 ? "gray" : "white",
+            color:
+              startIndex >= jobList.length - itemsPerPage ? "gray" : "white",
             zIndex: 2,
           }}
         />

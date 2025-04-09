@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import CardDetail from "../../components/common/Card/Card";
+import CardDetail from "../../components/common/Card";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
+
+import { JobsAPI } from "../../services";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -15,20 +17,28 @@ import Sidebar from "../../components/ui/Sidebar";
 
 function Job() {
   const itemPerPage = 8;
-  const totalItems = 30;
-  const totalPages = Math.ceil(totalItems / itemPerPage);
   const [currentPage, setCurrentPage] = useState(1);
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    JobsAPI.getJobs((err, result) => {
+      if (!err && result?.data) {
+        setJobs(result.data);
+      }
+    });
+  }, []);
+
+  console.log(jobs);
 
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
+
+  const totalItems = jobs.length;
+  const totalPages = Math.ceil(totalItems / itemPerPage);
   const startIndex = (currentPage - 1) * itemPerPage;
   const endIndex = startIndex + itemPerPage;
-
-  const currentItems = Array.from({ length: totalItems }).slice(
-    startIndex,
-    endIndex
-  );
+  const currentItems = jobs.slice(startIndex, endIndex);
 
   return (
     <Box>
@@ -71,17 +81,24 @@ function Job() {
                 Tuyển dụng nhân sự
               </Typography>
             </Grid>
-            {currentItems.map((_, index) => (
+            {currentItems.map((job, jobIndex) => (
               <Grid
                 item
-                key={index}
+                key={jobIndex}
                 size={{ xs: 12, md: 3 }}
                 sx={{
                   display: { xs: "flex", md: "flex" },
                   justifyContent: { xs: "center", md: "none" },
                 }}
               >
-                <CardDetail />
+                <CardDetail
+                  id={job._id}
+                  jobName={job.jobName}
+                  jobDesc={job.jobDescription}
+                  quantity={job.quantity}
+                  salary={job.salary}
+                  company={job.company}
+                />
               </Grid>
             ))}
           </Grid>

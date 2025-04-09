@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,8 +12,10 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import PATHS from "../../../routes/path";
-import useAuth from "../../../context/auth";
 import { Grid } from "@mui/system";
+
+import useAuth from "../../../context/auth";
+import { LoginAPI } from "../../../services/index";
 
 const pages = [
   { name: "Trang chủ", url: `${PATHS.HOME}` },
@@ -26,8 +28,9 @@ function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isScrolled, setIsScrolled] = React.useState(false);
+  const [user, setUser] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
         setIsScrolled(true);
@@ -35,12 +38,46 @@ function ResponsiveAppBar() {
         setIsScrolled(false);
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      LoginAPI.getCurrentUser((err, result) => {
+        if (!err && result?.data) {
+          setUser(result.data);
+        }
+      });
+    }
+  }, [isAuthenticated]);
+
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = "#";
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+    };
+  }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -147,14 +184,11 @@ function ResponsiveAppBar() {
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            {isAuthenticated ? (
+            {isAuthenticated && user ? (
               <>
                 <Tooltip title="Hồ sơ cá nhân">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                      alt="User Avatar"
-                      src="/static/images/avatar/2.jpg"
-                    />
+                    <Avatar {...stringAvatar(user.name)} />
                   </IconButton>
                 </Tooltip>
                 <Menu

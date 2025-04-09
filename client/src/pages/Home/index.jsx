@@ -1,11 +1,10 @@
 import React from "react";
-import Banner from "../../components/ui/Banner";
 import { Typography, Box, Button } from "@mui/material";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import albumFirst from "../../assets/album-1.jpg";
 import albumSecond from "../../assets/album-2.jpg";
 import albumThird from "../../assets/album-3.jpg";
-import SlideCard from "../../components/common/SlideCard/SlideCard";
+import SlideCard from "../../components/common/SlideCard";
 import PATHS from "../../routes/path";
 
 function Home() {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import bannerAbout from "../../../assets/Banner-About.jpg";
+import bannerAbout from "../../assets/Banner-About.jpg";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 

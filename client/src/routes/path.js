@@ -1,7 +1,7 @@
 const PATHS = {
   HOME: "/",
   JOB: "/job",
-  JOBDETAIL: "/jobD",
+  JOBDETAIL: "/job/detail/:id",
   ABOUT: "/about",
   LOGIN: "/login",
   REGISTER: "/register",

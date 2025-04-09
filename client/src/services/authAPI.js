@@ -4,10 +4,10 @@ const restRequest = userBaseRestRequest();
 
 export const LoginAPI = {
   async login(data, cb) {
-    await restRequest.post("auth/login", data, (err, result) => {
+    await restRequest.post("/auth/login", data, (err, result) => {
       if (err) return cb(err);
-      if (result?.accessToken) {
-        sessionStorage.setItem("accessToken", result.accessToken);
+      if (result?.data?.accessToken) {
+        sessionStorage.setItem("accessToken", result?.data?.accessToken);
       }
       if (typeof cb === "function") cb(null, result);
     });

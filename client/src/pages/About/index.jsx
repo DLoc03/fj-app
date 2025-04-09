@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 import aboutData from "../../data/aboutUs.json";
-import SlideCard from "../../components/common/SlideCard/SlideCard";
+import SlideCard from "../../components/common/SlideCard";
 
 function AboutUs() {
   return (
@@ -21,7 +21,11 @@ function AboutUs() {
           </Typography>
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>
-          <Typography variant="h5" fontWeight={"700"} textAlign={"left"}>
+          <Typography
+            variant="h5"
+            fontWeight={"700"}
+            textAlign={{ xs: "center", md: "left" }}
+          >
             {aboutData["about-us"].heading[0]}
           </Typography>
           <Typography variant="body1" fontWeight={"500"} textAlign={"justify"}>
@@ -43,7 +47,11 @@ function AboutUs() {
           />
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>
-          <Typography variant="h5" fontWeight={"700"} textAlign={"right"}>
+          <Typography
+            variant="h5"
+            fontWeight={"700"}
+            textAlign={{ xs: "center", md: "right" }}
+          >
             {aboutData["about-us"].heading[1]}
           </Typography>
           <Typography variant="body1" fontWeight={"500"} textAlign={"justify"}>
@@ -51,10 +59,10 @@ function AboutUs() {
           </Typography>
         </Grid>
         <Grid size={{ xs: 12, md: 12 }}>
-          <Typography variant="h5" fontWeight={"700"} textAlign={"left"}>
+          <Typography variant="h5" fontWeight={"700"} textAlign={"center"}>
             {aboutData["about-us"].heading[2]}
           </Typography>
-          <Typography variant="body1" fontWeight={"500"} textAlign={"justify"}>
+          <Typography variant="body1" fontWeight={"500"} textAlign={"center"}>
             {aboutData["about-us"].content[2]}
           </Typography>
         </Grid>
@@ -66,10 +74,10 @@ function AboutUs() {
           />
         </Grid>
         <Grid size={{ xs: 12, md: 12 }}>
-          <Typography variant="h5" fontWeight={"700"} textAlign={"left"}>
+          <Typography variant="h5" fontWeight={"700"} textAlign={"center"}>
             {aboutData["about-us"].heading[3]}
           </Typography>
-          <Typography variant="body1" fontWeight={"500"} textAlign={"left"}>
+          <Typography variant="body1" fontWeight={"500"} textAlign={"justify"}>
             {aboutData["about-us"].content[3]}
           </Typography>
         </Grid>
