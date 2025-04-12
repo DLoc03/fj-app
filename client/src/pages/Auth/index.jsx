@@ -5,8 +5,9 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import { Button, Grid, IconButton } from "@mui/material";
 
-import { LoginAPI } from "../../services/authAPI";
+import { AuthAPI } from "../../services/authAPI";
 import PopupAlert from "../../components/common/PopUp";
+import { useAuth } from "../../context/auth";
 
 import imgBg from "../../assets/jobBg.jpg";
 import albumFJ from "../../assets/album-1.jpg";
@@ -14,11 +15,13 @@ import albumFJ from "../../assets/album-1.jpg";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DisabledVisibleIcon from "@mui/icons-material/DisabledVisible";
 
-function Index() {
+function Auth() {
   const [isDisplay, setIsDisplay] = useState(false);
   const [isLoginPage, setIsLoginPage] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [alertStatus, setAlertStatus] = useState("");
+  const { login } = useAuth();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -58,20 +61,23 @@ function Index() {
 
   const handleSubmit = () => {
     if (isLoginPage) {
-      LoginAPI.login(
+      AuthAPI.login(
         { email: form.email, password: form.password },
         (err, res) => {
-          if (err) {
-            handleShowAlert("Đăng nhập thất bại!");
+          if (err || res.errCode !== 0) {
+            handleShowAlert("Đăng nhập thất bại! Vui lòng thử lại");
+            setAlertStatus("error");
             return;
           }
+          login(res?.data?.accessToken);
+          setAlertStatus("success");
           handleShowAlert("Đăng nhập thành công!", () => {
             window.location.href = "/";
           });
         }
       );
     } else {
-      LoginAPI.register(
+      AuthAPI.register(
         {
           email: form.email,
           password: form.password,
@@ -79,10 +85,12 @@ function Index() {
           phone: form.phone,
         },
         (err, res) => {
-          if (err) {
-            handleShowAlert("Đăng ký thất bại!");
+          if (err || res.errCode !== 0) {
+            handleShowAlert("Đăng ký thất bại! Vui lòng thử lại");
+            setAlertStatus("error");
             return;
           }
+          setAlertStatus("success");
           handleShowAlert("Đăng ký thành công!", () => {
             window.location.href = "/login";
           });
@@ -104,6 +112,7 @@ function Index() {
         open={alertOpen}
         message={alertMessage}
         onClose={handleAlertClose}
+        severity={alertStatus}
       />
       <Grid container spacing={4} py={8}>
         <Grid item size={{ xs: 12, md: 5 }}>
@@ -253,4 +262,4 @@ function Index() {
   );
 }
 
-export default Index;
+export default Auth;

@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 
 import { useParams } from "react-router-dom";
 
-import { JobsAPI } from "../../services";
+import { JobsAPI, CompaniesAPI } from "../../services";
 
 import HomeIcon from "@mui/icons-material/Home";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
@@ -23,8 +23,8 @@ import SpinningLoading from "../../components/common/SpinningLoading";
 function JobDetail() {
   const { id } = useParams();
   const [job, setJob] = useState();
+  const [comp, setComp] = useState();
   const compDetail = sessionStorage.getItem("selectedCompany");
-  console.log(compDetail);
 
   useEffect(() => {
     JobsAPI.getJobById(id, (err, result) => {
@@ -33,6 +33,17 @@ function JobDetail() {
       }
     });
   }, [id]);
+
+  useEffect(() => {
+    CompaniesAPI.getCompanyById(compDetail, (err, result) => {
+      if (!err && result?.data) {
+        console.log(err);
+        setComp(result?.data);
+      }
+    });
+  }, [compDetail]);
+
+  console.log("Company detail: ", comp);
 
   return (
     <Box
@@ -127,10 +138,10 @@ function JobDetail() {
               <Divider />
             </Typography>
             <Typography variant="body2" mb={"4px"}>
-              <span>Địa chỉ: </span>
+              <span>Địa chỉ: {comp.address}</span>
             </Typography>
             <Typography variant="body2">
-              <span>Hotline: </span>
+              <span>Hotline: {comp.recruiter.phone}</span>
             </Typography>
           </Grid>
           <Grid

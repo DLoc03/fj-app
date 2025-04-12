@@ -4,6 +4,10 @@ import AboutUs from "../pages/About";
 import Job from "../pages/Jobs";
 import JobDetail from "../pages/Jobs/_id";
 import Auth from "../pages/Auth";
+import Profile from "../pages/Profile/_id";
+import UserCompany from "../pages/Profile/_idComp";
+import CompanyJobs from "../pages/Recruitment";
+import TestDetail from "../pages/Recruitment/_id";
 
 export const routes = [
   {
@@ -32,4 +36,21 @@ export const routes = [
   },
 ];
 
-export const protectedRoutes = [];
+export const protectedRoutes = [
+  {
+    path: PATHS.PROFILE,
+    page: Profile,
+  },
+  {
+    path: PATHS.COMPANY_INFO,
+    page: UserCompany,
+  },
+  {
+    path: PATHS.COMPANY_JOBS,
+    page: CompanyJobs,
+  },
+  {
+    path: PATHS.COMPANY_TEST,
+    page: TestDetail,
+  },
+];

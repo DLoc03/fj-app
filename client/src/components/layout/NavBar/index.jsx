@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,8 +14,8 @@ import MenuItem from "@mui/material/MenuItem";
 import PATHS from "../../../routes/path";
 import { Grid } from "@mui/system";
 
-import useAuth from "../../../context/auth";
-import { LoginAPI } from "../../../services/index";
+import { useAuth } from "../../../context/auth";
+import { AuthAPI } from "../../../services/index";
 
 const pages = [
   { name: "Trang chủ", url: `${PATHS.HOME}` },
@@ -46,7 +46,7 @@ function ResponsiveAppBar() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      LoginAPI.getCurrentUser((err, result) => {
+      AuthAPI.getCurrentUser((err, result) => {
         if (!err && result?.data) {
           setUser(result.data);
         }

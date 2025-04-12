@@ -5,12 +5,10 @@ import Typography from "@mui/material/Typography";
 import album from "../../assets/album-1.jpg";
 import { Button } from "@mui/material";
 
-import { useNavigate } from "react-router-dom";
-
 import PATHS from "../../routes/path";
 import formatMoney from "../../utils/formatMoney";
 
-function CardDetail({ id, jobName, jobDesc, quantity, salary, company }) {
+function CardDetail({ id, jobName, quantity, salary, company }) {
   return (
     <Card
       sx={{
@@ -91,10 +89,7 @@ function CardDetail({ id, jobName, jobDesc, quantity, salary, company }) {
             color="white"
             onClick={() => {
               window.location.href = PATHS.JOBDETAIL.replace(":id", id);
-              sessionStorage.setItem(
-                "selectedCompany",
-                JSON.stringify(company)
-              );
+              sessionStorage.setItem("selectedCompany", company.id);
             }}
           >
             Chi tiết

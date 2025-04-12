@@ -1,14 +1,17 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/auth";
 
-const PrivateRoute = ({ children }) => {
-  const token = sessionStorage.getItem("accessToken");
+import SpinningLoader from "../components/common/SpinningLoading";
 
-  if (!token) {
-    return <Navigate to="/login" replace />;
+const PrivateRoute = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  console.log(isAuthenticated);
+
+  if (isLoading) {
+    return <SpinningLoader />;
   }
 
-  return children;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;
