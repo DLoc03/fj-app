@@ -10,6 +10,7 @@ export const socketServer = (httpServer) => {
             allowedHeaders: '*',
             credentials: true
         },
+		//path:"/socket"
     });
     io.on(SOCKET.CONNECT, (socket) => {
         handleSocket(socket)

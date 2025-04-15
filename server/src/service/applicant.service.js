@@ -32,7 +32,8 @@ const getApplicantWithResult = async (id) => {
         question: q.question,
         answer: answers.find(a => a.questionId.toString() === q._id.toString())
     }))
-    console.log(examp);
+    // console.log(examp);
+    return examp
 }
 
 export const applicantService = {

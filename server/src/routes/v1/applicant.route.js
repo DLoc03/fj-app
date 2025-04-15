@@ -1,6 +1,5 @@
 import express from 'express'
 import { applicantController } from '../../controller/applicant.controller.js'
-import { answerController } from '../../controller/answer.controller.js'
 
 const Router = express.Router()
 
