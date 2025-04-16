@@ -15,21 +15,21 @@ export const AuthAPI = {
   },
 
   async register(data, cb) {
-    await restRequest.post("auth/register", data, (err, result) => {
+    await restRequest.post("/auth/register", data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
   },
 
   async getCurrentUser(cb) {
-    await restRequest.get("auth/me", {}, (err, result) => {
+    await restRequest.get("/auth/me", {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
   },
 
   async updateUser(id, data, cb) {
-    await restRequest.put(`user/${id}`, data, (err, result) => {
+    await restRequest.put(`/user/${id}`, data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
