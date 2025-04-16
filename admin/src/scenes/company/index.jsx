@@ -1,6 +1,8 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
+import Switch from "@mui/material/Switch";
+import Stack from "@mui/material/Stack";
 import Header from "../../components/Header";
 import {
   useTheme,
@@ -77,6 +79,15 @@ const Company = () => {
     setSelected(null);
   };
 
+  const handleStatusToggle = (id, newStatus) => {
+    setCompanies((prev) =>
+      prev.map((company) =>
+        company.id === id ? { ...company, status: newStatus } : company
+      )
+    );
+    //Call API Here
+  };
+
   const handleDeleteConfirm = async () => {
     if (!selectedCompany) return;
     try {
@@ -95,8 +106,32 @@ const Company = () => {
     { field: "address", headerName: "Địa chỉ", flex: 1 },
     { field: "username", headerName: "Đại diện cơ sở", flex: 1 },
     { field: "phone", headerName: "Hotline", flex: 1 },
-    { field: "status", headerName: "Trạng thái đăng ký", flex: 1 },
-    { field: "position", headerName: "Vị trí tuyển", flex: 1 },
+    {
+      field: "status",
+      headerName: "Trạng thái xác thực",
+      flex: 1,
+      renderCell: (params) => {
+        const isActive = params.row.status === "Authenticated";
+
+        return (
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Switch
+              checked={isActive}
+              onChange={(e) =>
+                handleStatusToggle(
+                  params.row.id,
+                  e.target.checked ? "Authenticated" : "Pending"
+                )
+              }
+              inputProps={{ "aria-label": "status toggle" }}
+            />
+            <Typography variant="body2">
+              {isActive ? "Đã xác thực" : "Chờ xác thực"}
+            </Typography>
+          </Stack>
+        );
+      },
+    },
     {
       field: "view",
       headerName: "Xem thông tin",
