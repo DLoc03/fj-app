@@ -24,19 +24,27 @@ function AboutUs() {
           </Typography>
         </Grid>
         <Grid size={12}>
-          <Typography variant="body1" fontWeight={"500"} textAlign={"center"}>
+          <Typography
+            sx={{ fontSize: { xs: "12px", md: "16px" } }}
+            fontWeight={"500"}
+            textAlign={"center"}
+          >
             {aboutData["about-us"].desc}
           </Typography>
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>
           <Typography
-            variant="h5"
+            sx={{ fontSize: { xs: "16px", md: "24px" } }}
             fontWeight={"700"}
             textAlign={{ xs: "center", md: "left" }}
           >
             {aboutData["about-us"].heading[0]}
           </Typography>
-          <Typography variant="body1" fontWeight={"500"} textAlign={"justify"}>
+          <Typography
+            sx={{ fontSize: { xs: "12px", md: "16px" } }}
+            fontWeight={"500"}
+            textAlign={"justify"}
+          >
             {aboutData["about-us"].content[0]}
           </Typography>
         </Grid>
@@ -56,21 +64,34 @@ function AboutUs() {
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>
           <Typography
-            variant="h5"
             fontWeight={"700"}
             textAlign={{ xs: "center", md: "right" }}
+            sx={{ fontSize: { xs: "16px", md: "24px" } }}
           >
             {aboutData["about-us"].heading[1]}
           </Typography>
-          <Typography variant="body1" fontWeight={"500"} textAlign={"justify"}>
+          <Typography
+            sx={{ fontSize: { xs: "12px", md: "16px" } }}
+            fontWeight={"500"}
+            textAlign={"justify"}
+          >
             {aboutData["about-us"].content[1]}
           </Typography>
         </Grid>
         <Grid size={{ xs: 12, md: 12 }}>
-          <Typography variant="h5" fontWeight={"700"} textAlign={"center"}>
+          <Typography
+            sx={{ fontSize: { xs: "16px", md: "24px" } }}
+            fontWeight={"700"}
+            textAlign={"center"}
+          >
             {aboutData["about-us"].heading[2]}
           </Typography>
-          <Typography variant="body1" fontWeight={"500"} textAlign={"center"}>
+          <Typography
+            sx={{ fontSize: { xs: "12px", md: "16px" } }}
+            s
+            fontWeight={"500"}
+            textAlign={"center"}
+          >
             {aboutData["about-us"].content[2]}
           </Typography>
         </Grid>
@@ -82,10 +103,18 @@ function AboutUs() {
           />
         </Grid>
         <Grid size={{ xs: 12, md: 12 }}>
-          <Typography variant="h5" fontWeight={"700"} textAlign={"center"}>
+          <Typography
+            sx={{ fontSize: { xs: "16px", md: "24px" } }}
+            fontWeight={"700"}
+            textAlign={"center"}
+          >
             {aboutData["about-us"].heading[3]}
           </Typography>
-          <Typography variant="body1" fontWeight={"500"} textAlign={"justify"}>
+          <Typography
+            sx={{ fontSize: { xs: "12px", md: "16px" } }}
+            fontWeight={"500"}
+            textAlign={"justify"}
+          >
             {aboutData["about-us"].content[3]}
           </Typography>
         </Grid>

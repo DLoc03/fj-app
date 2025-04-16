@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, Box, Button, Grid } from "@mui/material";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import albumFirst from "../../assets/album-1.jpg";
@@ -21,7 +21,7 @@ function Home() {
           justifyContent: { xs: "center", md: "center" },
           alignItems: { xs: "center", md: "normal" },
           textAlign: { xs: "center", md: "left" },
-          gap: 12,
+          gap: { xs: 4, md: 12 },
           my: 4,
         }}
       >
@@ -34,17 +34,22 @@ function Home() {
             },
           }}
         >
-          <Typography variant="h4" color="primary.main" fontWeight={700} mb={2}>
+          <Typography
+            color="primary.main"
+            fontWeight={700}
+            mb={2}
+            sx={{ fontSize: { xs: "20px", md: "28px" } }}
+          >
             FJ HUB hỗ trợ tuyển dụng như thế nào?
           </Typography>
-          <Typography variant="body1">
+          <Typography sx={{ fontSize: { xs: "12px", md: "16px" } }}>
             <FiberManualRecordIcon fontSize="1px" sx={{ mr: 2 }} /> Với{" "}
             <span>Ứng viên tìm việc</span>, FJ sẽ giúp các bạn có thể tìm kiếm
             cơ hội việc làm từ danh sách các tuyển dụng các công việc như pha
             chế, phục vụ, quản lý,...v.v. Vậy nên ngay bây giờ, hãy{" "}
             <span>Nộp hồ sơ ứng tuyển ngay!</span>
           </Typography>
-          <Typography variant="body1" py={1}>
+          <Typography sx={{ fontSize: { xs: "12px", md: "16px" } }}>
             <FiberManualRecordIcon fontSize="1px" sx={{ mr: 2 }} /> Với{" "}
             <span>Nhà tuyển dụng</span>, FJ sẽ hỗ trợ sàng lọc ứng viên, dễ dàng
             tìm kiếm ứng viên sáng giá, tiết kiệm thời gian và chi phí rất
@@ -67,8 +72,8 @@ function Home() {
             alt="album-1"
             sx={{
               margin: "auto 0",
-              height: { xs: "240px", md: "260px" },
-              width: { xs: "90px", md: "120px" },
+              height: { xs: "200px", md: "260px" },
+              width: { xs: "100px", md: "120px" },
               objectFit: "cover",
               borderRadius: "8px",
             }}
@@ -78,8 +83,8 @@ function Home() {
             src={albumThird}
             alt="album-2"
             sx={{
-              height: { xs: "300px", md: "320px" },
-              width: { xs: "170px", md: "200px" },
+              height: { xs: "260px", md: "320px" },
+              width: { xs: "140px", md: "200px" },
               borderRadius: "8px",
               objectFit: "cover",
             }}
@@ -90,8 +95,8 @@ function Home() {
             alt="album-3"
             sx={{
               margin: "auto 0",
-              height: { xs: "240px", md: "260px" },
-              width: { xs: "90px", md: "120px" },
+              height: { xs: "200px", md: "260px" },
+              width: { xs: "100px", md: "120px" },
               objectFit: "cover",
               borderRadius: "8px",
             }}
@@ -124,7 +129,6 @@ function Home() {
           Kết nối ứng viên và nhà tuyển dụng ngành F&B
         </Typography>
         <Typography
-          variant="body1"
           color="white"
           textAlign={"center"}
           display={{ xs: "none", md: "block" }}
