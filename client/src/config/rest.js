@@ -1,4 +1,4 @@
-import HTTP_METHOD from "../common/enum/httpMethodEnum";
+import { HTTP_METHOD } from "../common/enum/enum";
 import { SERVICE_URL, getHeaderConfig } from "./config";
 
 const userBaseRestRequest = () => {

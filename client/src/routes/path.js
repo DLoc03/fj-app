@@ -9,6 +9,7 @@ const PATHS = {
   COMPANY_INFO: "/company",
   COMPANY_JOBS: "/company/jobs",
   COMPANY_TEST: "/company/test/:id",
+  ANSWER: "/job/detail/candidate/:id",
   NOT_FOUND: "*",
 };
 

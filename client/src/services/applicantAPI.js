@@ -2,16 +2,16 @@ import userBaseRestRequest from "../config/rest";
 
 const restRequest = userBaseRestRequest();
 
-export const QuestionAPI = {
-  async getQuestion(id, cb) {
-    await restRequest.get(`question/${id}`, {}, (err, result) => {
+export const ApplicantAPI = {
+  async postApplicant(id, data, cb) {
+    await restRequest.post(`applicant/${id}`, data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
   },
 
-  async postQuestion(id, data, cb) {
-    await restRequest.post(`question/${id}`, data, (err, result) => {
+  async getApplicant(id, data, cb) {
+    await restRequest.get(`applicant/${id}`, data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });

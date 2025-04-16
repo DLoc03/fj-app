@@ -6,7 +6,7 @@ import album from "../../assets/album-1.jpg";
 import { Button } from "@mui/material";
 
 import PATHS from "../../routes/path";
-import formatMoney from "../../utils/formatMoney";
+import { formatCurrency } from "../../utils/helper";
 
 function CardDetail({ id, jobName, quantity, salary, company }) {
   return (
@@ -65,7 +65,7 @@ function CardDetail({ id, jobName, quantity, salary, company }) {
               my: "2px",
             }}
           >
-            <span>Lương</span>: {formatMoney(salary)}
+            <span>Lương</span>: {formatCurrency(salary)}
           </Typography>
           <Typography
             className="description"

@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 
 import { AuthAPI } from "../../services";
 import Authenticated from "../../components/ui/Authenticated";
+import PATHS from "../../routes/path";
 
 function UserCompany() {
   const [comp, setComp] = useState({
@@ -152,7 +153,12 @@ function UserCompany() {
                 </Typography>
               </Grid>
             </Grid>
-            <Button variant="contained">Đăng tuyển dụng nhân sự</Button>
+            <Button
+              variant="contained"
+              onClick={() => (window.location.href = PATHS.COMPANY_JOBS)}
+            >
+              Đăng tuyển dụng nhân sự
+            </Button>
           </Paper>
         ) : (
           <Authenticated

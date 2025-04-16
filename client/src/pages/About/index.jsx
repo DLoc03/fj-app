@@ -9,9 +9,17 @@ import SlideCard from "../../components/common/SlideCard";
 function AboutUs() {
   return (
     <Box>
-      <Grid container spacing={4} sx={{ my: 4, padding: "0 80px" }}>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 4 }}
+        sx={{ my: 4, padding: { xs: "0 20px", md: "0 80px" } }}
+      >
         <Grid size={12}>
-          <Typography variant="h3" fontWeight={"700"} textAlign={"center"}>
+          <Typography
+            sx={{ fontSize: { xs: "28px", md: "40px" } }}
+            fontWeight={"700"}
+            textAlign={"center"}
+          >
             {aboutData["about-us"].title}
           </Typography>
         </Grid>

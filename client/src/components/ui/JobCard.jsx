@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import { Button, Divider, Grid, Typography } from "@mui/material";
 
-import formatMoney from "../../utils/formatMoney";
+import { formatCurrency } from "../../utils/helper";
 import PATHS from "../../routes/path";
+
+import { QuestionAPI } from "../../services";
 
 function JobCard({ id, jobName, quantity, jobDescription, salary }) {
   const [jobData, setJobData] = useState({
@@ -13,6 +15,7 @@ function JobCard({ id, jobName, quantity, jobDescription, salary }) {
     jobDescription: "",
     salary: "",
   });
+  const [questions, setQuestions] = useState([]);
 
   const defautFetch = "Đang tải...";
 
@@ -26,7 +29,18 @@ function JobCard({ id, jobName, quantity, jobDescription, salary }) {
     });
   }, [id, jobName, quantity, jobDescription, salary]);
 
-  console.log("Job data received: ", jobData);
+  useEffect(() => {
+    QuestionAPI.getQuestion(id, (err, result) => {
+      if (!err && result?.data.length > 0) {
+        setQuestions(result.data);
+      }
+    });
+  }, [id]);
+
+  console.log("Job id: ", id);
+
+  console.log("Question data: ", questions);
+
   return (
     <Paper
       sx={{ padding: "12px 20px", border: "1px solid secondary.main", mb: 2 }}
@@ -44,22 +58,36 @@ function JobCard({ id, jobName, quantity, jobDescription, salary }) {
 
         <Grid item size={{ sx: 12, md: 9 }}>
           <Typography>
-            Mức lương dự kiến: {formatMoney(jobData.salary)}
+            Mức lương dự kiến: {formatCurrency(jobData.salary)}
           </Typography>
         </Grid>
         <Grid item size={12}>
           <Typography>Mô tả công việc: {jobData.jobDescription}</Typography>
         </Grid>
       </Grid>
-      <Button
-        variant="outlined"
-        sx={{ mt: 2 }}
-        onClick={() => {
-          window.location.href = PATHS.COMPANY_TEST.replace(":id", id);
-        }}
-      >
-        Tạo câu hỏi phỏng vấn
-      </Button>
+      {questions && questions.length > 0 ? (
+        <Button
+          variant="outlined"
+          sx={{ mt: 2 }}
+          onClick={() => {
+            window.location.href = PATHS.COMPANY_TEST.replace(":id", id);
+          }}
+        >
+          Xem câu hỏi phỏng vấn
+        </Button>
+      ) : (
+        <Button
+          variant="outlined"
+          sx={{ mt: 2 }}
+          onClick={() => {
+            window.location.href = PATHS.COMPANY_TEST.replace(":id", id);
+          }}
+        >
+          {questions.length > 0
+            ? "Xem câu hỏi phỏng vấn"
+            : "Tạo câu hỏi phỏng vấn"}
+        </Button>
+      )}
     </Paper>
   );
 }

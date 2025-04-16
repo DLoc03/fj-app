@@ -11,7 +11,7 @@ function SpinningLoader() {
         height: "100vh",
       }}
     >
-      <CircularProgress />
+      <CircularProgress sx={{ color: "white" }} />
     </Box>
   );
 }

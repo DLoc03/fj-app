@@ -13,7 +13,7 @@ import ReuseableModal from "../common/Modal";
 import PopupAlert from "../common/PopUp";
 
 import { JobsAPI } from "../../services";
-
+import { formatCurrency } from "../../utils/helper";
 function Recruitment() {
   const [openModal, setOpenModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -72,6 +72,12 @@ function Recruitment() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSalaryChange = (e) => {
+    const { value } = e.target;
+    const formattedValue = formatCurrency(value);
+    setFormData((prev) => ({ ...prev, salary: formattedValue }));
   };
 
   const handleSubmit = () => {
@@ -151,9 +157,9 @@ function Recruitment() {
             label="Mức lương"
             name="salary"
             value={formData.salary}
-            onChange={handleChange}
+            onChange={handleSalaryChange} // Use handleSalaryChange for formatted salary
             fullWidth
-            type="number"
+            type="text" // Change type to text to allow formatted value
             InputProps={{
               endAdornment: <InputAdornment position="end">VNĐ</InputAdornment>,
               inputProps: { min: 0 },

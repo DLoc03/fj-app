@@ -8,6 +8,7 @@ import Profile from "../pages/Profile/_id";
 import UserCompany from "../pages/Profile/_idComp";
 import CompanyJobs from "../pages/Recruitment";
 import TestDetail from "../pages/Recruitment/_id";
+import Answer from "../pages/Jobs/_idAnswer";
 
 export const routes = [
   {
@@ -33,6 +34,10 @@ export const routes = [
   {
     path: PATHS.REGISTER,
     page: Auth,
+  },
+  {
+    path: PATHS.ANSWER,
+    page: Answer,
   },
 ];
 

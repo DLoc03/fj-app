@@ -14,6 +14,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import jobBg from "../../assets/jobBg.jpg";
 import Sidebar from "../../components/ui/Sidebar";
+import { Divider } from "@mui/material";
 
 function Job() {
   const itemPerPage = 8;
@@ -70,13 +71,13 @@ function Job() {
           size={{ xs: 12, md: 9 }}
           sx={{ position: "relative", zIndex: 2 }}
         >
-          <Grid container spacing={4} py={4}>
+          <Grid container spacing={4} py={{ xs: 1, md: 4 }}>
             <Grid item size={12}>
               <Typography
-                variant="h4"
                 fontWeight={"700"}
                 color="white"
                 textAlign={"center"}
+                sx={{ fontSize: { xs: "28px", md: "32px" } }}
               >
                 Tuyển dụng nhân sự
               </Typography>

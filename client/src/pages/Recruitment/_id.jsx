@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -10,15 +10,20 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Fade,
 } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { QuestionAPI } from "../../services";
 import PopupAlert from "../../components/common/PopUp";
+import QuestionCard from "../../components/ui/QuestionCard";
+import PATHS from "../../routes/path";
+import { TransitionGroup } from "react-transition-group";
+import { USER_TYPE } from "../../common/enum/enum";
 
 function TestDetail() {
   const { id: jobId } = useParams();
-  const navigate = useNavigate();
   const [questions, setQuestions] = useState([{ question: "" }]);
+  const [questionList, setQuestionList] = useState([]);
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -37,15 +42,30 @@ function TestDetail() {
   };
 
   const handleSaveQuestions = () => {
-    console.log("Job ID:", jobId);
-    QuestionAPI.postQuestion(jobId, questions, (err, res) => {
-      if (err) {
+    Promise.all(
+      questions.map(
+        (q) =>
+          new Promise((resolve, reject) => {
+            QuestionAPI.postQuestion(jobId, q, (err, res) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(res);
+              }
+            });
+          })
+      )
+    )
+      .then(() => {
+        handleShowAlert("Lưu tất cả câu hỏi thành công!", "success");
+        setTimeout(() => {
+          window.location.href = PATHS.COMPANY_JOBS;
+        }, 1000);
+      })
+      .catch((err) => {
+        console.error(err);
         handleShowAlert("Có lỗi xảy ra khi lưu câu hỏi!", "error");
-        return;
-      }
-      handleShowAlert("Lưu câu hỏi thành công!", "success");
-      navigate("/company/jobs");
-    });
+      });
   };
 
   const handleDeleteConfirm = (index) => {
@@ -70,6 +90,14 @@ function TestDetail() {
     setAlertOpen(true);
   };
 
+  useEffect(() => {
+    QuestionAPI.getQuestion(jobId, (err, result) => {
+      if (!err && result?.data.length > 0) {
+        setQuestionList(result.data);
+      }
+    });
+  }, [jobId]);
+
   return (
     <Box p={4}>
       <PopupAlert
@@ -79,43 +107,67 @@ function TestDetail() {
         severity={alertStatus}
       />
 
-      {questions.map((q, index) => (
-        <Paper key={index} sx={{ p: 2, mb: 2 }}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Typography variant="h6">Câu {index + 1}</Typography>
-            <Button
-              color="error"
-              onClick={() => handleDeleteConfirm(index)}
-              disabled={questions.length === 1}
-            >
-              Xóa
-            </Button>
-          </Box>
-          <TextField
-            label="Nội dung câu hỏi"
-            fullWidth
-            multiline
-            value={q.question}
-            onChange={(e) => handleQuestionChange(index, e.target.value)}
-            sx={{ mt: 2 }}
-          />
-        </Paper>
-      ))}
+      {questionList.length > 0 ? (
+        <QuestionCard id={jobId} type={USER_TYPE.EMPLOYER} />
+      ) : (
+        <>
+          <Typography variant="h5" mb={2} color="white" fontWeight={500}>
+            Tạo bộ câu hỏi mới
+          </Typography>
 
-      <Button variant="contained" sx={{ mr: 2 }} onClick={handleAddQuestion}>
-        Thêm câu hỏi
-      </Button>
-      <Button
-        variant="contained"
-        sx={{ backgroundColor: "secondary.main" }}
-        onClick={handleSaveQuestions}
-      >
-        Lưu tất cả
-      </Button>
+          <TransitionGroup>
+            {questions.map((q, index) => (
+              <Fade key={index} in timeout={500}>
+                <Paper sx={{ p: 2, mb: 2 }}>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Typography variant="h6">Câu {index + 1}</Typography>
+                    <Button
+                      color="error"
+                      onClick={() => handleDeleteConfirm(index)}
+                      disabled={questions.length === 1}
+                    >
+                      Xóa
+                    </Button>
+                  </Box>
+                  <TextField
+                    label="Nội dung câu hỏi"
+                    fullWidth
+                    multiline
+                    value={q.question}
+                    onChange={(e) =>
+                      handleQuestionChange(index, e.target.value)
+                    }
+                    sx={{ mt: 2 }}
+                  />
+                </Paper>
+              </Fade>
+            ))}
+          </TransitionGroup>
+        </>
+      )}
+
+      {questionList.length === 0 && (
+        <Box>
+          <Button
+            variant="contained"
+            sx={{ mr: 2, my: 1 }}
+            onClick={handleAddQuestion}
+          >
+            Thêm câu hỏi
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "secondary.main" }}
+            onClick={handleSaveQuestions}
+          >
+            Lưu tất cả
+          </Button>
+        </Box>
+      )}
 
       <Dialog
         open={confirmOpen}

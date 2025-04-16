@@ -1,13 +1,16 @@
 import React from "react";
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Box, Button, Grid } from "@mui/material";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import albumFirst from "../../assets/album-1.jpg";
 import albumSecond from "../../assets/album-2.jpg";
 import albumThird from "../../assets/album-3.jpg";
 import SlideCard from "../../components/common/SlideCard";
+import slideSecond from "../../assets/slide-2.jpg";
 import PATHS from "../../routes/path";
+import { useAuth } from "../../context/auth";
 
 function Home() {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="home-container">
       <Box
@@ -93,6 +96,74 @@ function Home() {
               borderRadius: "8px",
             }}
           />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          backgroundImage: `url(${slideSecond})`,
+          width: "100%",
+          height: { xs: "200px", md: "400px" },
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          mx: "auto",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          px: { xs: "8px", md: "80px" },
+        }}
+      >
+        <Typography
+          sx={{
+            fontSize: { xs: "16px", md: "32px" },
+          }}
+          textAlign={"center"}
+          fontWeight={700}
+          color="white"
+        >
+          Kết nối ứng viên và nhà tuyển dụng ngành F&B
+        </Typography>
+        <Typography
+          variant="body1"
+          color="white"
+          textAlign={"center"}
+          display={{ xs: "none", md: "block" }}
+          my={2}
+        >
+          FJ HUB đồng hành cùng bạn trên hành trình chinh phục ngành F&B. Dù là
+          nhân viên pha chế, phục vụ hay quản lý nhà hàng, cơ hội luôn chờ đón
+          bạn. Nhà tuyển dụng cũng sẽ nhanh chóng tìm được ứng viên phù hợp nhất
+          cho vị trí cần tuyển.
+        </Typography>
+        <Box display={"flex"} gap={4} my={{ xs: 2, md: 0 }}>
+          <Button
+            variant="outlined"
+            sx={{
+              color: "white",
+              borderColor: "white",
+              width: { xs: "160px", md: "300px" },
+              fontSize: { xs: "8px", md: "16px" },
+            }}
+            onClick={() => (window.location.href = PATHS.JOB)}
+          >
+            Tìm việc làm ngay
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{
+              color: "white",
+              borderColor: "white",
+              width: { xs: "160px", md: "300px" },
+              fontSize: { xs: "8px", md: "16px" },
+            }}
+            onClick={() => {
+              window.location.href = isAuthenticated
+                ? PATHS.PROFILE
+                : PATHS.LOGIN;
+            }}
+          >
+            Tuyển dụng ngay
+          </Button>
         </Box>
       </Box>
       <SlideCard />

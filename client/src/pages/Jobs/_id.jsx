@@ -17,8 +17,9 @@ import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 
 import imgBg from "../../assets/jobBg.jpg";
 import SlideCard from "../../components/common/SlideCard";
-import formatMoney from "../../utils/formatMoney";
+import { formatCurrency } from "../../utils/helper";
 import SpinningLoading from "../../components/common/SpinningLoading";
+import PATHS from "../../routes/path";
 
 function JobDetail() {
   const { id } = useParams();
@@ -89,7 +90,7 @@ function JobDetail() {
                 <Box display="flex" alignItems="center">
                   <AttachMoneyIcon sx={{ mr: 1 }} />
                   <Typography variant="body1">
-                    Mức lương: ~ {formatMoney(job.salary)}
+                    Mức lương: ~ {formatCurrency(job.salary)}
                   </Typography>
                 </Box>
               </Grid>
@@ -120,7 +121,14 @@ function JobDetail() {
             </Grid>
             <Grid item size={12} mt={2}></Grid>
             <Grid item size={{ xs: 12, md: 3 }} mt={2}>
-              <Button variant="contained">Nộp hồ sơ ứng tuyển</Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  window.location.href = PATHS.ANSWER.replace(":id", id);
+                }}
+              >
+                Nộp hồ sơ ứng tuyển
+              </Button>
             </Grid>
           </Grid>
           <Grid

@@ -22,11 +22,11 @@ const modalStyle = {
   maxWidth: 500,
 };
 
-function ReuseableModal({ open, onClose, title, children }) {
+function ReuseableModal({ open, onClose, title, children, disableClose }) {
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={disableClose ? null : onClose}
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{
@@ -37,7 +37,9 @@ function ReuseableModal({ open, onClose, title, children }) {
       <Fade in={open}>
         <Box sx={modalStyle}>
           <Box display="flex" justifyContent="space-between" mb={2}>
-            <Typography variant="h6">{title}</Typography>
+            <Typography variant="h6" textAlign={"center"}>
+              {title}
+            </Typography>
             <IconButton onClick={onClose}>
               <CloseIcon />
             </IconButton>
