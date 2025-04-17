@@ -19,6 +19,7 @@ function Banner() {
         textAlign: "center",
         color: "white",
         position: "relative",
+        padding: { xs: "0 20px", md: "0" },
       }}
     >
       <Box
@@ -28,16 +29,11 @@ function Banner() {
         }}
       >
         <Typography
-          variant="h2"
           sx={{ fontWeight: 700, fontSize: { xs: "28px", md: "48px" } }}
         >
           FJ Hub - Food & Beverage Job Hubs
         </Typography>
-        <Typography
-          variant="h4"
-          mb={4}
-          sx={{ fontSize: { xs: "16px", md: "32px" } }}
-        >
+        <Typography mb={4} sx={{ fontSize: { xs: "16px", md: "32px" } }}>
           Giải pháp tuyển dụng thông minh cho đội ngũ nhân sự
         </Typography>
         <Button
