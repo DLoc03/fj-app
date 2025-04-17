@@ -36,14 +36,14 @@ export const AuthAPI = {
   },
 
   async logout(cb) {
-    await restRequest.get("auth/logout", {}, () => {
+    await restRequest.get("/auth/logout", {}, () => {
       sessionStorage.removeItem("accessToken");
       if (typeof cb === "function") cb();
     });
   },
 
   async getCompany(cb) {
-    await restRequest.get("user/company", {}, (err, result) => {
+    await restRequest.get("/user/company", {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
