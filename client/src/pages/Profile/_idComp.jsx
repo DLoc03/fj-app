@@ -21,7 +21,7 @@ function UserCompany() {
   });
 
   useEffect(() => {
-    AuthAPI.getCompany((err, result) => {
+    AuthAPI.getCurrentUser((err, result) => {
       if (!err && result?.data) {
         setComp({
           name: result?.data?.company.name,

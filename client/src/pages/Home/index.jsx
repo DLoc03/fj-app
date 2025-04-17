@@ -8,6 +8,7 @@ import SlideCard from "../../components/common/SlideCard";
 import slideSecond from "../../assets/slide-2.jpg";
 import PATHS from "../../routes/path";
 import { useAuth } from "../../context/auth";
+import feedbacks from "../../data/feedback.json";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
@@ -40,7 +41,7 @@ function Home() {
             color="primary.main"
             fontWeight={700}
             mb={2}
-            sx={{ fontSize: { xs: "20px", md: "28px" } }}
+            sx={{ fontSize: { xs: "20px", md: "32px" } }}
           >
             FJ HUB hỗ trợ tuyển dụng như thế nào?
           </Typography>
@@ -172,15 +173,62 @@ function Home() {
           </Button>
         </Box>
       </Box>
-      <Grid container py={2} px={4} boxSizing={"border-box"}>
-        <Grid item size={6}>
-          <Typography fontSize={{ xs: "20px", md: "32px" }} fontWeight={700}>
-            Các dịch vụ cho nhà tuyển dụng
+      <Grid container spacing={4} justifyContent="center" sx={{ my: 4, px: 6 }}>
+        <Grid item size={12}>
+          <Typography
+            fontSize={{ xs: "20px", md: "32px" }}
+            textAlign={"center"}
+            fontWeight={700}
+          >
+            Họ nói gì về FJ?
           </Typography>
         </Grid>
-        <Grid item size={6}>
-          //
-        </Grid>
+        {feedbacks.map((item, index) => (
+          <Grid item size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+            <Box
+              sx={{
+                background: "white",
+                borderRadius: "16px",
+                p: 3,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box
+                component="img"
+                src={item.avatar}
+                alt={item.name}
+                sx={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  mb: 2,
+                  border: "2px solid #ddd",
+                }}
+              />
+              <Typography fontWeight={600} mb={0.5}>
+                {item.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" mb={2}>
+                {item.role}
+              </Typography>
+              <Typography
+                sx={{
+                  fontStyle: "italic",
+                  textAlign: "center",
+                  fontSize: { xs: "12px", md: "14px" },
+                }}
+              >
+                “{item.feedback}”
+              </Typography>
+            </Box>
+          </Grid>
+        ))}
       </Grid>
       <SlideCard />
     </div>

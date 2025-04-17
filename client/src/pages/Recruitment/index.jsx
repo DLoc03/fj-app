@@ -14,9 +14,9 @@ function CompanyJobs() {
   const [status, setStatus] = useState();
 
   useEffect(() => {
-    AuthAPI.getCompany((err, result) => {
+    AuthAPI.getCurrentUser((err, result) => {
       if (!err && result?.data) {
-        setJobList(result.data.jobList);
+        setJobList(result.data.jobs);
         setStatus(result.data.company.status);
       }
     });

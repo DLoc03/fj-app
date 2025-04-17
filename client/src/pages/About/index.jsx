@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import aboutData from "../../data/aboutUs.json";
+import aboutData from "../../data/about-us.json";
 import SlideCard from "../../components/common/SlideCard";
 
 import img1 from "../../assets/about-us/img-1.jpg";

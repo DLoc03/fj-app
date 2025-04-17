@@ -131,6 +131,10 @@ function Authenticated({ message, register }) {
     CompaniesAPI.postCompany(
       { ...formData, address: fullAddress },
       (err, result) => {
+        if (err || !result?.data) {
+          setAlertStatus("error");
+          handleShowAlert("Đăng ký thất bại! Vui lòng thử lại!");
+        }
         setAlertStatus("success");
         handleShowAlert("Đăng ký thông tin thành công!", () => {
           window.location.href = "/company";
@@ -165,10 +169,10 @@ function Authenticated({ message, register }) {
         }}
       />
       <Typography
-        variant="h5"
+        fontSize={{ xs: "20px", md: "28px" }}
         textAlign={"center"}
-        color="white"
         fontWeight={700}
+        color="white"
       >
         {message}
       </Typography>
@@ -176,7 +180,10 @@ function Authenticated({ message, register }) {
         <>
           <Button
             variant="contained"
-            sx={{ width: "280px" }}
+            sx={{
+              width: { xs: "240px", md: "320px" },
+              fontSize: { xs: "10px", md: "16px" },
+            }}
             onClick={() => setOpenModal(true)}
           >
             Đăng ký thông tin cơ sở ngay

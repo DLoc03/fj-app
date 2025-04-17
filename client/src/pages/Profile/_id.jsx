@@ -105,6 +105,7 @@ function Profile() {
         justifyContent: "center",
         p: 4,
         alignItems: "center",
+        backgroundColor: "secondary.second",
       }}
     >
       <Grid container spacing={4}>

@@ -14,6 +14,7 @@ const theme = createTheme({
     },
     secondary: {
       main: "rgb(48, 48, 48)",
+      second: "rgb(180, 180, 180)",
     },
     error: {
       main: red.A400,

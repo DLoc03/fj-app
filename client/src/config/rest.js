@@ -44,6 +44,7 @@ const userBaseRestRequest = () => {
 
   const fetchAsync = async (url, config, cb) => {
     try {
+      console.log("url: ", url);
       const response = await fetch(url, config);
       await handleResponse(response, { url, config }, cb);
     } catch (error) {

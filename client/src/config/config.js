@@ -1,4 +1,4 @@
-export const SERVICE_DOMAIN = "http://localhost:8080";
+export const SERVICE_DOMAIN = import.meta.env.VITE_API_URL;
 export const SERVICE_URL = `${SERVICE_DOMAIN}/api/v1`;
 export const SOCKET_URL = `${SERVICE_DOMAIN}/socket`;
 
