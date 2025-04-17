@@ -9,6 +9,8 @@ import slideSecond from "../../assets/slide-2.jpg";
 import PATHS from "../../routes/path";
 import { useAuth } from "../../context/auth";
 
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+
 function Home() {
   const { isAuthenticated } = useAuth();
   return (
@@ -43,14 +45,14 @@ function Home() {
             FJ HUB hỗ trợ tuyển dụng như thế nào?
           </Typography>
           <Typography sx={{ fontSize: { xs: "12px", md: "16px" } }}>
-            <FiberManualRecordIcon fontSize="1px" sx={{ mr: 2 }} /> Với{" "}
+            <PlayArrowIcon fontSize="2px" sx={{ mr: 2 }} /> Với{" "}
             <span>Ứng viên tìm việc</span>, FJ sẽ giúp các bạn có thể tìm kiếm
             cơ hội việc làm từ danh sách các tuyển dụng các công việc như pha
             chế, phục vụ, quản lý,...v.v. Vậy nên ngay bây giờ, hãy{" "}
             <span>Nộp hồ sơ ứng tuyển ngay!</span>
           </Typography>
-          <Typography sx={{ fontSize: { xs: "12px", md: "16px" } }}>
-            <FiberManualRecordIcon fontSize="1px" sx={{ mr: 2 }} /> Với{" "}
+          <Typography sx={{ fontSize: { xs: "12px", md: "16px" }, mt: 1 }}>
+            <PlayArrowIcon fontSize="2" sx={{ mr: 2 }} /> Với{" "}
             <span>Nhà tuyển dụng</span>, FJ sẽ hỗ trợ sàng lọc ứng viên, dễ dàng
             tìm kiếm ứng viên sáng giá, tiết kiệm thời gian và chi phí rất
             nhiều. <span>Đăng ký thông tin nhà tuyển dụng ngay!</span>
@@ -170,6 +172,16 @@ function Home() {
           </Button>
         </Box>
       </Box>
+      <Grid container py={2} px={4} boxSizing={"border-box"}>
+        <Grid item size={6}>
+          <Typography fontSize={{ xs: "20px", md: "32px" }} fontWeight={700}>
+            Các dịch vụ cho nhà tuyển dụng
+          </Typography>
+        </Grid>
+        <Grid item size={6}>
+          //
+        </Grid>
+      </Grid>
       <SlideCard />
     </div>
   );

@@ -11,7 +11,7 @@ export const CompanyResponse = {
         status,
         isDestroy,
         createdAt: DateFormat(createdAt),
-        updatedAt: DateFormat(createdAt)
+        updatedAt: DateFormat(updatedAt)
     }),
 
     Companies: ({ _id, name, description, recruiterId, status, isDestroy, createdAt, updatedAt }) => ({

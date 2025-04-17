@@ -18,39 +18,45 @@ const getUserList = async (isDestroy) => {
 };
 
 const getUserById = async (id) => {
-  const user = UserResponse.UserInfo(await User.findById(id).lean());
-  if (!user || user.isDestroy === true)
+  const userRaw = await User.findById(id).lean();
+  if (!userRaw || userRaw.isDestroy) {
     return MasterResponse({
       status: STATUS.NOT_FOUND,
       errCode: ERROR_CODE.BAD_REQUEST,
       message: "User not found",
     });
-  const company = CompanyResponse.CompanyFound(
-    await Company.findOne({ recruiterId: user.id }).lean()
-  );
-  if (!company || company.isDestroy === true)
+  }
+
+  const validUser = UserResponse.UserInfo(userRaw);
+
+  const existedCompany = await Company.findOne({
+    recruiterId: userRaw._id,
+  }).lean();
+  if (!existedCompany || existedCompany.isDestroy) {
     return MasterResponse({
-      status: STATUS.NOT_FOUND,
-      errCode: ERROR_CODE.BAD_REQUEST,
-      message: "Company not found",
+      data: {
+        ...validUser,
+        company: null,
+        jobs: [],
+      },
     });
-  const jobs = await Job.find({
-    companyId: company.id,
+  }
+
+  const company = CompanyResponse.CompanyFound(existedCompany);
+
+  const jobsOfComp = await Job.find({
+    companyId: existedCompany._id,
     isDestroy: false,
   }).lean();
-  if (!jobs)
-    return MasterResponse({
-      status: STATUS.NOT_FOUND,
-      errCode: ERROR_CODE.BAD_REQUEST,
-      message: "Job not found",
-    });
-  const validJob = jobs.map((j) => JobResponse.Jobs(j));
+  const jobs = jobsOfComp.map((j) => JobResponse.Jobs(j));
+
   const data = {
-    ...user,
+    ...validUser,
     company,
-    jobList: [...validJob],
+    jobs,
   };
-  return MasterResponse({ data: data });
+
+  return MasterResponse({ data });
 };
 
 const deleteUserById = async (id) => {

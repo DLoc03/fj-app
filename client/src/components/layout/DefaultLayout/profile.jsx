@@ -20,11 +20,11 @@ function DefaultProfile({ children }) {
     >
       <NavBar />
       <BannerAbout />
-      <Grid container spacing={{ xs: 1, md: 2 }}>
+      <Grid container>
         <Grid item size={3}>
           <ProfileBar />
         </Grid>
-        <Grid item size={8} mt={4}>
+        <Grid item size={8}>
           {children}
         </Grid>
       </Grid>
