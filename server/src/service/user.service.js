@@ -95,7 +95,7 @@ const deleteUserById = async (id) => {
 
 const updateUserById = async (id, data) => {
     const user = await User.findById(id)
-    if (!user || user.isDestroy === true) return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST })
+    if (!user || user.isDestroy === true) return MasterResponse({ status: STATUS.NOT_FOUND, message: 'User not found', errCode: ERROR_CODE.BAD_REQUEST })
     const newData = await User.findByIdAndUpdate(id, data, { new: true })
     return MasterResponse({ message: "Update successful", data: UserResponse.UserLogin(newData) })
 }
