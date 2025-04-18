@@ -57,7 +57,7 @@ const logout = async (id) => {
   const user = await User.findByIdAndUpdate(id, { refreshToken: null }).lean();
   if (!user) {
     return MasterResponse({
-      status: 404,
+      status: STATUS.NOT_FOUND,
       errCode: 1,
       message: "User not found",
     });
@@ -97,7 +97,7 @@ const refreshAccessToken = async (refreshToken) => {
 
 const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: "10s",
+    expiresIn: "15m",
   });
 };
 
