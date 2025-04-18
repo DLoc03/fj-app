@@ -52,7 +52,10 @@ const ProfileBar = () => {
 
   return (
     <Box height="100vh">
-      <ProSidebar collapsed={isSmallScreen}>
+      <ProSidebar
+        collapsed={isSmallScreen}
+        style={{ width: "100%", height: "100vh" }}
+      >
         <Menu iconShape="square">
           {!isSmallScreen && (
             <Box display="flex" justifyContent="center" mt={2}>

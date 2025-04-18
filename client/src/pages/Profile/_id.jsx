@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
@@ -11,14 +13,16 @@ import { AuthAPI } from "../../services";
 import { useAuth } from "../../context/auth";
 
 import PopupAlert from "../../components/common/PopUp";
-import { Divider } from "@mui/material";
+import { Divider, Link } from "@mui/material";
+import { SESSION_DATA } from "../../common/enum/enum";
+import PATHS from "../../routes/path";
 
 function Profile() {
   const { isAuthenticated } = useAuth();
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState("");
-  const userId = sessionStorage.getItem("UserId");
+  const userId = sessionStorage.getItem(SESSION_DATA.USERID);
   const [isEditing, setIsEditing] = useState(false);
   const nameInputRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -28,16 +32,21 @@ function Profile() {
     name: "",
     phone: "",
   });
+  const [comp, setComp] = useState();
+  const [jobs, setJobs] = useState();
 
   useEffect(() => {
     if (isAuthenticated) {
       AuthAPI.getCurrentUser((err, result) => {
+        console.log(result.data);
         if (!err && result?.data) {
           setForm({
             email: result.data.email,
             name: result.data.name,
             phone: result.data.phone,
           });
+          setComp(result.data.company);
+          setJobs(result.data.jobs);
         }
       });
     }
@@ -93,31 +102,47 @@ function Profile() {
       };
       reader.readAsDataURL(file);
 
-      // uploadAvatarToCloudinary(file);
+      const formData = new FormData();
+      formData.append("avatar", file);
+
+      AuthAPI.uploadAvatar(userId, formData, (err, result) => {
+        if (err) {
+          setAlertStatus("error");
+          handleShowAlert("Cập nhật ảnh đại diện thất bại");
+          return;
+        }
+        setAlertStatus("success");
+        handleShowAlert("Cập nhật ảnh đại diện thành công");
+      });
     }
   };
 
   return (
-    <Paper
+    <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        p: 4,
+        padding: { xs: "27px", md: " 27px 0" },
+        boxSizing: "border-box",
         alignItems: "center",
-        backgroundColor: "secondary.second",
+        backgroundColor: "white",
       }}
     >
       <Grid container spacing={4}>
         <Grid item size={12}>
-          <Typography variant="h5" textAlign={"center"} fontWeight={700}>
+          <Typography
+            fontSize={{ xs: "20px", md: "24px" }}
+            textAlign={"center"}
+            fontWeight={700}
+          >
             Thông tin nhà tuyển dụng
           </Typography>
           <Divider sx={{ mt: 1 }} />
         </Grid>
         <Grid
           item
-          size={{ sx: 12, md: 4 }}
+          size={12}
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -141,7 +166,7 @@ function Profile() {
           >
             <img
               src={previewImage || "https://via.placeholder.com/150"}
-              alt="avatar"
+              alt={previewImage ? "avatar" : ""}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
             <Box
@@ -172,22 +197,18 @@ function Profile() {
             />
           </Box>
         </Grid>
-        <Grid item size={{ sx: 12, md: 8 }}>
-          <Grid container spacing={4}>
-            <Grid
-              item
-              size={{ sx: 12, md: 4 }}
-              display={"flex"}
-              alignItems={"center"}
-            >
-              <Typography variant="body1">Họ và tên</Typography>
+        <Grid item size={{ xs: 12, md: 7 }}>
+          <Grid
+            container
+            spacing={{ xs: 1, md: 4 }}
+            sx={{ px: { xs: 0, sm: 1, md: 8 } }}
+          >
+            <Grid item size={4} display={"flex"} alignItems={"center"}>
+              <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                Họ và tên
+              </Typography>
             </Grid>
-            <Grid
-              item
-              size={{ sx: 12, md: 8 }}
-              display={"flex"}
-              alignItems={"center"}
-            >
+            <Grid item size={8} display={"flex"} alignItems={"center"}>
               <InputBase
                 name="name"
                 fullWidth
@@ -199,23 +220,16 @@ function Profile() {
                   borderBottom: "1px solid gray",
                   p: 1,
                   flexGrow: 1,
+                  fontSize: { xs: "12px", md: "16px" },
                 }}
               />
             </Grid>
-            <Grid
-              item
-              size={{ sx: 12, md: 4 }}
-              display={"flex"}
-              alignItems={"center"}
-            >
-              <Typography variant="body1">Email</Typography>
+            <Grid item size={4} display={"flex"} alignItems={"center"}>
+              <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                Email
+              </Typography>
             </Grid>
-            <Grid
-              item
-              size={{ sx: 12, md: 8 }}
-              display={"flex"}
-              alignItems={"center"}
-            >
+            <Grid item size={8} display={"flex"} alignItems={"center"}>
               <InputBase
                 name="email"
                 fullWidth
@@ -226,23 +240,16 @@ function Profile() {
                   borderBottom: "1px solid gray",
                   p: 1,
                   flexGrow: 1,
+                  fontSize: { xs: "12px", md: "16px" },
                 }}
               />
             </Grid>
-            <Grid
-              item
-              size={{ sx: 12, md: 4 }}
-              display={"flex"}
-              alignItems={"center"}
-            >
-              <Typography variant="body1">Số điện thoại</Typography>
+            <Grid item size={4} display={"flex"} alignItems={"center"}>
+              <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                Số điện thoại
+              </Typography>
             </Grid>
-            <Grid
-              item
-              size={{ sx: 12, md: 8 }}
-              display={"flex"}
-              alignItems={"center"}
-            >
+            <Grid item size={8} display={"flex"} alignItems={"center"}>
               <InputBase
                 name="phone"
                 fullWidth
@@ -253,18 +260,99 @@ function Profile() {
                   borderBottom: "1px solid gray",
                   p: 1,
                   flexGrow: 1,
+                  fontSize: { xs: "12px", md: "16px" },
                 }}
               />
             </Grid>
           </Grid>
         </Grid>
+        <Divider orientation="vertical" flexItem />
+        <Grid
+          item
+          size={{ xs: 12, md: 4 }}
+          display={{ xs: "none", md: "block" }}
+        >
+          {comp ? (
+            comp.status !== "Pending" ? (
+              <Grid container>
+                <Grid item size={12}>
+                  <Typography fontSize={"12px"}>Đại diện của cơ sở</Typography>
+                </Grid>
+                <Grid item size={12}>
+                  <Typography
+                    fontSize={{ xs: "12px", md: "20px" }}
+                    fontWeight={500}
+                    mb={2}
+                  >
+                    {comp.name}
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                </Grid>
+                <Grid item size={12} mb={1}>
+                  <Typography>
+                    Đang tuyển {jobs.length} vị trí.{" "}
+                    <Link
+                      component={RouterLink}
+                      to={PATHS.COMPANY_JOBS}
+                      sx={{
+                        color: "blue",
+                        fontSize: "16px",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Xem thêm
+                    </Link>
+                  </Typography>
+                </Grid>
+                <Grid item size={12}>
+                  <Typography>
+                    Đã có 4 ứng viên xin ứng tuyển.{" "}
+                    <Link
+                      component={RouterLink}
+                      to={PATHS.COMPANY_TEST}
+                      sx={{
+                        color: "blue",
+                        fontSize: "16px",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Xem thêm
+                    </Link>
+                  </Typography>
+                </Grid>
+              </Grid>
+            ) : (
+              <Box
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                sx={{ height: "100%", width: "100%" }}
+              >
+                <Typography>Đang chờ xác thực cơ sở</Typography>
+              </Box>
+            )
+          ) : (
+            <Box
+              display={"flex"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              sx={{ height: "100%", width: "100%" }}
+            >
+              <Typography>Hiện chưa có thông tin cơ sở</Typography>
+            </Box>
+          )}
+        </Grid>
       </Grid>
       <Button
         variant="contained"
-        sx={{ width: "240px", mt: 4 }}
+        sx={{
+          width: "fit-content",
+          mt: { xs: 0, md: 4 },
+          fontSize: { xs: "12px", md: "14px" },
+        }}
         onClick={handleToggleEdit}
       >
-        <EditIcon /> {isEditing ? "Cập nhật" : "Chỉnh sửa thông tin"}
+        <EditIcon /> {isEditing ? "Cập nhật" : "Chỉnh sửa thông tin cá nhân"}
       </Button>
       <PopupAlert
         open={alertOpen}
@@ -272,7 +360,7 @@ function Profile() {
         onClose={handleAlertClose}
         severity={alertStatus}
       />
-    </Paper>
+    </Box>
   );
 }
 

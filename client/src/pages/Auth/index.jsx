@@ -8,6 +8,7 @@ import { Button, Grid, IconButton } from "@mui/material";
 import { AuthAPI } from "../../services/authAPI";
 import PopupAlert from "../../components/common/PopUp";
 import { useAuth } from "../../context/auth";
+import { validateEmail, validatePhoneNumber } from "../../utils/helper";
 
 import imgBg from "../../assets/jobBg.jpg";
 import albumFJ from "../../assets/album-1.jpg";
@@ -60,17 +61,41 @@ function Auth() {
   };
 
   const handleSubmit = () => {
+    if (!validateEmail(form.email)) {
+      showError("Email không hợp lệ!");
+      return;
+    }
+    if (!form.password.trim()) {
+      showError("Vui lòng nhập mật khẩu!");
+      return;
+    }
+
+    if (!isLoginPage) {
+      if (!form.name.trim()) {
+        showError("Vui lòng nhập họ và tên!");
+        return;
+      }
+      if (!validatePhoneNumber(form.phone)) {
+        showError("Số điện thoại không hợp lệ!");
+        return;
+      }
+    }
+
     if (isLoginPage) {
       AuthAPI.login(
         { email: form.email, password: form.password },
         (err, res) => {
           if (err || res.errCode !== 0) {
-            handleShowAlert("Đăng nhập thất bại! Vui lòng thử lại");
-            setAlertStatus("error");
+            showError("Đăng nhập thất bại! Vui lòng thử lại");
             return;
           }
-          login(res?.data?.accessToken);
+          if (res?.user?.role === "admin") {
+            showError("Tài khoản không hợp lệ!");
+            return;
+          }
+
           setAlertStatus("success");
+          login(res?.data?.accessToken);
           handleShowAlert("Đăng nhập thành công!", () => {
             window.location.href = "/";
           });
@@ -86,10 +111,10 @@ function Auth() {
         },
         (err, res) => {
           if (err || res.errCode !== 0) {
-            handleShowAlert("Đăng ký thất bại! Vui lòng thử lại");
-            setAlertStatus("error");
+            showError("Đăng ký thất bại! Vui lòng thử lại");
             return;
           }
+
           setAlertStatus("success");
           handleShowAlert("Đăng ký thành công!", () => {
             window.location.href = "/login";
@@ -97,6 +122,11 @@ function Auth() {
         }
       );
     }
+  };
+
+  const showError = (message) => {
+    setAlertStatus("error");
+    handleShowAlert(message);
   };
 
   return (
@@ -197,7 +227,7 @@ function Auth() {
             <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
               {isLoginPage ? "Đăng nhập" : "Đăng ký"}
             </Button>
-            <Typography>
+            <Typography sx={{ mt: 1 }}>
               {isLoginPage ? (
                 <>
                   Chưa có tài khoản?{" "}

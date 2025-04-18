@@ -1,87 +1,96 @@
-import { HTTP_METHOD } from "../common/enum/enum";
+import { HTTP_METHOD, SESSION_DATA } from "../common/enum/enum";
 import { SERVICE_URL, getHeaderConfig } from "./config";
 
 const userBaseRestRequest = () => {
   const baseURL = SERVICE_URL;
 
-  const handleResponse = async (response, originalRequest, cb) => {
-    if (response && response.status === 200) {
-      const data = await response.json();
-      cb(null, data.result);
-    } else {
-      const errorResult = await response.json();
+  const refreshToken = async () => {
+    const res = await fetch(`${SERVICE_URL}/auth/token`, {
+      method: "PATCH",
+      credentials: "include",
+    });
 
-      if (errorResult.statusCode === 401 || errorResult.statusCode === 403) {
-        try {
-          const refreshRes = await fetch(`${SERVICE_URL}/token`, {
-            method: "PATCH",
-            credentials: "include",
-          });
+    const data = await res.json();
 
-          const refreshData = await refreshRes.json();
-          const newAccessToken = refreshData?.result;
+    if (res.status === 200 && data?.result) {
+      const newAccessToken = data.result;
+      sessionStorage.setItem(SESSION_DATA.ACCESSTOKEN, newAccessToken);
+      return newAccessToken;
+    }
 
-          if (refreshRes.status === 200 && newAccessToken) {
-            sessionStorage.setItem("accessToken", newAccessToken);
+    throw new Error("Failed to refresh token");
+  };
 
-            const retryResponse = await fetch(originalRequest.url, {
-              ...originalRequest.config,
-              headers: getHeaderConfig(),
-            });
-            const retryData = await retryResponse.json();
-            cb(null, retryData.result);
-          } else {
-            handleError(errorResult, cb);
-          }
-        } catch (refreshErr) {
-          handleError(refreshErr, cb);
+  const fetchAsync = async (url, config, cb, retry = true) => {
+    try {
+      const response = await fetch(url, config);
+      const result = await response.json();
+
+      if (response.status === 200) {
+        cb(null, result.result);
+        return;
+      }
+
+      if ((response.status === 401 || response.status === 403) && retry) {
+        await refreshToken();
+
+        const retryConfig = {
+          ...config,
+          headers: getHeaderConfig(),
+        };
+        const retryResponse = await fetch(url, retryConfig);
+        const retryResult = await retryResponse.json();
+
+        if (retryResponse.status === 200) {
+          cb(null, retryResult.result);
+        } else {
+          cb(retryResult);
         }
       } else {
-        handleError(errorResult, cb);
+        cb(result);
       }
-    }
-  };
-
-  const fetchAsync = async (url, config, cb) => {
-    try {
-      console.log("url: ", url);
-      const response = await fetch(url, config);
-      await handleResponse(response, { url, config }, cb);
     } catch (error) {
-      handleError(error, cb);
+      cb(error);
     }
-  };
-
-  const handleError = async (error, cb) => {
-    cb(error);
   };
 
   const sendRequest = async (method, endpoint, data, cb) => {
     const config = {
       method,
       headers: getHeaderConfig(),
+      credentials: "include",
     };
 
     if (method !== HTTP_METHOD.GET && data) {
-      config.body = JSON.stringify(data);
+      if (data instanceof FormData) {
+        config.body = data;
+        console.log(data);
+      } else {
+        config.body = JSON.stringify(data);
+      }
     }
-    await fetchAsync(`${baseURL}${endpoint}`, config, cb);
+
+    const url = `${baseURL}${endpoint}`;
+    await fetchAsync(url, config, cb);
   };
 
-  const get = async (endpoint, data, cb) =>
-    await sendRequest(HTTP_METHOD.GET, endpoint, data, cb);
-  const post = async (endpoint, data, cb) =>
-    await sendRequest(HTTP_METHOD.POST, endpoint, data, cb);
-  const put = async (endpoint, data, cb) =>
-    await sendRequest(HTTP_METHOD.PUT, endpoint, data, cb);
-  const del = async (endpoint, data, cb) =>
-    await sendRequest(HTTP_METHOD.DELETE, endpoint, data, cb);
+  const get = (endpoint, data, cb) =>
+    sendRequest(HTTP_METHOD.GET, endpoint, data, cb);
+  const post = (endpoint, data, cb) =>
+    sendRequest(HTTP_METHOD.POST, endpoint, data, cb);
+  const put = (endpoint, data, cb) =>
+    sendRequest(HTTP_METHOD.PUT, endpoint, data, cb);
+  const del = (endpoint, data, cb) =>
+    sendRequest(HTTP_METHOD.DELETE, endpoint, data, cb);
+  const postFormData = (endpoint, data, cb) =>
+    sendRequest(HTTP_METHOD.POST, endpoint, data, cb, true);
 
   return {
     get,
     post,
     put,
     delete: del,
+    postFormData,
   };
 };
 

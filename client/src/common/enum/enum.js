@@ -10,4 +10,11 @@ const USER_TYPE = {
   USER: "user",
 };
 
-export { HTTP_METHOD, USER_TYPE };
+const SESSION_DATA = {
+  USERID: "UserID",
+  ACCESSTOKEN: "AccessToken",
+  EXPIRESAT: "ExpiresAt",
+  NEW_ACCESSTOKEN: "NewAccessToken",
+};
+
+export { HTTP_METHOD, USER_TYPE, SESSION_DATA };

@@ -39,7 +39,7 @@ function UserCompany() {
     <>
       {comp.name ? (
         comp.status !== "Pending" ? (
-          <Paper
+          <Box
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -48,9 +48,11 @@ function UserCompany() {
               mx: "auto",
               alignItems: "center",
               gap: 4,
+              height: "100%",
+              backgroundColor: "white",
             }}
           >
-            <Grid container spacing={4}>
+            <Grid container spacing={{ xs: 1, md: 4 }}>
               <Grid item size={12}>
                 <Typography
                   className="profile__title"
@@ -64,91 +66,116 @@ function UserCompany() {
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 3 }}
+                size={{ sx: 12, sm: 4, md: 3 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1">Tên cơ sở</Typography>
+                <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                  Tên cơ sở
+                </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 9 }}
+                size={{ sx: 12, sm: 8, md: 9 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1" fontWeight={700}>
+                <Typography
+                  fontSize={{ xs: "12px", md: "16px" }}
+                  fontWeight={700}
+                >
                   {comp.name}
                 </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 3 }}
+                size={{ sx: 12, sm: 4, md: 3 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1">Địa chỉ</Typography>
+                <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                  Địa chỉ
+                </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 9 }}
+                size={{ sx: 12, sm: 8, md: 9 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1" fontWeight={700}>
+                <Typography
+                  fontSize={{ xs: "12px", md: "16px" }}
+                  fontWeight={700}
+                >
                   {comp.address}
                 </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 3 }}
+                size={{ sx: 12, sm: 4, md: 3 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1">Số điện thoại</Typography>
+                <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                  Số điện thoại
+                </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 9 }}
+                size={{ sx: 12, sm: 8, md: 9 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1" fontWeight={700}>
+                <Typography
+                  fontSize={{ xs: "12px", md: "16px" }}
+                  fontWeight={700}
+                >
                   {comp.phone}
                 </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 3 }}
+                size={{ sx: 12, sm: 4, md: 3 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1">Đại diện cơ sở</Typography>
+                <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                  Đại diện cơ sở
+                </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 9 }}
+                size={{ sx: 12, sm: 8, md: 9 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1" fontWeight={700}>
+                <Typography
+                  fontSize={{ xs: "12px", md: "16px" }}
+                  fontWeight={700}
+                >
                   {comp.user}
                 </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 3 }}
+                size={{ sx: 12, sm: 4, md: 9 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1">Slogan</Typography>
+                <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                  Slogan
+                </Typography>
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, md: 9 }}
+                size={{ sx: 12, sm: 4, md: 9 }}
                 display={"flex"}
                 alignItems={"center"}
               >
-                <Typography variant="body1" fontWeight={700}>
+                <Typography
+                  fontSize={{ xs: "12px", md: "16px" }}
+                  fontWeight={700}
+                >
                   {comp.description}
                 </Typography>
               </Grid>
@@ -159,7 +186,7 @@ function UserCompany() {
             >
               Đăng tuyển dụng nhân sự
             </Button>
-          </Paper>
+          </Box>
         ) : (
           <Authenticated
             message={"Đang chờ xác thực thông tin cơ sở..."}

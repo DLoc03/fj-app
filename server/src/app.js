@@ -16,8 +16,6 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(auditLogger);
 
-app.disable("etag");
-
 app.use("/api/v1", API_ROUTE);
 app.use(errorHandler);
 

@@ -45,6 +45,7 @@ function ResponsiveAppBar() {
   }, []);
 
   useEffect(() => {
+    console.log("Authenticated status: ", isAuthenticated);
     if (isAuthenticated) {
       AuthAPI.getCurrentUser((err, result) => {
         if (!err && result?.data) {

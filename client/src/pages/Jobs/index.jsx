@@ -6,8 +6,9 @@ import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
+import { useMediaQuery } from "react-responsive";
 
-import { JobsAPI } from "../../services";
+import { JobsAPI, CompaniesAPI } from "../../services";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -17,7 +18,8 @@ import Sidebar from "../../components/ui/Sidebar";
 import { Divider } from "@mui/material";
 
 function Job() {
-  const itemPerPage = 8;
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const itemPerPage = isMobile ? 3 : 8;
   const [currentPage, setCurrentPage] = useState(1);
   const [jobs, setJobs] = useState([]);
 
