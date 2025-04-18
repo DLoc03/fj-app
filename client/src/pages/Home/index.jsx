@@ -19,11 +19,11 @@ function Home() {
       <Box
         sx={{
           display: "flex",
-          px: 8,
+          px: { xs: 4, md: 8 },
           flexDirection: { xs: "column", md: "row" },
-          justifyContent: { xs: "center", md: "center" },
+          justifyContent: "center",
           alignItems: { xs: "center", md: "normal" },
-          textAlign: { xs: "center", md: "left" },
+          textAlign: { xs: "justify", md: "left" },
           gap: { xs: 4, md: 12 },
           my: 4,
         }}
@@ -58,15 +58,23 @@ function Home() {
             tìm kiếm ứng viên sáng giá, tiết kiệm thời gian và chi phí rất
             nhiều. <span>Đăng ký thông tin nhà tuyển dụng ngay!</span>
           </Typography>
-          <Button
-            variant="contained"
-            sx={{ mt: 2 }}
-            onClick={() => {
-              window.location.href = PATHS.ABOUT;
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: { xs: "center", md: "flex-start" },
             }}
           >
-            Tìm hiểu thêm
-          </Button>
+            <Button
+              variant="contained"
+              sx={{ mt: 2 }}
+              onClick={() => {
+                window.location.href = PATHS.ABOUT;
+              }}
+            >
+              Tìm hiểu thêm
+            </Button>
+          </Box>
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>
           <Box
@@ -76,7 +84,7 @@ function Home() {
             sx={{
               margin: "auto 0",
               height: { xs: "200px", md: "260px" },
-              width: { xs: "100px", md: "120px" },
+              width: { xs: "90px", md: "120px" },
               objectFit: "cover",
               borderRadius: "8px",
             }}
@@ -99,7 +107,7 @@ function Home() {
             sx={{
               margin: "auto 0",
               height: { xs: "200px", md: "260px" },
-              width: { xs: "100px", md: "120px" },
+              width: { xs: "90px", md: "120px" },
               objectFit: "cover",
               borderRadius: "8px",
             }}

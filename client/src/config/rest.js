@@ -11,9 +11,8 @@ const userBaseRestRequest = () => {
     });
 
     const data = await res.json();
-
     if (res.status === 200 && data?.result) {
-      const newAccessToken = data.result;
+      const newAccessToken = data.result.data;
       sessionStorage.setItem(SESSION_DATA.ACCESSTOKEN, newAccessToken);
       return newAccessToken;
     }
@@ -21,7 +20,7 @@ const userBaseRestRequest = () => {
     throw new Error("Failed to refresh token");
   };
 
-  const fetchAsync = async (url, config, cb, retry = true) => {
+  const fetchAsync = async (url, config, cb) => {
     try {
       const response = await fetch(url, config);
       const result = await response.json();
@@ -31,13 +30,20 @@ const userBaseRestRequest = () => {
         return;
       }
 
-      if ((response.status === 401 || response.status === 403) && retry) {
-        await refreshToken();
+      if (response.status === 401 || response.status === 403) {
+        // Cấp mới accessToken
+        const newAccessToken = await refreshToken();
 
+        // Cập nhật lại header Authorization
         const retryConfig = {
           ...config,
-          headers: getHeaderConfig(),
+          headers: {
+            ...config.headers,
+            Authorization: `Bearer ${newAccessToken}`,
+          },
         };
+
+        // Retry request với token mới
         const retryResponse = await fetch(url, retryConfig);
         const retryResult = await retryResponse.json();
 
@@ -53,7 +59,6 @@ const userBaseRestRequest = () => {
       cb(error);
     }
   };
-
   const sendRequest = async (method, endpoint, data, cb) => {
     const config = {
       method,
