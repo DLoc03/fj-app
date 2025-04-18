@@ -35,7 +35,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ posType }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const width = isMobile ? "100vw" : "260px";
@@ -101,10 +101,26 @@ const Sidebar = () => {
             <Typography variant="h6" sx={{ m: "15px 0 5px 20px" }}>
               Vị trí tuyển
             </Typography>
-            <FormControlLabel control={<Checkbox />} label="Phục vụ" />
-            <FormControlLabel control={<Checkbox />} label="Phụ bếp" />
-            <FormControlLabel control={<Checkbox />} label="Pha chế" />
-            <FormControlLabel control={<Checkbox />} label="Tiếp tân" />
+            <FormControlLabel
+              control={<Checkbox />}
+              value={posType}
+              label="Phục vụ"
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              value={posType}
+              label="Phụ bếp"
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              value={posType}
+              label="Pha chế"
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              value={posType}
+              label="Tiếp tân"
+            />
           </Box>
           <Box
             paddingLeft={isCollapsed ? undefined : "12px"}

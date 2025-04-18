@@ -12,12 +12,15 @@ import MenuItem from "@mui/material/MenuItem";
 import ReuseableModal from "../common/Modal";
 import PopupAlert from "../common/PopUp";
 
+import bgImg from "../../assets/background.jpg";
+
 import { CompaniesAPI } from "../../services";
 import {
   getProvinces,
   getDistricts,
   getWards,
 } from "../../services/addressAPI";
+import { Paper } from "@mui/material";
 
 function Authenticated({ message, register }) {
   const [openModal, setOpenModal] = useState(false);
@@ -131,6 +134,10 @@ function Authenticated({ message, register }) {
     CompaniesAPI.postCompany(
       { ...formData, address: fullAddress },
       (err, result) => {
+        if (err || !result?.data) {
+          setAlertStatus("error");
+          handleShowAlert("Đăng ký thất bại! Vui lòng thử lại!");
+        }
         setAlertStatus("success");
         handleShowAlert("Đăng ký thông tin thành công!", () => {
           window.location.href = "/company";
@@ -140,12 +147,19 @@ function Authenticated({ message, register }) {
   };
 
   return (
-    <Box
+    <Paper
       display={"flex"}
       flexDirection={"column"}
       justifyContent={"center"}
       alignItems={"center"}
-      gap={1}
+      gap={4}
+      sx={{
+        height: "100%",
+        p: 2,
+        backgroundImage: `url(${bgImg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <PopupAlert
         open={alertOpen}
@@ -165,22 +179,28 @@ function Authenticated({ message, register }) {
         }}
       />
       <Typography
-        variant="h5"
+        fontSize={{ xs: "20px", md: "28px" }}
         textAlign={"center"}
-        color="white"
         fontWeight={700}
+        color="secondary.main"
+        my={2}
       >
         {message}
       </Typography>
       {register && (
         <>
-          <Button
-            variant="contained"
-            sx={{ width: "280px" }}
-            onClick={() => setOpenModal(true)}
-          >
-            Đăng ký thông tin cơ sở ngay
-          </Button>
+          <Box display="flex" justifyContent="center">
+            <Button
+              variant="contained"
+              sx={{
+                width: { xs: "240px", md: "320px" },
+                fontSize: { xs: "10px", md: "16px" },
+              }}
+              onClick={() => setOpenModal(true)}
+            >
+              Đăng ký thông tin cơ sở ngay
+            </Button>
+          </Box>
 
           <ReuseableModal
             open={openModal}
@@ -252,7 +272,7 @@ function Authenticated({ message, register }) {
               </FormControl>
 
               <TextField
-                label="Mô tả công việc"
+                label="Mô tả về cơ sở"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -272,7 +292,7 @@ function Authenticated({ message, register }) {
           </ReuseableModal>
         </>
       )}
-    </Box>
+    </Paper>
   );
 }
 

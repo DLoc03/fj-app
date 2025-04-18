@@ -14,3 +14,8 @@ export const validatePhoneNumber = (phone) => {
   const regex = /^\d{10,15}$/;
   return regex.test(phone);
 };
+
+//  Validate password textfield
+// export const validatePassword = (password) => {
+//   return password.length >= 6;
+// };

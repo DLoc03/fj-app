@@ -14,19 +14,19 @@ function CompanyJobs() {
   const [status, setStatus] = useState();
 
   useEffect(() => {
-    AuthAPI.getCompany((err, result) => {
+    AuthAPI.getCurrentUser((err, result) => {
       if (!err && result?.data) {
-        setJobList(result.data.jobList);
+        setJobList(result.data.jobs);
         setStatus(result.data.company.status);
       }
     });
   }, []);
 
   return (
-    <Box>
+    <Box sx={{ height: "100%" }}>
       {status !== "Pending" ? (
         jobList.length > 0 ? (
-          <Box>
+          <Box m={2}>
             {jobList.map((job) => (
               <JobCard
                 key={job.id}
@@ -43,7 +43,7 @@ function CompanyJobs() {
             </Box>
           </Box>
         ) : (
-          <Paper
+          <Box
             sx={{
               backgroundColor: "white",
               p: 2,
@@ -51,7 +51,7 @@ function CompanyJobs() {
               justifyContent: "center",
               alignItems: "center",
               flexDirection: "column",
-              mt: 4,
+              height: "100%",
             }}
           >
             <Typography variant="h5" gutterBottom color="primary">
@@ -60,7 +60,7 @@ function CompanyJobs() {
             <Box textAlign="center" mt={2}>
               <Recruitment />
             </Box>
-          </Paper>
+          </Box>
         )
       ) : (
         <Authenticated

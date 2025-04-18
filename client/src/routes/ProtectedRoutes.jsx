@@ -5,7 +5,6 @@ import SpinningLoader from "../components/common/SpinningLoading";
 
 const PrivateRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
-  console.log(isAuthenticated);
 
   if (isLoading) {
     return <SpinningLoader />;

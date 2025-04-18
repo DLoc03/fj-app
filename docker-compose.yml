@@ -1,0 +1,40 @@
+services:
+  admin:
+    build: ./admin
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./admin:/app
+
+  audit_logs_server:
+    build: ./audit_logs_server
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./audit_logs_server:/app
+
+  client:
+    build: ./client
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./client:/app
+
+  payment:
+    build: ./payment
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./payment:/app
+
+  server:
+    build: ./server
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/app
+
+  worker:
+    build: ./worker
+    volumes:
+      - ./worker:/app

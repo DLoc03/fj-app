@@ -8,6 +8,9 @@ import SlideCard from "../../components/common/SlideCard";
 import slideSecond from "../../assets/slide-2.jpg";
 import PATHS from "../../routes/path";
 import { useAuth } from "../../context/auth";
+import feedbacks from "../../data/feedback.json";
+
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
 function Home() {
   const { isAuthenticated } = useAuth();
@@ -16,12 +19,12 @@ function Home() {
       <Box
         sx={{
           display: "flex",
-          px: 8,
+          px: { xs: 4, md: 8 },
           flexDirection: { xs: "column", md: "row" },
-          justifyContent: { xs: "center", md: "center" },
+          justifyContent: "center",
           alignItems: { xs: "center", md: "normal" },
-          textAlign: { xs: "center", md: "left" },
-          gap: 12,
+          textAlign: { xs: "justify", md: "left" },
+          gap: { xs: 4, md: 12 },
           my: 4,
         }}
       >
@@ -34,31 +37,44 @@ function Home() {
             },
           }}
         >
-          <Typography variant="h4" color="primary.main" fontWeight={700} mb={2}>
+          <Typography
+            color="primary.main"
+            fontWeight={700}
+            mb={2}
+            sx={{ fontSize: { xs: "20px", md: "32px" } }}
+          >
             FJ HUB hỗ trợ tuyển dụng như thế nào?
           </Typography>
-          <Typography variant="body1">
-            <FiberManualRecordIcon fontSize="1px" sx={{ mr: 2 }} /> Với{" "}
+          <Typography sx={{ fontSize: { xs: "12px", md: "16px" } }}>
+            <PlayArrowIcon fontSize="2px" sx={{ mr: 2 }} /> Với{" "}
             <span>Ứng viên tìm việc</span>, FJ sẽ giúp các bạn có thể tìm kiếm
             cơ hội việc làm từ danh sách các tuyển dụng các công việc như pha
             chế, phục vụ, quản lý,...v.v. Vậy nên ngay bây giờ, hãy{" "}
             <span>Nộp hồ sơ ứng tuyển ngay!</span>
           </Typography>
-          <Typography variant="body1" py={1}>
-            <FiberManualRecordIcon fontSize="1px" sx={{ mr: 2 }} /> Với{" "}
+          <Typography sx={{ fontSize: { xs: "12px", md: "16px" }, mt: 1 }}>
+            <PlayArrowIcon fontSize="2" sx={{ mr: 2 }} /> Với{" "}
             <span>Nhà tuyển dụng</span>, FJ sẽ hỗ trợ sàng lọc ứng viên, dễ dàng
             tìm kiếm ứng viên sáng giá, tiết kiệm thời gian và chi phí rất
             nhiều. <span>Đăng ký thông tin nhà tuyển dụng ngay!</span>
           </Typography>
-          <Button
-            variant="contained"
-            sx={{ mt: 2 }}
-            onClick={() => {
-              window.location.href = PATHS.ABOUT;
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: { xs: "center", md: "flex-start" },
             }}
           >
-            Tìm hiểu thêm
-          </Button>
+            <Button
+              variant="contained"
+              sx={{ mt: 2 }}
+              onClick={() => {
+                window.location.href = PATHS.ABOUT;
+              }}
+            >
+              Tìm hiểu thêm
+            </Button>
+          </Box>
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>
           <Box
@@ -67,7 +83,7 @@ function Home() {
             alt="album-1"
             sx={{
               margin: "auto 0",
-              height: { xs: "240px", md: "260px" },
+              height: { xs: "200px", md: "260px" },
               width: { xs: "90px", md: "120px" },
               objectFit: "cover",
               borderRadius: "8px",
@@ -78,8 +94,8 @@ function Home() {
             src={albumThird}
             alt="album-2"
             sx={{
-              height: { xs: "300px", md: "320px" },
-              width: { xs: "170px", md: "200px" },
+              height: { xs: "260px", md: "320px" },
+              width: { xs: "140px", md: "200px" },
               borderRadius: "8px",
               objectFit: "cover",
             }}
@@ -90,7 +106,7 @@ function Home() {
             alt="album-3"
             sx={{
               margin: "auto 0",
-              height: { xs: "240px", md: "260px" },
+              height: { xs: "200px", md: "260px" },
               width: { xs: "90px", md: "120px" },
               objectFit: "cover",
               borderRadius: "8px",
@@ -124,7 +140,6 @@ function Home() {
           Kết nối ứng viên và nhà tuyển dụng ngành F&B
         </Typography>
         <Typography
-          variant="body1"
           color="white"
           textAlign={"center"}
           display={{ xs: "none", md: "block" }}
@@ -166,6 +181,63 @@ function Home() {
           </Button>
         </Box>
       </Box>
+      <Grid container spacing={4} justifyContent="center" sx={{ my: 4, px: 6 }}>
+        <Grid item size={12}>
+          <Typography
+            fontSize={{ xs: "20px", md: "32px" }}
+            textAlign={"center"}
+            fontWeight={700}
+          >
+            Họ nói gì về FJ?
+          </Typography>
+        </Grid>
+        {feedbacks.map((item, index) => (
+          <Grid item size={{ xs: 12, sm: 6, md: 3 }} key={index}>
+            <Box
+              sx={{
+                background: "white",
+                borderRadius: "16px",
+                p: 3,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Box
+                component="img"
+                src={item.avatar}
+                alt={item.name}
+                sx={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  mb: 2,
+                  border: "2px solid #ddd",
+                }}
+              />
+              <Typography fontWeight={600} mb={0.5}>
+                {item.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" mb={2}>
+                {item.role}
+              </Typography>
+              <Typography
+                sx={{
+                  fontStyle: "italic",
+                  textAlign: "center",
+                  fontSize: { xs: "12px", md: "14px" },
+                }}
+              >
+                “{item.feedback}”
+              </Typography>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
       <SlideCard />
     </div>
   );

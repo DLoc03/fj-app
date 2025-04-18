@@ -1,3 +1,4 @@
+import { SESSION_DATA } from "../common/enum/enum";
 import userBaseRestRequest from "../config/rest";
 
 const restRequest = userBaseRestRequest();
@@ -7,8 +8,11 @@ export const AuthAPI = {
     await restRequest.post("/auth/login", data, (err, result) => {
       if (err) return cb(err);
       if (result?.data?.accessToken) {
-        sessionStorage.setItem("accessToken", result?.data?.accessToken);
-        sessionStorage.setItem("UserId", result?.data?.user.id);
+        sessionStorage.setItem(
+          SESSION_DATA.ACCESSTOKEN,
+          result?.data?.accessToken
+        );
+        sessionStorage.setItem(SESSION_DATA.USERID, result?.data?.user.id);
       }
       if (typeof cb === "function") cb(null, result);
     });
@@ -36,16 +40,26 @@ export const AuthAPI = {
   },
 
   async logout(cb) {
-    await restRequest.get("auth/logout", {}, () => {
-      sessionStorage.removeItem("accessToken");
+    await restRequest.get("/auth/logout", {}, () => {
+      sessionStorage.removeItem(SESSION_DATA.ACCESSTOKEN);
       if (typeof cb === "function") cb();
     });
   },
 
   async getCompany(cb) {
-    await restRequest.get("user/company", {}, (err, result) => {
+    await restRequest.get("/user/company", {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
+  },
+  async uploadAvatar(id, formData, cb) {
+    await restRequest.postFormData(
+      `/user/${id}/avatar`,
+      formData,
+      (err, result) => {
+        if (err) return cb(err);
+        if (typeof cb === "function") cb(null, result);
+      }
+    );
   },
 };

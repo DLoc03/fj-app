@@ -1,26 +1,60 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { AuthAPI } from "../services";
+import { SESSION_DATA } from "../common/enum/enum";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("accessToken");
+  const checkAuth = () => {
+    const token = sessionStorage.getItem(SESSION_DATA.ACCESSTOKEN);
     setIsAuthenticated(!!token);
+  };
+
+  useEffect(() => {
+    checkAuth();
     setIsLoading(false);
+
+    const handleTokenRefreshed = (e) => {
+      const token = e.detail;
+      console.log("New token arrive: ", token);
+      sessionStorage.setItem(SESSION_DATA.ACCESSTOKEN, token);
+      setIsAuthenticated(true);
+    };
+
+    window.addEventListener("tokenRefreshed", handleTokenRefreshed);
+
+    const handleStorageChange = () => {
+      checkAuth();
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    const interval = setInterval(async () => {
+      try {
+        await AuthAPI.refreshToken();
+      } catch (err) {
+        console.error("Làm mới token thất bại", err);
+        logout();
+      }
+    }, 14 * 60 * 1000);
+
+    return () => {
+      window.removeEventListener("tokenRefreshed", handleTokenRefreshed);
+      window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
+    };
   }, []);
 
   const login = (token) => {
-    sessionStorage.setItem("accessToken", token);
+    sessionStorage.setItem(SESSION_DATA.ACCESSTOKEN, token);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     AuthAPI.logout(() => {
+      sessionStorage.removeItem(SESSION_DATA.ACCESSTOKEN);
       setIsAuthenticated(false);
       window.location.href = "/login";
     });
