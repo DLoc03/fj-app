@@ -9,14 +9,15 @@ const Router = express.Router();
 Router.route("/")
   .get(verifyToken, authorizeAdmin('admin'), cacheMiddleware, userController.getUsers)
 
-Router.route("/:id")
-  .get(verifyToken, authorizeAdmin('admin'), userController.getUserById)
+Router.route('/avatar')
   .put(verifyToken, authorizeAdmin('user'), upload.single('avatar'), userController.updateUserById)
-  .delete(verifyToken, authorizeAdmin('admin'), userController.deleteUserById)
-
-Router.route('/:id/avatar')
   .post(verifyToken, authorizeAdmin('user'), upload.single('avatar'), userController.uploadAvatarById)
   .delete(verifyToken, authorizeAdmin('user'), userController.deleteAvatarById)
+
+Router.route("/:id")
+  .get(verifyToken, authorizeAdmin('admin'), userController.getUserById)
+  .delete(verifyToken, authorizeAdmin('admin'), userController.deleteUserById)
+
 
 
 export const userRoute = Router;
