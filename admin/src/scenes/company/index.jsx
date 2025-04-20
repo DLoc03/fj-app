@@ -15,12 +15,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  deleteCompanyById,
-  getAllCompanies,
-} from "../../services/company.service";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
+
+import { CompanyAPI } from "../../services";
 
 const Company = () => {
   const theme = useTheme();
@@ -34,34 +32,13 @@ const Company = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getAllCompanies();
-
-        if (!Array.isArray(response?.result?.data)) {
-          throw new Error("Dữ liệu trả về không hợp lệ!");
-        }
-        const formattedCompanies = response.result.data.map(
-          (company, index) => ({
-            id: company.id || index,
-            name: company.name || "Đang cập nhật...",
-            address: company.address || "Đang cập nhật...",
-            username: company.recruiter?.name || "Đang cập nhật...",
-            phone: company.recruiter?.phone || "Đang cập nhật...",
-            status: company.status || "Đang cập nhật...",
-            position: company.position || "Đang cập nhật...",
-          })
-        );
-
-        setCompanies(formattedCompanies);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+    CompanyAPI.getAllCompany((err, result) => {
+      if (err || !result?.data) {
+        setCompanies(["Không có dữ liệu"]);
+        return;
       }
-    };
-
-    fetchData();
+      setCompanies(result?.data);
+    });
   }, []);
 
   const handleRowClick = (params) => {
@@ -88,18 +65,18 @@ const Company = () => {
     //Call API Here
   };
 
-  const handleDeleteConfirm = async () => {
-    if (!selectedCompany) return;
-    try {
-      await deleteCompanyById(selectedCompany);
-      setCompanies((prevUsers) =>
-        prevUsers.filter((user) => user.id !== selectedCompany)
-      );
-      handleCloseDialog();
-    } catch (error) {
-      console.error("Xóa thất bại:", error);
-    }
-  };
+  // const handleDeleteConfirm = async () => {
+  //   if (!selectedCompany) return;
+  //   try {
+  //     await deleteCompanyById(selectedCompany);
+  //     setCompanies((prevUsers) =>
+  //       prevUsers.filter((user) => user.id !== selectedCompany)
+  //     );
+  //     handleCloseDialog();
+  //   } catch (error) {
+  //     console.error("Xóa thất bại:", error);
+  //   }
+  // };
 
   const columns = [
     { field: "name", headerName: "Tên cơ sở", flex: 1 },
@@ -208,7 +185,7 @@ const Company = () => {
           <Button onClick={handleCloseDialog} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+          <Button color="error" autoFocus>
             Xóa
           </Button>
         </DialogActions>

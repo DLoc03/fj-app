@@ -11,15 +11,13 @@ const registerUser = async (req, res) => {
     await redis.del("/api/v1/user/:{}");
     return res.status(200).json(result);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
@@ -39,15 +37,13 @@ const loginUser = async (req, res) => {
     }
     return res.status(200).json(response);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
@@ -57,15 +53,13 @@ export const refreshAccessToken = async (req, res) => {
     const result = await authService.refreshAccessToken(refreshToken);
     return res.status(200).json(result);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
@@ -82,32 +76,29 @@ export const logout = async (req, res) => {
     }
     return res.status(200).json(response);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
 export const getMe = async (req, res) => {
   try {
     const response = await userService.getUserById(req.user.id);
+    console.log("User response: ", response);
     return res.status(200).json(response);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 

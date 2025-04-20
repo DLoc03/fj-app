@@ -13,8 +13,7 @@ const userBaseRestRequest = () => {
     const data = await res.json();
     if (res.status === 200 && data?.result) {
       const newAccessToken = data.result.data;
-      console.log("New token: ", newAccessToken);
-      sessionStorage.setItem(SESSION_DATA.ACCESSTOKEN, newAccessToken);
+      sessionStorage.setItem(SESSION_DATA.ADMINTOKEN, newAccessToken);
       return newAccessToken;
     }
 

@@ -31,6 +31,7 @@ function Profile() {
     email: "",
     name: "",
     phone: "",
+    avatar: "",
   });
   const [comp, setComp] = useState();
   const [jobs, setJobs] = useState();
@@ -44,6 +45,7 @@ function Profile() {
             email: result.data.email,
             name: result.data.name,
             phone: result.data.phone,
+            avatar: result.data.avatar,
           });
           setComp(result.data.company);
           setJobs(result.data.jobs);
@@ -75,7 +77,15 @@ function Profile() {
 
   const handleToggleEdit = () => {
     if (isEditing) {
-      AuthAPI.updateUser(userId, form, (err, result) => {
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("email", form.email);
+      formData.append("phone", form.phone);
+      if (fileInputRef.current?.files[0]) {
+        formData.append("avatar", fileInputRef.current.files[0]);
+      }
+
+      AuthAPI.updateUser(userId, formData, (err, result) => {
         if (err) {
           setAlertStatus("error");
           handleShowAlert("Cập nhật thất bại");
@@ -103,14 +113,14 @@ function Profile() {
       reader.readAsDataURL(file);
 
       const formData = new FormData();
-      formData.append("avatar", file);
 
-      AuthAPI.uploadAvatar(userId, formData, (err, result) => {
-        if (err) {
+      AuthAPI.updateUser(userId, formData, (err, result) => {
+        if (err || !result.data) {
           setAlertStatus("error");
           handleShowAlert("Cập nhật ảnh đại diện thất bại");
           return;
         }
+        console.log();
         setAlertStatus("success");
         handleShowAlert("Cập nhật ảnh đại diện thành công");
       });

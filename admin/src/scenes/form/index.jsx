@@ -3,10 +3,10 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
-import { UserUpdate, GetUserByID } from "../../services/user.service";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ERROR_CODE, STATUS } from "../../utils/enum";
+
+import { UserAPI } from "../../services";
 
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -21,44 +21,22 @@ const Form = () => {
 
   useEffect(() => {
     if (!id) return;
-    const fetchUser = async () => {
-      try {
-        const response = await GetUserByID(id);
-        const userData = response?.user?.result?.data;
-        if (userData) {
-          setUserData({
-            name: userData.name || "",
-            email: userData.email || "",
-            phone: userData.phone || "",
-          });
-        } else {
-          console.error("Dữ liệu API không hợp lệ:", response);
-        }
-      } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
+    UserAPI.getUserByID(id, (err, result) => {
+      if (err || !result.data) {
+        setUserData({
+          name: "Không có dữ liệu",
+          email: "Không có dữ liệu",
+          phone: "Không có dữ liệu",
+        });
+        return;
       }
-    };
-    fetchUser();
+      setUserData({
+        name: result?.data?.name,
+        email: result?.data?.email,
+        phone: result?.data?.phone,
+      });
+    });
   }, [id]);
-
-  // const handleFormSubmit = async (values) => {
-  //   console.log("Dữ liệu gửi lên:", values);
-  //   try {
-  //     const response = await UserUpdate(id, values);
-  //     console.log("Response data: ", response);
-  //     if (
-  //       response.status === STATUS.DONE &&
-  //       response.result.errCode === ERROR_CODE.DONE
-  //     ) {
-  //       alert("Cập nhật thông tin thành công");
-  //       setTimeout(() => {
-  //         window.location.reload();
-  //       }, 1000);
-  //     }
-  //   } catch (error) {
-  //     console.error("Cập nhật thất bại:", error);
-  //   }
-  // };
 
   return (
     <Box m="20px">

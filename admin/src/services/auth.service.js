@@ -9,47 +9,24 @@ export const AuthAPI = {
       if (err) return cb(err);
       if (result?.data?.accessToken) {
         sessionStorage.setItem(
-          SESSION_DATA.ACCESSTOKEN,
+          SESSION_DATA.ADMINTOKEN,
           result?.data?.accessToken
         );
-        sessionStorage.setItem(SESSION_DATA.USERID, result?.data?.user.id);
+        sessionStorage.setItem(SESSION_DATA.ADMINID, result?.data?.user.id);
       }
       if (typeof cb === "function") cb(null, result);
     });
   },
-
-  async register(data, cb) {
-    await restRequest.post("/auth/register", data, (err, result) => {
-      if (err) return cb(err);
-      if (typeof cb === "function") cb(null, result);
-    });
-  },
-
   async getCurrentUser(cb) {
     await restRequest.get("/auth/me", {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
   },
-
-  async updateUser(id, data, cb) {
-    await restRequest.put(`/user/avatar`, data, (err, result) => {
-      if (err) return cb(err);
-      if (typeof cb === "function") cb(null, result);
-    });
-  },
-
   async logout(cb) {
     await restRequest.get("/auth/logout", {}, () => {
-      sessionStorage.removeItem(SESSION_DATA.ACCESSTOKEN);
+      sessionStorage.removeItem(SESSION_DATA.ADMINTOKEN);
       if (typeof cb === "function") cb();
-    });
-  },
-
-  async getCompany(cb) {
-    await restRequest.get("/user/company", {}, (err, result) => {
-      if (err) return cb(err);
-      if (typeof cb === "function") cb(null, result);
     });
   },
 };

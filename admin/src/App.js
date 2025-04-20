@@ -15,9 +15,9 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
 import CompInfo from "./scenes/comp-info/index";
 import Company from "./scenes/company";
-import { AuthProvider } from "./auth/authContext";
-import AuthForm from "./auth/authForm";
-import { AuthProtect } from "./auth/authProtect";
+import { AuthProvider } from "./context/auth";
+import AuthForm from "./components/auth/authForm";
+import { AuthProtect } from "./components/auth/authProtect";
 
 function App() {
   const [theme, colorMode] = useMode();

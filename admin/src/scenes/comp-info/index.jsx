@@ -3,10 +3,10 @@ import { Formik } from "formik";
 import { Box, TextField, Button } from "@mui/material";
 import Header from "../../components/Header";
 import * as yup from "yup";
-
-import { getCompanyById } from "../../services/company.service";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+
+import { CompanyAPI } from "../../services";
 
 const CompForm = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -23,22 +23,21 @@ const CompForm = () => {
   // };
 
   useEffect(() => {
-    const fetchCompany = async () => {
-      try {
-        const response = await getCompanyById(id);
-        console.log(response?.result?.data);
-        const data = response?.result?.data;
+    CompanyAPI.getCompanyByID(id, (err, result) => {
+      if (err || !result.data) {
         setCompanyData({
-          name: data.name || "",
-          address: data.address || "",
-          username: data.recruiter.name || "",
+          name: "Không có dữ liệu",
+          address: "Không có dữ liệu",
+          username: "Không có dữ liệu",
         });
-      } catch (error) {
-        console.error("Lỗi khi gọi API:", error);
+        return;
       }
-    };
-
-    fetchCompany();
+      setCompanyData({
+        name: result?.data.name,
+        address: result?.data.address,
+        username: result?.data.recruiter.name,
+      });
+    });
   }, [id]);
 
   return (

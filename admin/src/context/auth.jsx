@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = () => {
-    const token = sessionStorage.getItem(SESSION_DATA.ACCESSTOKEN);
+    const token = sessionStorage.getItem(SESSION_DATA.ADMINTOKEN);
     setIsAuthenticated(!!token);
   };
 
@@ -19,8 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     const handleTokenRefreshed = (e) => {
       const token = e.detail;
-      console.log("New token arrive: ", token);
-      sessionStorage.setItem(SESSION_DATA.ACCESSTOKEN, token);
+      sessionStorage.setItem(SESSION_DATA.ADMINTOKEN, token);
       setIsAuthenticated(true);
     };
 
@@ -48,13 +47,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (token) => {
-    sessionStorage.setItem(SESSION_DATA.ACCESSTOKEN, token);
+    sessionStorage.setItem(SESSION_DATA.ADMINTOKEN, token);
     setIsAuthenticated(true);
   };
 
   const logout = () => {
     AuthAPI.logout(() => {
-      sessionStorage.removeItem(SESSION_DATA.ACCESSTOKEN);
+      sessionStorage.removeItem(SESSION_DATA.ADMINTOKEN);
       setIsAuthenticated(false);
       window.location.href = "/login";
     });

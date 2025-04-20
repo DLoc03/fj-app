@@ -10,8 +10,9 @@ import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import QuizIcon from "@mui/icons-material/Quiz";
 import StoreIcon from "@mui/icons-material/Store";
-import { useAuth } from "../../auth/authContext";
-import { GetUserInfo } from "../../services/user.service";
+
+import { useAuth } from "../../context/auth";
+import { AuthAPI } from "../../services";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -46,16 +47,13 @@ const Sidebar = () => {
   const [adminName, setAdminName] = useState("Đang tải...");
 
   useEffect(() => {
-    const fetchAdmin = async () => {
-      try {
-        const response = await GetUserInfo();
-        const adName = response.result.data.name;
-        setAdminName(adName);
-      } catch (error) {
-        console.error("Đã có lỗi xảy ra!");
+    AuthAPI.getCurrentUser((err, result) => {
+      console.log("Current user: ", result.data);
+      if (err || !result.data) {
+        return;
       }
-    };
-    fetchAdmin();
+      setAdminName(result?.data?.name);
+    });
   }, []);
 
   return (

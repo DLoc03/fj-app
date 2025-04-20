@@ -1,15 +1,18 @@
-import { getData, getDataByID, deleteDataById } from "../api/base.service";
+import userBaseRestRequest from "../config/rest";
 
-import { server_path } from "../api/path.service";
+const restRequest = userBaseRestRequest();
 
-export const getAllCompanies = async () => {
-  return await getData(server_path.GETCOMPANIES);
-};
-
-export const getCompanyById = async (id) => {
-  return await getDataByID(server_path.GETCOMPANIES, id);
-};
-
-export const deleteCompanyById = async (id) => {
-  return await deleteDataById(server_path.GETCOMPANIES, id);
+export const CompanyAPI = {
+  async getAllCompany(cb) {
+    await restRequest.get("/comp", {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
+  async getCompanyByID(id, cb) {
+    await restRequest.get(`/comp/${id}`, {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
 };

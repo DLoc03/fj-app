@@ -1,45 +1,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserLogin } from "../services/user.service";
 import "./auth.css";
-import { STATUS } from "../utils/enum";
+
+import { AuthAPI } from "../../services";
+import { useAuth } from "../../context/auth";
 
 function AuthForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   async function handleLogin(e) {
     e.preventDefault();
-    try {
-      const response = await UserLogin({ email, password });
-      if (
-        response.status === STATUS.NOT_FOUND ||
-        response.result.data.user.role !== "admin"
-      ) {
-        setMessage("Bạn không có quyền đăng nhập quản trị viên!");
+    AuthAPI.login({ email, password }, (err, result) => {
+      console.log("Data from backend: ", result);
+      if (err || result.errCode !== 0) {
+        setMessage("Đăng nhập thất bại, vui lòng thử lại.");
         return;
-      } else if (response.errCode === 2) {
-        setMessage("Sai mật khẩu");
-        return;
-      } else {
-        setMessage("Đăng nhập thành công!");
-        sessionStorage.setItem("adminToken", response.result.data.accessToken);
-        localStorage.setItem(
-          "Admin",
-          JSON.stringify(response.result.data.user.id)
-        );
-
-        setTimeout(() => {
-          navigate("/dashboard");
-          window.location.reload();
-        }, 1000);
       }
-    } catch (error) {
-      console.log("Error login for admin: ", error);
-      setMessage("Đã có lỗi xảy ra! Vui lòng thử lại!");
-    }
+      if (result?.data.user?.role !== "admin") {
+        setMessage("Bạn không có quyền đăng nhập!");
+        return;
+      }
+      login(result?.data?.accessToken);
+      navigate("/dashboard");
+    });
   }
 
   return (

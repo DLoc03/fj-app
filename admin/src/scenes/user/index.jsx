@@ -15,7 +15,7 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GetUsers, UserDelete } from "../../services/user.service";
+import { UserAPI } from "../../services/index";
 
 const User = () => {
   const theme = useTheme();
@@ -27,31 +27,13 @@ const User = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await GetUsers();
-        if (Array.isArray(response?.result?.data)) {
-          const formattedUsers = response.result.data
-            .filter((user) => user.role === "user")
-            .map((user, index) => ({
-              id: user.id || index,
-              name: user.name,
-              phone: user.phone || "Chưa có số",
-              email: user.email,
-            }));
-
-          setUsers(formattedUsers);
-        } else {
-          throw new Error("Dữ liệu trả về không hợp lệ!");
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+    UserAPI.getAllUsers((err, result) => {
+      if (err || !result.data) {
+        setUsers(["Hiện không có người dùng nào!"]);
+        return;
       }
-    };
-
-    fetchUsers();
+      setUsers(result.data);
+    });
   }, []);
 
   const handleOpenDialog = (id) => {
@@ -62,19 +44,6 @@ const User = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedUserId(null);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!selectedUserId) return;
-    try {
-      await UserDelete(selectedUserId);
-      setUsers((prevUsers) =>
-        prevUsers.filter((user) => user.id !== selectedUserId)
-      );
-      handleCloseDialog();
-    } catch (error) {
-      console.error("Xóa thất bại:", error);
-    }
   };
 
   const handleRowClick = (params) => {
@@ -147,7 +116,7 @@ const User = () => {
           <Button onClick={handleCloseDialog} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+          <Button color="error" autoFocus>
             Xóa
           </Button>
         </DialogActions>
