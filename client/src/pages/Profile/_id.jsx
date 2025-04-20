@@ -39,7 +39,6 @@ function Profile() {
   useEffect(() => {
     if (isAuthenticated) {
       AuthAPI.getCurrentUser((err, result) => {
-        console.log(result.data);
         if (!err && result?.data) {
           setForm({
             email: result.data.email,
@@ -120,7 +119,6 @@ function Profile() {
           handleShowAlert("Cập nhật ảnh đại diện thất bại");
           return;
         }
-        console.log();
         setAlertStatus("success");
         handleShowAlert("Cập nhật ảnh đại diện thành công");
       });
@@ -347,8 +345,16 @@ function Profile() {
               justifyContent={"center"}
               alignItems={"center"}
               sx={{ height: "100%", width: "100%" }}
+              flexDirection={"column"}
             >
               <Typography>Hiện chưa có thông tin cơ sở</Typography>
+              <Button
+                variant="outlined"
+                sx={{ mt: 1 }}
+                onClick={() => (window.location.href = PATHS.COMPANY_INFO)}
+              >
+                Đăng ký thông tin cơ sở ngay
+              </Button>
             </Box>
           )}
         </Grid>

@@ -41,8 +41,8 @@ const Form = () => {
   return (
     <Box m="20px">
       <Header
-        title="Cập nhật người dùng"
-        subtitle="Cập nhật thông tin người dùng"
+        title={`Thông tin ${userData.name ? `- ${userData.name}` : ""}`}
+        subtitle="Thông tin người dùng"
       />
 
       <Formik

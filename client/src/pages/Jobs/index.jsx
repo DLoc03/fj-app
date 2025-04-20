@@ -31,8 +31,6 @@ function Job() {
     });
   }, []);
 
-  console.log(jobs);
-
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };

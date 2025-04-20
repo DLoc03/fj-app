@@ -37,10 +37,6 @@ function JobCard({ id, jobName, quantity, jobDescription, salary }) {
     });
   }, [id]);
 
-  console.log("Job id: ", id);
-
-  console.log("Question data: ", questions);
-
   return (
     <Paper
       sx={{ padding: "12px 20px", border: "1px solid secondary.main", mb: 2 }}

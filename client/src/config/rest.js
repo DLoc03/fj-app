@@ -56,18 +56,25 @@ const userBaseRestRequest = () => {
       cb(error);
     }
   };
-
   const sendRequest = async (method, endpoint, data, cb) => {
     const config = {
       method,
       headers: getHeaderConfig(),
+      credentials: "include",
     };
 
     if (method !== HTTP_METHOD.GET && data) {
-      config.body = JSON.stringify(data);
+      if (data instanceof FormData) {
+        config.body = data;
+      } else {
+        config.body = JSON.stringify(data);
+      }
     }
-    await fetchAsync(`${baseURL}${endpoint}`, config, cb);
+
+    const url = `${baseURL}${endpoint}`;
+    await fetchAsync(url, config, cb);
   };
+
   const get = (endpoint, data, cb) =>
     sendRequest(HTTP_METHOD.GET, endpoint, data, cb);
   const post = (endpoint, data, cb) =>

@@ -56,17 +56,23 @@ const userBaseRestRequest = () => {
       cb(error);
     }
   };
-
   const sendRequest = async (method, endpoint, data, cb) => {
     const config = {
       method,
       headers: getHeaderConfig(),
+      credentials: "include",
     };
 
     if (method !== HTTP_METHOD.GET && data) {
-      config.body = JSON.stringify(data);
+      if (data instanceof FormData) {
+        config.body = data;
+      } else {
+        config.body = JSON.stringify(data);
+      }
     }
-    await fetchAsync(`${baseURL}${endpoint}`, config, cb);
+
+    const url = `${baseURL}${endpoint}`;
+    await fetchAsync(url, config, cb);
   };
 
   const get = (endpoint, data, cb) =>
@@ -77,12 +83,15 @@ const userBaseRestRequest = () => {
     sendRequest(HTTP_METHOD.PUT, endpoint, data, cb);
   const del = (endpoint, data, cb) =>
     sendRequest(HTTP_METHOD.DELETE, endpoint, data, cb);
+  const postFormData = (endpoint, data, cb) =>
+    sendRequest(HTTP_METHOD.POST, endpoint, data, cb, true);
 
   return {
     get,
     post,
     put,
     delete: del,
+    postFormData,
   };
 };
 

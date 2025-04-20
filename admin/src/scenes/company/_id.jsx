@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { CompanyAPI } from "../../services";
+import { formatDate } from "../../utils/helper";
 
 const CompForm = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -16,6 +17,8 @@ const CompForm = () => {
     name: "",
     address: "",
     username: "",
+    date: "",
+    status: "Pending",
   });
 
   // const handleFormSubmit = (values) => {
@@ -29,6 +32,8 @@ const CompForm = () => {
           name: "Không có dữ liệu",
           address: "Không có dữ liệu",
           username: "Không có dữ liệu",
+          date: "Không có dữ liệu",
+          status: "Pending",
         });
         return;
       }
@@ -36,22 +41,18 @@ const CompForm = () => {
         name: result?.data.name,
         address: result?.data.address,
         username: result?.data.recruiter.name,
+        status: result?.data?.status,
+        date: formatDate(result?.data?.createdAt),
       });
     });
   }, [id]);
 
   return (
     <Box m="20px">
-      {id ? (
-        <Header title="Cập nhật cơ sở" subtitle="Cập nhật thông tin cơ sở" />
-      ) : (
-        <Header title="Thêm mới cơ sở" subtitle="Thêm mới thông tin cơ sở" />
-      )}
-
+      <Header title="Thông tin cơ sở" subtitle="Thông tin cơ sở" />
       <Formik
         // onSubmit={handleFormSubmit}
         initialValues={companyData}
-        validationSchema={checkoutSchema}
         enableReinitialize
       >
         {({
@@ -113,6 +114,38 @@ const CompForm = () => {
                 sx={{ gridColumn: "span 2" }}
                 disabled
               />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Trạng thái xác thực"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={
+                  values.status === "Pending"
+                    ? "Đang chờ xác thực"
+                    : "Đã xác thực"
+                }
+                name="status"
+                error={!!touched.status && !!errors.status}
+                helperText={touched.status && errors.status}
+                sx={{ gridColumn: "span 2" }}
+                disabled
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Ngày đăng ký"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.date}
+                name="date"
+                error={!!touched.phone && !!errors.phone}
+                helperText={touched.phone && errors.phone}
+                sx={{ gridColumn: "span 2" }}
+                disabled
+              />
             </Box>
           </form>
         )}
@@ -123,11 +156,5 @@ const CompForm = () => {
 
 const phoneRegExp =
   /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
-
-const checkoutSchema = yup.object().shape({
-  name: yup.string().required("Tên cơ sở không được để trống"),
-  address: yup.string().required("Địa chỉ không được để trống"),
-  username: yup.string().required("Tên người đại diện không được để trống"),
-});
 
 export default CompForm;

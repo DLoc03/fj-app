@@ -19,20 +19,32 @@ import { UserAPI } from "../../services/index";
 
 const User = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     UserAPI.getAllUsers((err, result) => {
-      if (err || !result.data) {
-        setUsers(["Hiện không có người dùng nào!"]);
+      if (err) {
+        setError("Có lỗi xảy ra khi tải danh sách người dùng.");
+        setLoading(false);
         return;
       }
-      setUsers(result.data);
+
+      if (!result.data || result.data.length === 0) {
+        setUsers([]);
+      } else {
+        const filteredUsers = result.data.filter(
+          (user) => user.role === "user"
+        );
+        setUsers(filteredUsers);
+      }
+
+      setLoading(false);
     });
   }, []);
 
@@ -57,19 +69,15 @@ const User = () => {
     { field: "email", headerName: "Email", flex: 2 },
     {
       field: "view",
-      headerName: "Xem thông tin",
+      headerName: "Chi tiết",
       flex: 1,
       renderCell: (params) => (
-        <p
-          style={{
-            cursor: "pointer",
-            textDecoration: "none",
-            fontWeight: "800",
-          }}
+        <Typography
+          sx={{ cursor: "pointer", fontWeight: 800 }}
           onClick={() => handleRowClick(params)}
         >
-          Xem thông tin
-        </p>
+          Chi tiết
+        </Typography>
       ),
     },
     {
@@ -96,11 +104,14 @@ const User = () => {
           <CircularProgress />
         ) : error ? (
           <Typography color="error">{error}</Typography>
+        ) : users.length === 0 ? (
+          <Typography>Hiện chưa có người dùng nào.</Typography>
         ) : (
           <DataGrid
             rows={users}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
+            getRowId={(row) => row.id}
           />
         )}
       </Box>

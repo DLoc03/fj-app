@@ -19,6 +19,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 
 import { CompanyAPI } from "../../services";
+import { formatDate } from "../../utils/helper";
 
 const Company = () => {
   const theme = useTheme();
@@ -35,9 +36,11 @@ const Company = () => {
     CompanyAPI.getAllCompany((err, result) => {
       if (err || !result?.data) {
         setCompanies(["Không có dữ liệu"]);
+        setLoading(false);
         return;
       }
       setCompanies(result?.data);
+      setLoading(false);
     });
   }, []);
 
@@ -81,12 +84,22 @@ const Company = () => {
   const columns = [
     { field: "name", headerName: "Tên cơ sở", flex: 1 },
     { field: "address", headerName: "Địa chỉ", flex: 1 },
-    { field: "username", headerName: "Đại diện cơ sở", flex: 1 },
-    { field: "phone", headerName: "Hotline", flex: 1 },
+    {
+      field: "username",
+      headerName: "Đại diện cơ sở",
+      flex: 1,
+      valueGetter: (params) => params.row.recruiter?.name || "Chưa có",
+    },
+    {
+      field: "phone",
+      headerName: "Hotline",
+      flex: 1,
+      valueGetter: (params) => params.row.recruiter?.phone || "Chưa có",
+    },
     {
       field: "status",
       headerName: "Trạng thái xác thực",
-      flex: 1,
+      flex: 2,
       renderCell: (params) => {
         const isActive = params.row.status === "Authenticated";
 
@@ -110,8 +123,14 @@ const Company = () => {
       },
     },
     {
+      field: "date",
+      headerName: "Ngày đăng ký",
+      flex: 1,
+      valueGetter: (params) => formatDate(params.row.createdAt) || "Chưa có",
+    },
+    {
       field: "view",
-      headerName: "Xem thông tin",
+      headerName: "Chi tiết",
       flex: 1,
       renderCell: (params) => (
         <p
@@ -122,7 +141,7 @@ const Company = () => {
           }}
           onClick={() => handleRowClick(params)}
         >
-          Xem thông tin
+          Chi tiết
         </p>
       ),
     },
@@ -145,7 +164,7 @@ const Company = () => {
     <Box m="20px">
       <Header
         title="Danh sách cơ sở"
-        subtitle="Quản lý danh sách cơ sở tuyển dụng"
+        subtitle="Danh sách cơ sở tuyển dụng đã đăng ký"
       />
 
       <Box m="40px 0 0 0" height="75vh">

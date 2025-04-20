@@ -15,7 +15,6 @@ function AuthForm() {
   async function handleLogin(e) {
     e.preventDefault();
     AuthAPI.login({ email, password }, (err, result) => {
-      console.log("Data from backend: ", result);
       if (err || result.errCode !== 0) {
         setMessage("Đăng nhập thất bại, vui lòng thử lại.");
         return;

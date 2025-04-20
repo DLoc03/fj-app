@@ -30,19 +30,9 @@ export const AuthProvider = ({ children }) => {
     };
     window.addEventListener("storage", handleStorageChange);
 
-    // const interval = setInterval(async () => {
-    //   try {
-    //     await AuthAPI.refreshToken();
-    //   } catch (err) {
-    //     console.error("Làm mới token thất bại", err);
-    //     logout();
-    //   }
-    // }, 14 * 60 * 1000);
-
     return () => {
       window.removeEventListener("tokenRefreshed", handleTokenRefreshed);
       window.removeEventListener("storage", handleStorageChange);
-      // clearInterval(interval);
     };
   }, []);
 
