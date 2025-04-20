@@ -89,7 +89,6 @@ export const logout = async (req, res) => {
 export const getMe = async (req, res) => {
   try {
     const response = await userService.getUserById(req.user.id);
-    console.log("User response: ", response);
     return res.status(200).json(response);
   } catch (error) {
     return res.status(500).json(

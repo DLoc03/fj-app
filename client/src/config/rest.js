@@ -13,7 +13,6 @@ const userBaseRestRequest = () => {
     const data = await res.json();
     if (res.status === 200 && data?.result) {
       const newAccessToken = data.result.data;
-      console.log("New token: ", newAccessToken);
       sessionStorage.setItem(SESSION_DATA.ACCESSTOKEN, newAccessToken);
       return newAccessToken;
     }
@@ -69,7 +68,6 @@ const userBaseRestRequest = () => {
     }
     await fetchAsync(`${baseURL}${endpoint}`, config, cb);
   };
-
   const get = (endpoint, data, cb) =>
     sendRequest(HTTP_METHOD.GET, endpoint, data, cb);
   const post = (endpoint, data, cb) =>
@@ -78,12 +76,15 @@ const userBaseRestRequest = () => {
     sendRequest(HTTP_METHOD.PUT, endpoint, data, cb);
   const del = (endpoint, data, cb) =>
     sendRequest(HTTP_METHOD.DELETE, endpoint, data, cb);
+  const postFormData = (endpoint, data, cb) =>
+    sendRequest(HTTP_METHOD.POST, endpoint, data, cb, true);
 
   return {
     get,
     post,
     put,
     delete: del,
+    postFormData,
   };
 };
 

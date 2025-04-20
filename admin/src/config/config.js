@@ -5,7 +5,7 @@ export const SERVICE_URL = `${SERVICE_DOMAIN}/api/v1`;
 export const SOCKET_URL = `${SERVICE_DOMAIN}/socket`;
 
 export const getHeaderConfig = () => {
-  const accessToken = sessionStorage.getItem(SESSION_DATA.ACCESSTOKEN);
+  const accessToken = sessionStorage.getItem(SESSION_DATA.ADMINTOKEN);
 
   if (accessToken) {
     return {
