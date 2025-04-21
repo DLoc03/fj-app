@@ -52,4 +52,11 @@ export const AuthAPI = {
       if (typeof cb === "function") cb(null, result);
     });
   },
+
+  async uploadAvatar(data, cb) {
+    await restRequest.postFormData(`/user/avatar`, data, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
 };

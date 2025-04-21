@@ -39,6 +39,7 @@ function Profile() {
   useEffect(() => {
     if (isAuthenticated) {
       AuthAPI.getCurrentUser((err, result) => {
+        console.log("User data: ", result?.data);
         if (!err && result?.data) {
           setForm({
             email: result.data.email,
@@ -48,6 +49,7 @@ function Profile() {
           });
           setComp(result.data.company);
           setJobs(result.data.jobs);
+          setPreviewImage(result.data.avatar);
         }
       });
     }
@@ -104,25 +106,30 @@ function Profile() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-
-      const formData = new FormData();
-
-      AuthAPI.updateUser(userId, formData, (err, result) => {
-        if (err || !result.data) {
-          setAlertStatus("error");
-          handleShowAlert("Cập nhật ảnh đại diện thất bại");
-          return;
-        }
-        setAlertStatus("success");
-        handleShowAlert("Cập nhật ảnh đại diện thành công");
-      });
+    if (!file || !file.type.startsWith("image/")) {
+      setAlertStatus("error");
+      handleShowAlert("Vui lòng chọn một ảnh hợp lệ");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    const imageUrl = URL.createObjectURL(file);
+    setPreviewImage(imageUrl);
+
+    AuthAPI.uploadAvatar(formData, (err, result) => {
+      if (err || !result.data) {
+        setAlertStatus("error");
+        handleShowAlert("Cập nhật ảnh thất bại!");
+        return;
+      }
+
+      setAlertStatus("success");
+      handleShowAlert("Cập nhật ảnh thành công!");
+
+      setForm((prev) => ({ ...prev, avatar: result.data.avatar }));
+    });
   };
 
   return (

@@ -56,10 +56,16 @@ const userBaseRestRequest = () => {
       cb(error);
     }
   };
-  const sendRequest = async (method, endpoint, data, cb) => {
+  const sendRequest = async (
+    method,
+    endpoint,
+    data,
+    cb,
+    isFormData = false
+  ) => {
     const config = {
       method,
-      headers: getHeaderConfig(),
+      headers: getHeaderConfig(isFormData),
       credentials: "include",
     };
 

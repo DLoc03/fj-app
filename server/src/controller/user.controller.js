@@ -81,7 +81,7 @@ const updateUserById = async (req, res) => {
 const uploadAvatarById = async (req, res) => {
   try {
     const response = await userService.updateUserById(req.user.id, {
-      avatar: req.file.path,
+      avatar: req.file.path || req.file.url,
     });
     await redis.del("/api/v1/user/:{}");
     return res.status(200).json(response);
