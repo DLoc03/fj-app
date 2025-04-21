@@ -60,12 +60,22 @@ const updateCompany = async (id, data) => {
     return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST, message: "Company not found" })
   }
   const newData = await Company.findOneAndUpdate(company._id, data, { new: true })
-  return MasterResponse({ status: STATUS.CREATED, data: CompanyResponse })
+  return MasterResponse({ status: STATUS.CREATED, data: CompanyResponse.CompanyFound(newData) })
+}
+
+const uploadAvatar = async (id, avatar) => {
+  const company = await Company.findOne({ recruiterId: id }).lean()
+  if (!company) {
+    return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST, message: "Company not found" })
+  }
+  const newData = await Company.findOneAndUpdate(company._id, avatar, { new: true })
+  return MasterResponse({ data: CompanyResponse.CompanyFound(newData) })
 }
 
 export const companyService = {
   postCompany,
   getCompany,
   getCompanies,
-  updateCompany
+  updateCompany,
+  uploadAvatar
 };
