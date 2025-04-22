@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const ApplicantSchema = new mongoose.Schema(
   {
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     phone: { type: String, required: true },
     cv: { type: String, required: true },
