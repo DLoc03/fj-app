@@ -18,7 +18,7 @@ function QuestionCard({ id, type }) {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const applicant = JSON.parse(sessionStorage.getItem("Applicant"));
+  const applicant = sessionStorage.getItem("Applicant");
 
   const handleAlertClose = () => {
     setAlertOpen(false);
@@ -67,7 +67,7 @@ function QuestionCard({ id, type }) {
   };
 
   const handleApplySubmit = (data) => {
-    sessionStorage.setItem("Applicant", JSON.stringify(data));
+    sessionStorage.setItem("Applicant", data);
     setOpenModal(false);
   };
 
