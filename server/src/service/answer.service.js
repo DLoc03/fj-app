@@ -5,7 +5,7 @@ import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
 const postAnswer = async (applicantId, data) => {
-    const applicant = await Applicant.findOne({ email: email }).lean()
+    const applicant = await Applicant.findById(applicantId).lean()
     if (!applicant) {
         return MasterResponse({ status: STATUS.FAILED, message: "Applicant not found", errCode: ERROR_CODE.NOT_FOUND });
     }
