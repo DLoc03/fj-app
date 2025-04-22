@@ -14,7 +14,7 @@ const postAnswer = async (email, data) => {
 
     if (answers.length === 0) {
         const saveAnswer = await Answer.insertMany(data.map(item => ({
-            applicantId: applicantId,
+            applicantId: applicant._id,
             questionId: questions.find(q => q._id.toString() === item.questionId.toString()),
             answer: item.answer
         })))
