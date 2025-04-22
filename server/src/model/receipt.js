@@ -7,8 +7,8 @@ const ReceiptSchema = new mongoose.Schema({
     paymentMethod: { type: String, required: true },
     status: {
         type: String,
-        enum: ['Pending', 'Success', 'Failed'],
-        default: 'Pending',
+        enum: ['Paid', 'None'],
+        default: 'None',
         required: true
     },
     transactionId: { type: String },

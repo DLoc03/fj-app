@@ -30,8 +30,11 @@ const postApplicant = async (jobId, data) => {
   return MasterResponse({
     status: STATUS.CREATED,
     message: "Created new Applicant",
+    data: newApplicant,
   });
 };
+
+const getApplicant = async (email) => {};
 
 const getApplicantWithResult = async (id) => {
   const applicant = await Applicant.findById(id).lean();

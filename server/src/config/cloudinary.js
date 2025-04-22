@@ -8,7 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const storage = new CloudinaryStorage({
+const storageUserAvatar = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "/avatars",
@@ -17,5 +17,15 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const upload = multer({ storage });
-export { upload, cloudinary };
+const storageCompanyImage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "/companies",
+    allowed_formats: ["jpg", "png", "jpeg"],
+    transformation: [{ width: 500, height: 500, crop: "limit" }],
+  },
+});
+
+const uploadUserAvatar = multer({ storage: storageUserAvatar });
+const uploadCompanyImage = multer({ storage: storageCompanyImage })
+export { uploadUserAvatar, uploadCompanyImage, cloudinary };
