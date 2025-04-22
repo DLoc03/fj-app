@@ -10,8 +10,8 @@ export const ApplicantAPI = {
     });
   },
 
-  async getApplicant(id, data, cb) {
-    await restRequest.get(`/applicant/${id}`, data, (err, result) => {
+  async getApplicant(id, cb) {
+    await restRequest.get(`/applicant/${id}`, {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { QuestionAPI, AnswerAPI } from "../../services";
+import { QuestionAPI, AnswerAPI, ApplicantAPI } from "../../services";
 import { Button, Divider, TextField } from "@mui/material";
 import { USER_TYPE } from "../../common/enum/enum";
+
 import SpinningLoader from "../common/SpinningLoading";
 import PopupAlert from "../common/PopUp";
 import Applicant from "./Applicant";
@@ -13,13 +14,14 @@ import SlideCard from "../common/SlideCard";
 
 function QuestionCard({ id, type }) {
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState([]);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const applicant = sessionStorage.getItem("Applicant");
-
+  const [loading, setLoading] = useState(true);
+  const applicant = JSON.parse(sessionStorage.getItem("Applicant"));
+  const [applicantResult, setApplicantResult] = useState();
   const handleAlertClose = () => {
     setAlertOpen(false);
   };
@@ -40,12 +42,31 @@ function QuestionCard({ id, type }) {
     QuestionAPI.getQuestion(id, (err, result) => {
       if (!err && result.data.length > 0) setQuestions(result.data);
     });
-
     const applicantInfo = sessionStorage.getItem("Applicant");
     if (!applicantInfo && type !== USER_TYPE.EMPLOYER) {
       setOpenModal(true);
     }
   }, [id, type]);
+
+  useEffect(() => {
+    if (applicant && applicant._id) {
+      ApplicantAPI.getApplicant(applicant._id, (err, result) => {
+        if (result.errCode === 0) {
+          console.log("Result: ", result);
+
+          const hasEmptyAnswer = result.data.some(
+            (item) => item.answer.answer === ""
+          );
+
+          if (hasEmptyAnswer) {
+            setApplicantResult([]);
+          } else {
+            setApplicantResult(result.data);
+          }
+        }
+      });
+    }
+  }, []);
 
   const handleAnswerChange = (index, value) => {
     setAnswers((prev) => ({
@@ -55,134 +76,147 @@ function QuestionCard({ id, type }) {
   };
 
   const handleSubmit = () => {
-    const email = applicant.email;
-    AnswerAPI.postAnswer(id, email, answers, (err, result) => {
-      if (!err && result?.data) {
-        setAlertStatus("success");
-        handleShowAlert("Hoàn tất!");
+    const id = applicant._id;
+    const data = questions.map((question, index) => ({
+      questionId: question.id,
+      answer: answers[index] || "",
+    }));
+    AnswerAPI.postAnswer(id, data, (err, result) => {
+      if (err && result?.errCode !== 0) {
+        setAlertStatus("error");
+        handleShowAlert("Có lỗi khi gửi câu trả lời!");
+
+        return;
       }
-      setAlertStatus("error");
-      handleShowAlert("Có lỗi khi gửi câu trả lời!");
+      setAlertStatus("success");
+      handleShowAlert("Hoàn tất!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     });
   };
 
   const handleApplySubmit = (data) => {
-    sessionStorage.setItem("Applicant", data);
+    sessionStorage.setItem("Applicant", JSON.stringify(data));
     setOpenModal(false);
   };
 
   return (
     <Box>
-      <Paper sx={{ py: 4, px: { xs: 4, md: 8 } }}>
-        <Typography
-          sx={{ textAlign: "center", fontSize: { xs: "18px", md: "28px" } }}
-        >
-          {questions.length > 0
-            ? "Câu hỏi phỏng vấn"
-            : "Chưa có bài phỏng vấn! Vui lòng quay lại sau!"}
-        </Typography>
-        <Divider sx={{ my: 1 }} />
+      {applicantResult?.length > 0 ? (
+        <Authenticated message={"Đã gửi hồ sơ ứng tuyển"} />
+      ) : (
+        <Paper sx={{ py: 4, px: { xs: 4, md: 8 } }}>
+          <Typography
+            sx={{ textAlign: "center", fontSize: { xs: "18px", md: "28px" } }}
+          >
+            {questions.length > 0
+              ? "Câu hỏi phỏng vấn"
+              : "Chưa có bài phỏng vấn! Vui lòng quay lại sau!"}
+          </Typography>
+          <Divider sx={{ my: 1 }} />
 
-        {type === USER_TYPE.EMPLOYER ? (
-          questions.length > 0 ? (
-            questions.map((question, index) => (
-              <Box key={index} sx={{ my: 4 }}>
-                <Typography
-                  fontWeight={700}
-                  color="secondary.main"
-                  sx={{ fontSize: { xs: "12px", md: "16px" } }}
-                >
-                  Câu {index + 1}
-                </Typography>
-                <Typography sx={{ fontSize: { xs: "12px", md: "16px" } }}>
-                  {question.question}
-                </Typography>
+          {type === USER_TYPE.EMPLOYER ? (
+            questions.length > 0 ? (
+              questions.map((question, index) => (
+                <Box key={index} sx={{ my: 4 }}>
+                  <Typography
+                    fontWeight={700}
+                    color="secondary.main"
+                    sx={{ fontSize: { xs: "12px", md: "16px" } }}
+                  >
+                    Câu {index + 1}
+                  </Typography>
+                  <Typography sx={{ fontSize: { xs: "12px", md: "16px" } }}>
+                    {question.question}
+                  </Typography>
+                </Box>
+              ))
+            ) : (
+              <Box display={"flex"} justifyContent={"center"}>
+                <SpinningLoader />
               </Box>
-            ))
-          ) : (
-            <Box display={"flex"} justifyContent={"center"}>
-              <SpinningLoader />
-            </Box>
-          )
-        ) : questions.length > 0 ? (
-          <Box>
-            {questions.map((question, index) => (
-              <Box key={index} my={2}>
-                <Typography
-                  variant="body1"
-                  fontWeight={700}
-                  color="secondary.main"
-                  sx={{ fontSize: { xs: "12px", md: "16px" } }}
-                >
-                  Câu {index + 1}
-                </Typography>
-                <Typography
-                  sx={{ fontSize: { xs: "12px", md: "16px" } }}
-                  mb={1}
-                >
-                  {question.question}
-                </Typography>
-                <TextField
-                  fullWidth
-                  placeholder="Nhập câu trả lời..."
-                  value={answers[index] || ""}
-                  sx={{
-                    fontSize: { xs: "12px", md: "16px" },
-                    "& .MuiInputBase-input": {
+            )
+          ) : questions.length > 0 ? (
+            <Box>
+              {questions.map((question, index) => (
+                <Box key={index} my={2}>
+                  <Typography
+                    variant="body1"
+                    fontWeight={700}
+                    color="secondary.main"
+                    sx={{ fontSize: { xs: "12px", md: "16px" } }}
+                  >
+                    Câu {index + 1}
+                  </Typography>
+                  <Typography
+                    sx={{ fontSize: { xs: "12px", md: "16px" } }}
+                    mb={1}
+                  >
+                    {question.question}
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    placeholder="Nhập câu trả lời..."
+                    value={answers[index] || ""}
+                    sx={{
                       fontSize: { xs: "12px", md: "16px" },
-                      padding: { xs: "10px 12px", md: "14px 16px" },
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "grey.400",
+                      "& .MuiInputBase-input": {
+                        fontSize: { xs: "12px", md: "16px" },
+                        padding: { xs: "10px 12px", md: "14px 16px" },
                       },
-                      "&:hover fieldset": {
-                        borderColor: "secondary.main",
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "grey.400",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "secondary.main",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "primary.main",
+                          borderWidth: "2px",
+                        },
                       },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "primary.main",
-                        borderWidth: "2px",
-                      },
-                    },
-                  }}
-                  onChange={(e) => handleAnswerChange(index, e.target.value)}
-                />
+                    }}
+                    onChange={(e) => handleAnswerChange(index, e.target.value)}
+                  />
+                </Box>
+              ))}
+              <Box display={"flex"} justifyContent={"center"}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 2 }}
+                  onClick={handleSubmit}
+                >
+                  Gửi câu trả lời
+                </Button>
               </Box>
-            ))}
-            <Box display={"flex"} justifyContent={"center"}>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-                onClick={handleSubmit}
-              >
-                Gửi câu trả lời
-              </Button>
             </Box>
-          </Box>
-        ) : (
-          <Box>
-            <Authenticated
-              message={"Hiện chưa có bài phỏng vấn. Vui lòng quay lại sau!"}
-              register={false}
-            />
-          </Box>
-        )}
+          ) : (
+            <Box>
+              <Authenticated
+                message={"Hiện chưa có bài phỏng vấn. Vui lòng quay lại sau!"}
+                register={false}
+              />
+            </Box>
+          )}
 
-        <PopupAlert
-          open={alertOpen}
-          message={alertMessage}
-          onClose={handleAlertClose}
-          severity={alertStatus}
-        />
+          <PopupAlert
+            open={alertOpen}
+            message={alertMessage}
+            onClose={handleAlertClose}
+            severity={alertStatus}
+          />
 
-        <Applicant
-          open={openModal}
-          onClose={() => setOpenModal(false)}
-          onSubmit={handleApplySubmit}
-          id={id}
-        />
-      </Paper>
+          <Applicant
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            onSubmit={handleApplySubmit}
+            id={id}
+          />
+        </Paper>
+      )}
       {questions.length === 0 && <SlideCard />}
     </Box>
   );

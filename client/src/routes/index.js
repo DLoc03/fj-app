@@ -9,6 +9,7 @@ import UserCompany from "../pages/Profile/_idComp";
 import CompanyJobs from "../pages/Recruitment";
 import TestDetail from "../pages/Recruitment/_id";
 import Answer from "../pages/Jobs/_idAnswer";
+import ApplicantAnswer from "../pages/Recruitment/indexAnswer";
 
 export const routes = [
   {
@@ -57,5 +58,9 @@ export const protectedRoutes = [
   {
     path: PATHS.COMPANY_TEST,
     page: TestDetail,
+  },
+  {
+    path: PATHS.APPLICANT_ANSWER,
+    page: ApplicantAnswer,
   },
 ];

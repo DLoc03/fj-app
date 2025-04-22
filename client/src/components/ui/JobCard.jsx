@@ -78,7 +78,7 @@ function JobCard({ id, jobName, quantity, jobDescription, salary }) {
           variant="outlined"
           sx={{ mt: 2 }}
           onClick={() => {
-            navigate(`${PATHS.COMPANY_TEST}/${id}`);
+            window.location.href = PATHS.COMPANY_TEST.replace(":id", id);
           }}
         >
           {questions.length > 0

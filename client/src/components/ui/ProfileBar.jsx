@@ -122,7 +122,7 @@ const ProfileBar = () => {
             />
             <Item
               title="Danh sách CV"
-              to="/company"
+              to="/cv"
               icon={<FormatListBulletedIcon />}
               selected={selected}
               setSelected={setSelected}

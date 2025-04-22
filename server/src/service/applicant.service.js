@@ -44,7 +44,11 @@ const getApplicantWithResult = async (id) => {
     question: q.question,
     answer: answers.find((a) => a.questionId.toString() === q._id.toString()),
   }));
-  return examp;
+  return MasterResponse({
+    status: STATUS.DONE,
+    message: "Done",
+    data: examp,
+  });
 };
 
 export const applicantService = {

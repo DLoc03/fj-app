@@ -14,7 +14,6 @@ function Applicant({ open, onClose, onSubmit, id }) {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState("");
-  const [email, setEmail] = useState();
 
   const handleAlertClose = () => {
     setAlertOpen(false);
@@ -60,10 +59,9 @@ function Applicant({ open, onClose, onSubmit, id }) {
         handleShowAlert("Có lỗi xảy ra khi gửi thông tin!");
       } else {
         console.log("Kết quả đăng ký: ", result);
-        setEmail(result?.data?.email);
         setAlertStatus("success");
         handleShowAlert("Hoàn tất!");
-        onSubmit(result?.data?.email);
+        onSubmit(result.data);
       }
     });
   };
