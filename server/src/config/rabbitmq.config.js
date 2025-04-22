@@ -9,14 +9,12 @@ export const connectRabbitMQ = async () => {
             const channel = await connection.createChannel()
             await channel.assertQueue(q, { durable: true })
             channels[q] = channel
-            // console.log(`Channel and queue ${q} asserted`);
         }
         connection.on(RABBIT_EVENTS.ERROR, e => {
             console.error(`RabbitMQ get some error: ${e}`);
         })
 
         connection.on(RABBIT_EVENTS.CLOSE, () => {
-            // console.log(`RabbitMQ connection closed`)
             for (const q of Object.values(QUEUE_NAME)) {
                 channels[q] = null
             }

@@ -1,12 +1,15 @@
 import { app } from "./app.js";
 import "dotenv/config";
 import { CONNNECT_DB } from "./config/mongo.js";
-
+import { createServer } from "http";
+import { Server } from "socket.io";
 const PORT = process.env.APP_PORT || 8080;
 const HOST = process.env.APP_HOST;
+const server = createServer(app);
+const io = new Server(server);
 
 async function START_SERVER() {
-  app.listen(PORT, "0.0.0.0", () => {
+  server.listen(PORT, () => {
     console.log(`Server is running on http://${HOST}:${PORT}`);
   });
 }
