@@ -5,7 +5,6 @@ import { ERROR_CODE, STATUS } from "../utils/enum.js";
 const postAnswer = async (req, res) => {
   try {
     const result = await answerService.postAnswer(req.params.id, req.body);
-    console.log(result);
     return res.status(200).json(result);
   } catch (error) {
     return res
