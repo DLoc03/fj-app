@@ -19,7 +19,11 @@ const postApplicant = async (jobId, data) => {
         jobId: jobId
     })
     await newApplicant.save()
-    return MasterResponse({ status: STATUS.CREATED, message: "Created new Applicant" })
+    return MasterResponse({ status: STATUS.CREATED, message: "Created new Applicant", data: newApplicant })
+}
+
+const getApplicant = async (email) => {
+
 }
 
 const getApplicantWithResult = async (id) => {
