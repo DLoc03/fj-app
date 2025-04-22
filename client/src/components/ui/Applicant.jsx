@@ -55,7 +55,6 @@ function Applicant({ open, onClose, onSubmit, id }) {
 
     ApplicantAPI.postApplicant(id, formData, (err, result) => {
       if (err) {
-        console.log("Có lỗi xảy ra khi gửi thông tin!", err);
         setAlertStatus("error");
         handleShowAlert("Có lỗi xảy ra khi gửi thông tin!");
       } else {

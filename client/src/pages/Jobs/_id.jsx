@@ -20,17 +20,20 @@ import SlideCard from "../../components/common/SlideCard";
 import { formatCurrency } from "../../utils/helper";
 import SpinningLoading from "../../components/common/SpinningLoading";
 import PATHS from "../../routes/path";
+import SpinningLoader from "../../components/common/SpinningLoading";
 
 function JobDetail() {
   const { id } = useParams();
   const [job, setJob] = useState();
   const [comp, setComp] = useState();
   const compDetail = sessionStorage.getItem("selectedCompany");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     JobsAPI.getJobById(id, (err, result) => {
       if (!err && result?.data) {
         setJob(result.data);
+        setLoading(false);
       }
     });
   }, [id]);
@@ -40,11 +43,12 @@ function JobDetail() {
       if (!err && result?.data) {
         console.log(err);
         setComp(result?.data);
+        setLoading(false);
       }
     });
   }, [compDetail]);
 
-  console.log("Company detail: ", comp);
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box
@@ -75,9 +79,6 @@ function JobDetail() {
             ></Box>
           </Grid>
           <Grid item size={{ xs: 12, md: 9 }} gap={4}>
-            <Typography variant="h4" fontWeight={700} mb={1}>
-              {job.company}
-            </Typography>
             <Grid
               container
               spacing={2}
@@ -86,6 +87,17 @@ function JobDetail() {
               color={"secondary.main"}
               p={1}
             >
+              <Grid item size={12}>
+                <Typography
+                  fontSize={{ xs: "20px", md: "28px" }}
+                  fontWeight={700}
+                  mb={1}
+                  textAlign={{ xs: "center", md: "left" }}
+                >
+                  {job.company}
+                </Typography>
+                <Divider orientation="horizontal" flexItem />
+              </Grid>
               <Grid item size={{ xs: 12, md: 4 }}>
                 <Box display="flex" alignItems="center">
                   <AttachMoneyIcon sx={{ mr: 1 }} />

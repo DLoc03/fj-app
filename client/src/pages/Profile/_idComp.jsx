@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import { AuthAPI } from "../../services";
 import Authenticated from "../../components/ui/Authenticated";
 import PATHS from "../../routes/path";
+import SpinningLoader from "../../components/common/SpinningLoading";
 
 function UserCompany() {
   const [comp, setComp] = useState({
@@ -19,6 +20,7 @@ function UserCompany() {
     user: "",
     status: "",
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     AuthAPI.getCurrentUser((err, result) => {
@@ -32,8 +34,11 @@ function UserCompany() {
           user: result?.data?.name,
         });
       }
+      setLoading(false);
     });
   }, []);
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <>

@@ -188,7 +188,11 @@ function ResponsiveAppBar() {
               <>
                 <Tooltip title="Hồ sơ cá nhân">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar {...stringAvatar(user.name)} />
+                    <Avatar
+                      {...(!user.avatar
+                        ? stringAvatar(user.name)
+                        : { src: user.avatar })}
+                    />
                   </IconButton>
                 </Tooltip>
                 <Menu

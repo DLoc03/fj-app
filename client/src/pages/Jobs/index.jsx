@@ -5,6 +5,8 @@ import CardDetail from "../../components/common/Card";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
+import Divider from "@mui/material/Divider";
+
 import Stack from "@mui/material/Stack";
 import { useMediaQuery } from "react-responsive";
 
@@ -15,18 +17,20 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import jobBg from "../../assets/jobBg.jpg";
 import Sidebar from "../../components/ui/Sidebar";
-import { Divider } from "@mui/material";
+import SpinningLoader from "../../components/common/SpinningLoading";
 
 function Job() {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const itemPerPage = isMobile ? 3 : 8;
   const [currentPage, setCurrentPage] = useState(1);
   const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     JobsAPI.getJobs((err, result) => {
       if (!err && result?.data) {
         setJobs(result.data);
+        setLoading(false);
       }
     });
   }, []);
@@ -40,6 +44,8 @@ function Job() {
   const startIndex = (currentPage - 1) * itemPerPage;
   const endIndex = startIndex + itemPerPage;
   const currentItems = jobs.slice(startIndex, endIndex);
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box>

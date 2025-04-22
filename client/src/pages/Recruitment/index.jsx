@@ -8,10 +8,12 @@ import JobCard from "../../components/ui/JobCard";
 import { AuthAPI } from "../../services/authAPI";
 import Authenticated from "../../components/ui/Authenticated";
 import Recruitment from "../../components/ui/Recruitment";
+import SpinningLoader from "../../components/common/SpinningLoading";
 
 function CompanyJobs() {
   const [jobList, setJobList] = useState([]);
   const [status, setStatus] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     AuthAPI.getCurrentUser((err, result) => {
@@ -19,8 +21,11 @@ function CompanyJobs() {
         setJobList(result.data.jobs);
         setStatus(result.data.company.status);
       }
+      setLoading(false);
     });
   }, []);
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box sx={{ height: "100%" }}>

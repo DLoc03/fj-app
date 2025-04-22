@@ -15,6 +15,7 @@ import albumFJ from "../../assets/album-1.jpg";
 
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DisabledVisibleIcon from "@mui/icons-material/DisabledVisible";
+import SpinningLoader from "../../components/common/SpinningLoading";
 
 function Auth() {
   const [isDisplay, setIsDisplay] = useState(false);
@@ -29,10 +30,12 @@ function Auth() {
     name: "",
     phone: "",
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const currentPath = window.location.pathname;
     setIsLoginPage(currentPath === "/login");
+    setLoading(false);
   }, []);
 
   const handleChange = (e) => {
@@ -128,6 +131,8 @@ function Auth() {
     setAlertStatus("error");
     handleShowAlert(message);
   };
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box

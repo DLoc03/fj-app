@@ -16,6 +16,7 @@ import PopupAlert from "../../components/common/PopUp";
 import { Divider, Link } from "@mui/material";
 import { SESSION_DATA } from "../../common/enum/enum";
 import PATHS from "../../routes/path";
+import SpinningLoader from "../../components/common/SpinningLoading";
 
 function Profile() {
   const { isAuthenticated } = useAuth();
@@ -35,11 +36,11 @@ function Profile() {
   });
   const [comp, setComp] = useState();
   const [jobs, setJobs] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isAuthenticated) {
       AuthAPI.getCurrentUser((err, result) => {
-        console.log("User data: ", result?.data);
         if (!err && result?.data) {
           setForm({
             email: result.data.email,
@@ -51,6 +52,7 @@ function Profile() {
           setJobs(result.data.jobs);
           setPreviewImage(result.data.avatar);
         }
+        setLoading(false);
       });
     }
   }, [isAuthenticated]);
@@ -131,6 +133,8 @@ function Profile() {
       setForm((prev) => ({ ...prev, avatar: result.data.avatar }));
     });
   };
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box

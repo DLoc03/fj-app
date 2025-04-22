@@ -9,7 +9,10 @@ import { useCustomNavigate } from "../../utils";
 import PATHS from "../../routes/path";
 import { JobsAPI } from "../../services";
 
+import SpinningLoader from "./SpinningLoading";
+
 function SlideCard() {
+  const [loading, setLoading] = useState(true);
   const navigate = useCustomNavigate();
   const itemsPerPage = 4;
 
@@ -22,6 +25,7 @@ function SlideCard() {
         const allJobs = res.data;
         const last8Jobs = allJobs.slice(-8);
         setJobList(last8Jobs);
+        setLoading(false);
       }
     });
   }, []);
@@ -46,6 +50,8 @@ function SlideCard() {
     const interval = setInterval(handleNext, 3000);
     return () => clearInterval(interval);
   }, [startIndex, jobList]);
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box

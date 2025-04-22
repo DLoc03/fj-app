@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import { Button, Divider, Grid, Typography } from "@mui/material";
 
@@ -16,6 +17,7 @@ function JobCard({ id, jobName, quantity, jobDescription, salary }) {
     salary: "",
   });
   const [questions, setQuestions] = useState([]);
+  const navigate = useNavigate();
 
   const defautFetch = "Đang tải...";
 
@@ -76,7 +78,7 @@ function JobCard({ id, jobName, quantity, jobDescription, salary }) {
           variant="outlined"
           sx={{ mt: 2 }}
           onClick={() => {
-            window.location.href = PATHS.COMPANY_TEST.replace(":id", id);
+            navigate(`${PATHS.COMPANY_TEST}/${id}`);
           }}
         >
           {questions.length > 0

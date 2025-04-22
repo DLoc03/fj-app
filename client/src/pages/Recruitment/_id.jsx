@@ -20,6 +20,8 @@ import PATHS from "../../routes/path";
 import { TransitionGroup } from "react-transition-group";
 import { USER_TYPE } from "../../common/enum/enum";
 
+import SpinningLoader from "../../components/common/SpinningLoading";
+
 function TestDetail() {
   const { id: jobId } = useParams();
   const [questions, setQuestions] = useState([{ question: "" }]);
@@ -30,6 +32,7 @@ function TestDetail() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleQuestionChange = (index, value) => {
     const updatedQuestions = [...questions];
@@ -95,8 +98,11 @@ function TestDetail() {
       if (!err && result?.data.length > 0) {
         setQuestionList(result.data);
       }
+      setLoading(false);
     });
   }, [jobId]);
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box p={4}>
