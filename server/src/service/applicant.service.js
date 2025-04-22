@@ -34,8 +34,6 @@ const postApplicant = async (jobId, data) => {
   });
 };
 
-const getApplicant = async (email) => {};
-
 const getApplicantWithResult = async (id) => {
   const applicant = await Applicant.findById(id).lean();
   const job = await Job.findById(applicant.jobId).lean();
@@ -46,7 +44,6 @@ const getApplicantWithResult = async (id) => {
     question: q.question,
     answer: answers.find((a) => a.questionId.toString() === q._id.toString()),
   }));
-  // console.log(examp);
   return examp;
 };
 
