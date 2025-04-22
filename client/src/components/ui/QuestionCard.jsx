@@ -18,6 +18,7 @@ function QuestionCard({ id, type }) {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState("");
   const [openModal, setOpenModal] = useState(false);
+  const applicant = JSON.parse(sessionStorage.getItem("Applicant"));
 
   const handleAlertClose = () => {
     setAlertOpen(false);
@@ -54,7 +55,8 @@ function QuestionCard({ id, type }) {
   };
 
   const handleSubmit = () => {
-    AnswerAPI.postAnswer(id, answers, (err, result) => {
+    const email = applicant.email;
+    AnswerAPI.postAnswer(id, email, answers, (err, result) => {
       if (!err && result?.data) {
         setAlertStatus("success");
         handleShowAlert("Hoàn tất!");
