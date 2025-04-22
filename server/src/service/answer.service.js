@@ -4,7 +4,7 @@ import Question from "../model/question.js";
 import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
-const postAnswer = async (email, data) => {
+const postAnswer = async (applicantId, data) => {
     const applicant = await Applicant.findOne({ email: email }).lean()
     if (!applicant) {
         return MasterResponse({ status: STATUS.FAILED, message: "Applicant not found", errCode: ERROR_CODE.NOT_FOUND });
@@ -14,7 +14,7 @@ const postAnswer = async (email, data) => {
 
     if (answers.length === 0) {
         const saveAnswer = await Answer.insertMany(data.map(item => ({
-            applicantId: applicant._id,
+            applicantId: applicantId,
             questionId: questions.find(q => q._id.toString() === item.questionId.toString()),
             answer: item.answer
         })))
