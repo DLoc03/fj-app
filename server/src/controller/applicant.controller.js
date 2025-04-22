@@ -22,7 +22,7 @@ const postApplicant = async (req, res) => {
 
 const getApplicantWithResult = async (req, res) => {
   try {
-    const result = await applicantService.getApplicantWithResult(req.params.id);
+    const result = await applicantService.getApplicantWithResult(req?.user.id, req.params.id);
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(
