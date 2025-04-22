@@ -6,34 +6,42 @@ import { ApplicantAPI, AuthAPI } from "../../services";
 
 import Authenticated from "../../components/ui/Authenticated";
 import ResultCard from "../../components/ui/ResultCard";
+import SpinningLoader from "../../components/common/SpinningLoading";
 
 function ApplicantAnswer() {
   const [applicant, setApplicant] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     AuthAPI.getCurrentUser((err, result) => {
       if (!err && result.data) {
-        console.log(result.data.job);
         setJobs(result?.data?.jobs);
+        setLoading(false);
         return;
       }
+      setJobs([]);
+      setLoading(false);
     });
   }, []);
 
+  if (loading) return <SpinningLoader />;
+
   return (
-    <Box sx={{ backgroundColor: "white", height: "100%", width: "100%" }}>
+    <Box sx={{ height: "100%", width: "100%" }}>
       {jobs.length > 0 ? (
-        jobs.map((job, index) => (
-          <ResultCard
-            key={index}
-            name={job.name}
-            salary={job.salary}
-            quantity={job.quantity}
-            applicant={0}
-            date={job.createdAt}
-          />
-        ))
+        <Box sx={{ height: "100%", width: "100%", p: 4 }}>
+          {jobs.map((job) => (
+            <ResultCard
+              key={job.id}
+              name={job.jobName}
+              salary={job.salary}
+              quantity={job.quantity}
+              applicant={""}
+              date={job.createdAt}
+            />
+          ))}
+        </Box>
       ) : (
         <Authenticated message={"Hiện chưa có công việc được đăng tuyển"} />
       )}

@@ -12,14 +12,14 @@ import SpinningLoader from "../../components/common/SpinningLoading";
 
 function CompanyJobs() {
   const [jobList, setJobList] = useState([]);
-  const [status, setStatus] = useState();
+  const [company, setCompany] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     AuthAPI.getCurrentUser((err, result) => {
       if (!err && result?.data) {
         setJobList(result.data.jobs);
-        setStatus(result.data.company.status);
+        setCompany(result.data.company);
       }
       setLoading(false);
     });
@@ -29,47 +29,53 @@ function CompanyJobs() {
 
   return (
     <Box sx={{ height: "100%" }}>
-      {status !== "Pending" ? (
-        jobList.length > 0 ? (
-          <Box m={2}>
-            {jobList.map((job) => (
-              <JobCard
-                key={job.id}
-                jobName={job.jobName}
-                id={job.id}
-                jobDescription={job.jobDescription}
-                quantity={job.quantity}
-                salary={job.salary}
-              />
-            ))}
-
-            <Box textAlign="center" mt={2}>
-              <Recruitment />
+      {company ? (
+        company.status !== "Pending" ? (
+          jobList.length > 0 ? (
+            <Box m={2}>
+              {jobList.map((job) => (
+                <JobCard
+                  key={job.id}
+                  jobName={job.jobName}
+                  id={job.id}
+                  jobDescription={job.jobDescription}
+                  quantity={job.quantity}
+                  salary={job.salary}
+                />
+              ))}
+              <Box textAlign="center" mt={2}>
+                <Recruitment />
+              </Box>
             </Box>
-          </Box>
+          ) : (
+            <Box
+              sx={{
+                backgroundColor: "white",
+                p: 2,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                height: "100%",
+              }}
+            >
+              <Typography variant="h5" gutterBottom color="primary">
+                Danh sách tuyển dụng của bạn hiện đang trống
+              </Typography>
+              <Box textAlign="center" mt={2}>
+                <Recruitment />
+              </Box>
+            </Box>
+          )
         ) : (
-          <Box
-            sx={{
-              backgroundColor: "white",
-              p: 2,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              height: "100%",
-            }}
-          >
-            <Typography variant="h5" gutterBottom color="primary">
-              Danh sách tuyển dụng của bạn hiện đang trống
-            </Typography>
-            <Box textAlign="center" mt={2}>
-              <Recruitment />
-            </Box>
-          </Box>
+          <Authenticated
+            message="Chúng tôi đang xác thực thông tin cơ sở của bạn! Vui lòng đợi!"
+            register={false}
+          />
         )
       ) : (
         <Authenticated
-          message="Chúng tôi đang xác thực thông tin cơ sở của bạn! Vui lòng đợi!"
+          message="Cơ sở của bạn chưa được đăng ký, vui lòng đăng ký thông tin!"
           register={false}
         />
       )}

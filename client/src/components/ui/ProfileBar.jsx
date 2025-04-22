@@ -51,7 +51,7 @@ const ProfileBar = () => {
   }, [isAuthenticated]);
 
   return (
-    <Box height="100vh">
+    <Box height="100%">
       <ProSidebar
         collapsed={isSmallScreen}
         style={{ width: "100%", height: "100vh" }}

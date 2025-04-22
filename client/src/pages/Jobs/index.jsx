@@ -29,7 +29,10 @@ function Job() {
   useEffect(() => {
     JobsAPI.getJobs((err, result) => {
       if (!err && result?.data) {
-        setJobs(result.data);
+        const sortedJobs = result.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setJobs(sortedJobs);
         setLoading(false);
       }
     });

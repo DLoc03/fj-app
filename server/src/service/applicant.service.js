@@ -31,7 +31,7 @@ const postApplicant = async (jobId, data) => {
   return MasterResponse({
     status: STATUS.CREATED,
     message: "Created new Applicant",
-    data: ApplicantResponse.ApplicantCreate(newApplicant),
+    data: ApplicantResponse.Create(newApplicant),
   });
 };
 

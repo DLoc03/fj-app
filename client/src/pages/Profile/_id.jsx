@@ -80,15 +80,13 @@ function Profile() {
 
   const handleToggleEdit = () => {
     if (isEditing) {
-      const formData = new FormData();
-      formData.append("name", form.name);
-      formData.append("email", form.email);
-      formData.append("phone", form.phone);
-      if (fileInputRef.current?.files[0]) {
-        formData.append("avatar", fileInputRef.current.files[0]);
-      }
+      const updateData = {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+      };
 
-      AuthAPI.updateUser(userId, formData, (err, result) => {
+      AuthAPI.updateUser(userId, updateData, (err, result) => {
         if (err) {
           setAlertStatus("error");
           handleShowAlert("Cập nhật thất bại");
