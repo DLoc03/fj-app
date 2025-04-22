@@ -4,7 +4,8 @@ import Question from "../model/question.js";
 import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
 import Answer from "../model/answer.js";
-
+import Company from "../model/company.js";
+import { ApplicantResponse } from "../response/applicant.response.js";
 const postApplicant = async (jobId, data) => {
   const { email, name, phone, cv } = data;
 
@@ -30,24 +31,47 @@ const postApplicant = async (jobId, data) => {
   return MasterResponse({
     status: STATUS.CREATED,
     message: "Created new Applicant",
-    data: newApplicant,
+    data: ApplicantResponse.ApplicantCreate(newApplicant),
   });
 };
 
-const getApplicantWithResult = async (id) => {
-  const applicant = await Applicant.findById(id).lean();
-  const job = await Job.findById(applicant.jobId).lean();
+const getApplicantWithResult = async (userId, applicantId) => {
+  const company = await Company.findOne({ recruiterId: userId }).lean();
+
+  const applicant = await Applicant.findById(applicantId).lean();
+
+  if (!applicant)
+    return MasterResponse({
+      status: STATUS.NOT_FOUND,
+      message: "Applicant not found",
+      errCode: ERROR_CODE.BAD_REQUEST,
+    });
+
+  const job = await Job.findOne({
+    companyId: company._id,
+    _id: applicant.jobId,
+  }).lean();
+
   const questions = await Question.find({ jobId: job._id }).lean();
-  const answers = await Answer.find({ applicantId: applicant._id });
-  const { jobId, ...data } = applicant;
-  const examp = questions.map((q) => ({
+
+  const answers = await Answer.find({ applicantId: applicant._id }).lean();
+
+  const validApplicant = ApplicantResponse.Create(applicant);
+
+  const exam = questions.map((q) => ({
     question: q.question,
-    answer: answers.find((a) => a.questionId.toString() === q._id.toString()),
+    answer: answers.reduce((acc, item) => {
+      if (q._id.toString() === item.questionId.toString()) {
+        return item.answer;
+      }
+      return acc;
+    }, null),
   }));
   return MasterResponse({
-    status: STATUS.DONE,
-    message: "Done",
-    data: examp,
+    data: {
+      ...validApplicant,
+      exam,
+    },
   });
 };
 
