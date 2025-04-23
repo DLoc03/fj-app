@@ -9,8 +9,8 @@ import { ApplicantResponse } from '../response/applicant.response.js'
 const postApplicant = async (jobId, data) => {
     const { email, name, phone, cv } = data
 
-    const exitedApplicant = await Applicant.findOne({ email: email, jobId: jobId }).lean()
-    if (exitedApplicant) return MasterResponse({ status: STATUS.FAILED, message: `Your email: ${exitedApplicant.email} is already for job`, errCode: ERROR_CODE.BAD_REQUEST })
+    const existingApplicant = await Applicant.findOne({ email: email, jobId: jobId }).lean()
+    if (existingApplicant) return MasterResponse({ status: STATUS.FAILED, message: `Your email: ${existingApplicant.email} is already for job`, errCode: ERROR_CODE.BAD_REQUEST })
 
     const newApplicant = new Applicant({
         email,
