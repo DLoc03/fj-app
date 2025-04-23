@@ -13,6 +13,14 @@ export const STATUS = {
     NOT_FOUND: "Not found"
 }
 
+export const STATUS_CODE = {
+    OK: 200,
+    CREATED: 201,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+    UNAUTHORIZED: 401,
+}
+
 
 export const QUEUE_NAME = {
     AUDIT: 'auditlogs',
@@ -22,8 +30,8 @@ export const QUEUE_NAME = {
 export const RABBIT_EVENTS = {
     ERROR: 'error',
     CLOSE: 'close',
-
 }
+
 
 export const REDIS_EVENTS = {
     CACHE_HIT: "CACHE_HIT",

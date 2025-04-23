@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { MasterResponse } from "../response/master.response.js";
-import { ERROR_CODE, STATUS } from "../utils/enum.js";
+import { ERROR_CODE, STATUS, STATUS_CODE } from "../utils/enum.js";
+import redis from "../config/redis.config.js";
 
 export const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -33,3 +34,38 @@ export const isOwnerId = (req, res, next) => {
   }
   next();
 };
+
+export const checkBlackList = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization
+    const token = authHeader && authHeader.split(" ")[1]
+    if (!token) {
+      return res
+        .status(STATUS_CODE.UNAUTHORIZED)
+        .json(MasterResponse({
+          status: STATUS.FAILED,
+          errCode: ERROR_CODE.UNAUTHORIZED,
+          message: 'Access token required'
+        }))
+    }
+    const isBlacklist = await redis.get(`black_list:${token}`)
+    if (isBlacklist) {
+      return res
+        .status(STATUS_CODE.UNAUTHORIZED)
+        .json(MasterResponse({
+          status: STATUS.FAILED,
+          errCode: ERROR_CODE.UNAUTHORIZED,
+          message: 'Token has been blacklisted'
+        }))
+    }
+    next()
+  } catch (error) {
+    return res
+      .status(500)
+      .json(MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.SERVER_ERROR,
+        message: error.message
+      }))
+  }
+}
