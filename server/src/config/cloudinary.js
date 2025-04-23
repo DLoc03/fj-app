@@ -8,24 +8,17 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const storageUserAvatar = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "/avatars",
-    allowed_formats: ["jpg", "png", "jpeg"],
-    transformation: [{ width: 500, height: 500, crop: "limit" }],
-  },
-});
+const imageStorage = (folder) => {
+  return new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: `/${folder}`,
+      allowed_formats: ["jpg", "png", "jpeg"],
+      transformation: [{ width: 500, height: 500, crop: "limit" }]
+    }
+  })
+}
 
-const storageCompanyImage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: "/companies",
-    allowed_formats: ["jpg", "png", "jpeg"],
-    transformation: [{ width: 500, height: 500, crop: "limit" }],
-  },
-});
-
-const uploadUserAvatar = multer({ storage: storageUserAvatar });
-const uploadCompanyImage = multer({ storage: storageCompanyImage })
+const uploadUserAvatar = multer({ storage: imageStorage('avatars') });
+const uploadCompanyImage = multer({ storage: imageStorage('companies') })
 export { uploadUserAvatar, uploadCompanyImage, cloudinary };
