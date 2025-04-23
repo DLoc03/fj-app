@@ -81,12 +81,17 @@ const updateJobById = async (userId, jobId, body) => {
 const getJobs = async (isDestroy, page = 1) => {
   const limit = 10
   const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
+  const companies = await Company.find({ isDestroy: false }).lean()
   const total = await Job.countDocuments()
   const jobs = await Job.find(filter)
     .skip((page - 1) * limit)
     .limit(limit)
     .lean();
-  const paginatedJobs = jobs.map(j => JobResponse.Jobs(j))
+  const validJobs = jobs.map(j => JobResponse.Jobs(j))
+  const paginatedJobs = validJobs.map(item => ({
+    ...item,
+    avatar: companies.find(c => c._id.toString() === item.companyId.toString())?.avatar || null
+  }))
   return MasterResponse({
     data: {
       paginatedJobs,
