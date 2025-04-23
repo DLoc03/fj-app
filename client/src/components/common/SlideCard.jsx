@@ -51,7 +51,7 @@ function SlideCard() {
     return () => clearInterval(interval);
   }, [startIndex, jobList]);
 
-  if (loading) return <SpinningLoader />;
+  // if (loading) return <SpinningLoader />;
 
   return (
     <Box
