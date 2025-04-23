@@ -113,7 +113,7 @@ export const logout = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const response = await userService.getUserById(req.user.id);
+    const response = await userService.getUserById(req.user.id, req.query?.site, req.query?.page);
     return res.status(STATUS_CODE.OK).json(response);
   } catch (error) {
     return res
