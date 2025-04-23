@@ -23,4 +23,11 @@ export const CompaniesAPI = {
       if (typeof cb === "function") cb(null, result);
     });
   },
+
+  async postCompanyAvatar(data, cb) {
+    await restRequest.postFormData("/comp/avatar", data, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
 };

@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import CardDetail from "../../components/common/Card";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
-import Divider from "@mui/material/Divider";
 
 import Stack from "@mui/material/Stack";
 import { useMediaQuery } from "react-responsive";
 
-import { JobsAPI, CompaniesAPI } from "../../services";
+import { JobsAPI } from "../../services";
+import bgJob from "../../assets/bgJob.png";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
-import jobBg from "../../assets/jobBg.jpg";
 import Sidebar from "../../components/ui/Sidebar";
 import SpinningLoader from "../../components/common/SpinningLoading";
+import { Divider } from "@mui/material";
 
 function Job() {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   const itemPerPage = isMobile ? 3 : 8;
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageParam = parseInt(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(pageParam);
+
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,8 +42,21 @@ function Job() {
     });
   }, []);
 
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setCurrentPage(pageParam);
+      setLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [pageParam]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+
   const handlePageChange = (event, page) => {
-    setCurrentPage(page);
+    setSearchParams({ page: page.toString() });
   };
 
   const totalItems = jobs.length;
@@ -56,24 +73,13 @@ function Job() {
         container
         spacing={10}
         sx={{
-          backgroundImage: `url(${jobBg})`,
+          backgroundImage: `url(${bgJob})`,
           backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
           position: "relative",
           minHeight: "100vh",
         }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            zIndex: 1,
-          }}
-        />
         <Sidebar />
         <Grid
           item
@@ -81,16 +87,6 @@ function Job() {
           sx={{ position: "relative", zIndex: 2 }}
         >
           <Grid container spacing={4} py={{ xs: 1, md: 4 }}>
-            <Grid item size={12}>
-              <Typography
-                fontWeight={"700"}
-                color="white"
-                textAlign={"center"}
-                sx={{ fontSize: { xs: "28px", md: "32px" } }}
-              >
-                Tuyển dụng nhân sự
-              </Typography>
-            </Grid>
             {currentItems.map((job, jobIndex) => (
               <Grid
                 item
@@ -104,6 +100,7 @@ function Job() {
                 <CardDetail
                   id={job._id}
                   jobName={job.jobName}
+                  avatar={job.company.avatar}
                   jobDesc={job.jobDescription}
                   quantity={job.quantity}
                   salary={job.salary}

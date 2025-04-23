@@ -3,20 +3,21 @@ import Card from "@mui/material/Card";
 
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import album from "../../assets/album-1.jpg";
+import logo from "../../assets/logo.png";
 import { Button } from "@mui/material";
 
 import PATHS from "../../routes/path";
 import { formatCurrency } from "../../utils/helper";
 
-function CardDetail({ id, jobName, quantity, salary, company }) {
+function CardDetail({ id, jobName, quantity, salary, company, avatar }) {
   return (
     <Card
       sx={{
         height: "240px",
         width: "200px",
         zIndex: "9",
-        backgroundImage: `url(${album})`,
+        boxShadow: "shadow.main",
+        backgroundImage: `url(${avatar ? avatar : logo})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",
@@ -33,11 +34,12 @@ function CardDetail({ id, jobName, quantity, salary, company }) {
       {company && (
         <CardContent
           sx={{
-            backgroundColor: "white",
+            backgroundColor: "primary.main",
             display: "flex",
             flexDirection: "column",
             cursor: "pointer",
             p: "6px",
+            color: "white",
             transition:
               "height 0.5s ease-in-out, background-color 0.5s ease-in-out",
             height: "100px",
@@ -45,7 +47,6 @@ function CardDetail({ id, jobName, quantity, salary, company }) {
               height: "200px",
               borderRadius: "20px 20px 0 0",
               backgroundColor: "secondary.main",
-              color: "white",
             },
             overflow: "hidden",
             "&:hover .description": {

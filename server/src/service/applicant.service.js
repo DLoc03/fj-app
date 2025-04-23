@@ -82,32 +82,6 @@ const getApplicantWithResult = async (userId, applicantId) => {
     }, null),
   }));
   return MasterResponse({
-    status: STATUS.NOT_FOUND,
-    message: "Applicant not found",
-    errCode: ERROR_CODE.BAD_REQUEST,
-  });
-
-  const job = await Job.findOne({
-    companyId: company._id,
-    _id: applicant.jobId,
-  }).lean();
-
-  const questions = await Question.find({ jobId: job._id }).lean();
-
-  const answers = await Answer.find({ applicantId: applicant._id }).lean();
-
-  const validApplicant = ApplicantResponse.Create(applicant);
-
-  const exam = questions.map((q) => ({
-    question: q.question,
-    answer: answers.reduce((acc, item) => {
-      if (q._id.toString() === item.questionId.toString()) {
-        return item.answer;
-      }
-      return acc;
-    }, null),
-  }));
-  return MasterResponse({
     data: {
       ...validApplicant,
       exam,

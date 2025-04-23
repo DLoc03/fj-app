@@ -14,13 +14,14 @@ const theme = createTheme({
     },
     secondary: {
       main: "rgb(48, 48, 48)",
-      second: "rgb(180, 180, 180)",
+      second: "rgb(82, 82, 82)",
+      light: "rgb(180, 180, 180)",
     },
     error: {
       main: red.A400,
     },
     shadow: {
-      main: "0 4px 12px rgba(0, 0, 0, 0.3)",
+      main: "0 10px 30px rgba(0, 0, 0, 0.3)",
     },
   },
 });

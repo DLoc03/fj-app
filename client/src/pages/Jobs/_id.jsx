@@ -15,7 +15,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 
-import imgBg from "../../assets/jobBg.jpg";
+import bgJob from "../../assets/bgJob.png";
+import defaultAvt from "../../assets/jobBg.jpg";
 import SlideCard from "../../components/common/SlideCard";
 import { formatCurrency, formatDate } from "../../utils/helper";
 import SpinningLoading from "../../components/common/SpinningLoading";
@@ -48,12 +49,14 @@ function JobDetail() {
     });
   }, [compDetail]);
 
+  console.log(comp);
+
   if (loading) return <SpinningLoader />;
 
   return (
     <Box
       sx={{
-        backgroundImage: `url(${imgBg})`,
+        backgroundImage: `url(${bgJob})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -67,18 +70,22 @@ function JobDetail() {
           color={"white"}
           mb={2}
         >
-          <Grid item size={{ xs: 12, md: 4 }}>
+          <Grid item size={{ xs: 12, md: 5 }}>
             <Box
               sx={{
                 boxSizing: "border-box",
-                backgroundColor: "white",
+                backgroundImage: `url(${
+                  comp.avatar ? comp.avatar : defaultAvt
+                })`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
                 width: { xs: "100%", md: "100%" },
-                height: { xs: "160px", md: "100%" },
+                height: { xs: "200px", md: "100%" },
                 borderRadius: "1px",
               }}
             ></Box>
           </Grid>
-          <Grid item size={{ xs: 12, md: 8 }} gap={4}>
+          <Grid item size={{ xs: 12, md: 7 }} gap={4}>
             <Grid
               container
               spacing={2}
@@ -87,6 +94,7 @@ function JobDetail() {
               color={"secondary.main"}
               py={2}
               px={3}
+              sx={{ boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)" }}
             >
               <Grid item size={12}>
                 <Typography
@@ -143,14 +151,20 @@ function JobDetail() {
             <Grid item size={12} mt={2}></Grid>
             <Grid
               item
-              size={{ xs: 12, md: 3 }}
+              size={{ xs: 12, md: 12 }}
               mt={2}
               display={"flex"}
               justifyContent={{ xs: "center", md: "left" }}
             >
               <Button
                 variant="contained"
-                sx={{ width: "240px", fontSize: { xs: "10px", md: "14px" } }}
+                sx={{
+                  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+                  fontSize: {
+                    xs: "10px",
+                    md: "14px",
+                  },
+                }}
                 onClick={() => {
                   window.location.href = PATHS.ANSWER.replace(":id", id);
                 }}
@@ -163,13 +177,18 @@ function JobDetail() {
             item
             size={12}
             sx={{
-              backgroundColor: "primary.light",
+              backgroundColor: "white",
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
               p: 2,
               boxSizing: "border-box",
               color: "secondary.main",
             }}
           >
-            <Typography fontSize={{ xs: "16px", md: "20px" }} mb={1}>
+            <Typography
+              fontSize={{ xs: "16px", md: "20px" }}
+              mb={1}
+              fontWeight={500}
+            >
               Thông tin cơ sở
               <Divider />
             </Typography>
@@ -185,14 +204,18 @@ function JobDetail() {
             size={12}
             mb={1}
             sx={{
-              backgroundColor: "primary.light",
+              backgroundColor: "white",
               p: 2,
               boxSizing: "border-box",
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
               color: "secondary.main",
             }}
           >
             <Box my={1}>
-              <Typography fontSize={{ xs: "16px", md: "20px" }}>
+              <Typography
+                fontSize={{ xs: "16px", md: "20px" }}
+                fontWeight={500}
+              >
                 Mô tả công việc
               </Typography>
               <Divider />
@@ -201,18 +224,34 @@ function JobDetail() {
               </Typography>
             </Box>
             <Box my={1}>
-              <Typography fontSize={{ xs: "16px", md: "20px" }}>
+              <Typography
+                fontSize={{ xs: "16px", md: "20px" }}
+                fontWeight={500}
+              >
                 Yêu cầu công việc
               </Typography>
               <Divider />
-              <Typography fontSize={{ xs: "12px", md: "16px" }}>...</Typography>
+              <Typography
+                fontSize={{ xs: "12px", md: "14px" }}
+                fontStyle={"italic"}
+              >
+                Chưa đề cập
+              </Typography>
             </Box>
             <Box my={1}>
-              <Typography fontSize={{ xs: "16px", md: "20px" }}>
+              <Typography
+                fontSize={{ xs: "16px", md: "20px" }}
+                fontWeight={500}
+              >
                 Quyền lợi
               </Typography>
               <Divider />
-              <Typography fontSize={{ xs: "12px", md: "16px" }}>...</Typography>
+              <Typography
+                fontSize={{ xs: "12px", md: "14px" }}
+                fontStyle={"italic"}
+              >
+                Chưa đề cập
+              </Typography>
             </Box>
           </Grid>
         </Grid>

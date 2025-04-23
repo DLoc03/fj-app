@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -6,10 +6,11 @@ import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 
-import { AuthAPI } from "../../services";
+import { AuthAPI, CompaniesAPI } from "../../services";
 import Authenticated from "../../components/ui/Authenticated";
 import PATHS from "../../routes/path";
 import SpinningLoader from "../../components/common/SpinningLoading";
+import PopupAlert from "../../components/common/PopUp";
 
 function UserCompany() {
   const [comp, setComp] = useState({
@@ -19,8 +20,30 @@ function UserCompany() {
     phone: "",
     user: "",
     status: "",
+    avatar: "",
   });
   const [loading, setLoading] = useState(true);
+  const fileInputRef = useRef(null);
+  const [previewImage, setPreviewImage] = useState("");
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertStatus, setAlertStatus] = useState("");
+
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
+
+  const handleShowAlert = (message, callback) => {
+    setAlertMessage(message);
+    setAlertOpen(true);
+    if (callback) {
+      const timer = setTimeout(() => {
+        setAlertOpen(false);
+        callback();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  };
 
   useEffect(() => {
     AuthAPI.getCurrentUser((err, result) => {
@@ -32,11 +55,44 @@ function UserCompany() {
           status: result?.data?.company.status,
           phone: result?.data?.phone,
           user: result?.data?.name,
+          avatar: result?.data?.company?.avatar,
         });
       }
       setLoading(false);
     });
   }, []);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file || !file.type.startsWith("image/")) {
+      setAlertStatus("error");
+      handleShowAlert("Vui lòng chọn một ảnh hợp lệ");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    CompaniesAPI.postCompanyAvatar(formData, (err, result) => {
+      if (err || !result.data) {
+        setAlertStatus("error");
+        handleShowAlert("Cập nhật ảnh thất bại!");
+        return;
+      }
+
+      setAlertStatus("success");
+      handleShowAlert("Cập nhật ảnh thành công!");
+
+      setComp((prev) => ({
+        ...prev,
+        avatar: result.data.avatar,
+      }));
+      setPreviewImage(result.data.avatar);
+    });
+  };
+
+  console.log("Comp data: ", comp);
 
   if (loading) return <SpinningLoader />;
 
@@ -68,6 +124,70 @@ function UserCompany() {
                   Thông tin cơ sở
                 </Typography>
                 <Divider sx={{ mt: 2 }} />
+              </Grid>
+              <Grid
+                item
+                size={12}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  position="relative"
+                  width={"100%"}
+                  height={"320px"}
+                  sx={{
+                    mx: "auto",
+                    cursor: "pointer",
+                    borderRadius: "8px",
+                    overflow: "hidden",
+                    "&:hover .overlay": {
+                      opacity: 1,
+                    },
+                    backgroundPosition: "center",
+                  }}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <img
+                    src={comp.avatar || "https://via.placeholder.com/150"}
+                    alt={previewImage ? "avatar" : ""}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <Box
+                    className="overlay"
+                    position="absolute"
+                    top={0}
+                    left={0}
+                    width="100%"
+                    height="100%"
+                    bgcolor="rgba(0, 0, 0, 0.5)"
+                    color="white"
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    opacity={0}
+                    transition="opacity 0.3s ease"
+                  >
+                    <Typography fontSize={{ xs: 30, md: 42 }}>+</Typography>
+                    <Typography fontSize={{ xs: 12, md: 18 }}>
+                      Cập nhật ảnh đại diện cơ sỏ
+                    </Typography>
+                  </Box>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                  />
+                </Box>
               </Grid>
               <Grid
                 item
@@ -191,6 +311,12 @@ function UserCompany() {
             >
               Đăng tuyển dụng nhân sự
             </Button>
+            <PopupAlert
+              open={alertOpen}
+              message={alertMessage}
+              onClose={handleAlertClose}
+              severity={alertStatus}
+            />
           </Box>
         ) : (
           <Authenticated
