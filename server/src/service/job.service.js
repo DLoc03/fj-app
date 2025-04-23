@@ -35,16 +35,14 @@ const postJob = async (userId, body) => {
   });
 };
 
-const getJob = async (id, page = 1) => {
+const getJob = async (id) => {
   const job = await Job.findOne({ _id: id }).lean();
-  const company = await Company.findOne({ _id: job.companyId }).lean();
   const validJob = JobResponse.Jobs(job);
-  const applicant = await Applicant.find({ jobId: validJob.id }).lean()
+  const total = await Applicant.countDocuments({ jobId: validJob.id })
   const { companyId, ...data } = validJob;
   const result = {
     ...data,
-    applicant: !applicant ? [] : applicant.map(a => ApplicantResponse.Create(a)),
-    count: applicant.length
+    total
   };
   return MasterResponse({ message: "OK", data: result });
 };
@@ -80,19 +78,23 @@ const updateJobById = async (userId, jobId, body) => {
   });
 };
 
-const getJobs = async (isDestroy) => {
+const getJobs = async (isDestroy, page = 1) => {
+  const limit = 10
   const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
-  const jobs = await Job.find(filter).lean();
-  const companies = await Company.find().lean();
-  const result = jobs.map(({ companyId, ...data }) => ({
-    ...data,
-    company: CompanyResponse.Companies(
-      companies.find(
-        (company) => company._id.toString() === companyId.toString() || null
-      )
-    ),
-  }));
-  return MasterResponse({ status: STATUS.DONE, message: "OK", data: result });
+  const total = await Job.countDocuments()
+  const jobs = await Job.find(filter)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+  const paginatedJobs = jobs.map(j => JobResponse.Jobs(j))
+  return MasterResponse({
+    data: {
+      paginatedJobs,
+      currentPage: page,
+      total,
+      totalPage: Math.ceil(total / limit)
+    }
+  });
 };
 
 export const jobService = {
