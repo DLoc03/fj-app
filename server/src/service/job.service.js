@@ -1,5 +1,7 @@
+import Applicant from "../model/applicant.js";
 import Company from "../model/company.js";
 import Job from "../model/job.js";
+import { ApplicantResponse } from "../response/applicant.response.js";
 import { CompanyResponse } from "../response/company.response.js";
 import { JobResponse } from "../response/job.response.js";
 import { MasterResponse } from "../response/master.response.js";
@@ -13,6 +15,13 @@ const postJob = async (userId, body) => {
       status: STATUS.NOT_FOUND,
       errCode: ERROR_CODE.BAD_REQUEST,
       message: "You need create company first",
+    });
+
+  if (company.status !== 'Authenticated')
+    return MasterResponse({
+      status: STATUS.NOT_FOUND,
+      errCode: ERROR_CODE.BAD_REQUEST,
+      message: "Your company still not authenticated yet",
     });
   const newJob = new Job({
     companyId: company._id,
@@ -28,26 +37,26 @@ const postJob = async (userId, body) => {
 
 const getJob = async (id) => {
   const job = await Job.findOne({ _id: id }).lean();
-  const company = await Company.findOne({ _id: job.companyId }).lean();
   const validJob = JobResponse.Jobs(job);
+  const total = await Applicant.countDocuments({ jobId: validJob.id })
   const { companyId, ...data } = validJob;
   const result = {
     ...data,
-    company: company.name,
+    total
   };
   return MasterResponse({ message: "OK", data: result });
 };
 
-const updateJobById = async (userId, body) => {
+const updateJobById = async (userId, jobId, body) => {
   const company = await Company.findOne({ recruiterId: userId }).lean();
   if (!company)
     return MasterResponse({
       status: STATUS.NOT_FOUND,
       errCode: ERROR_CODE.BAD_REQUEST,
-      message: "You need create company first",
+      message: "You need create/authenticated company first",
     });
 
-  const job = await Job.findOne({ companyId: company._id }).lean();
+  const job = await Job.findOne({ _id: jobId, companyId: company._id }).lean();
   if (!job)
     return MasterResponse({
       status: STATUS.NOT_FOUND,
@@ -56,7 +65,7 @@ const updateJobById = async (userId, body) => {
     });
 
   const validJob = JobResponse.Jobs(
-    await Job.findOneAndUpdate({ companyId: company._id }, body, { new: true })
+    await Job.findOneAndUpdate({ companyId: company._id, _id: jobId }, body, { new: true })
   );
   const { companyId, ...data } = validJob;
   const result = {
@@ -69,19 +78,23 @@ const updateJobById = async (userId, body) => {
   });
 };
 
-const getJobs = async (isDestroy) => {
+const getJobs = async (isDestroy, page = 1) => {
+  const limit = 10
   const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
-  const jobs = await Job.find(filter).lean();
-  const companies = await Company.find().lean();
-  const result = jobs.map(({ companyId, ...data }) => ({
-    ...data,
-    company: CompanyResponse.Companies(
-      companies.find(
-        (company) => company._id.toString() === companyId.toString() || null
-      )
-    ),
-  }));
-  return MasterResponse({ status: STATUS.DONE, message: "OK", data: result });
+  const total = await Job.countDocuments()
+  const jobs = await Job.find(filter)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .lean();
+  const paginatedJobs = jobs.map(j => JobResponse.Jobs(j))
+  return MasterResponse({
+    data: {
+      paginatedJobs,
+      currentPage: page,
+      total,
+      totalPage: Math.ceil(total / limit)
+    }
+  });
 };
 
 export const jobService = {
