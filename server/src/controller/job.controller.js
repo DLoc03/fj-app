@@ -24,7 +24,7 @@ const updateJobById = async (req, res) => {
         if (!req.body || Object.keys(req.body).length === 0) {
             return res.status(200).json(MasterResponse({ status: STATUS.FAILED, errCode: ERROR_CODE.BAD_REQUEST, message: "No update data provided" }));
         }
-        const response = await jobService.updateJobById(req.user.id, req.body)
+        const response = await jobService.updateJobById(req.user.id, req.params.id, req.body)
         return res.status(STATUS_CODE.OK).json(response)
     } catch (error) {
         return res.status(500).json(MasterResponse({ errCode: ERROR_CODE.FAILED, message: error.message }));
@@ -33,8 +33,8 @@ const updateJobById = async (req, res) => {
 
 const getJobs = async (req, res) => {
     try {
-        const isDestroy = req.query.isDestroy ? req.query.isDestroy === "true" : null;
-        const response = await jobService.getJobs(isDestroy)
+        const isDestroy = req.query?.isDestroy ? req.query?.isDestroy === "true" : null;
+        const response = await jobService.getJobs(isDestroy, req.query?.page)
         return res.status(STATUS_CODE.OK).json(response)
     } catch (error) {
         return res.status(500).json(MasterResponse({ errCode: ERROR_CODE.FAILED, message: error.message }));

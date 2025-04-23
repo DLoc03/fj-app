@@ -54,12 +54,12 @@ const getCompanies = async (query) => {
   return MasterResponse({ data: [...companyWithUser] });
 };
 
-const updateCompany = async (id, data) => {
+const updateCompany = async (id) => {
   const company = await Company.findOne({ recruiterId: id }).lean()
   if (!company) {
     return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST, message: "Company not found" })
   }
-  const newData = await Company.findOneAndUpdate(company._id, data, { new: true })
+  const newData = await Company.findOneAndUpdate(company._id, { status: 'Authenticated' }, { new: true })
   return MasterResponse({ status: STATUS.CREATED, data: CompanyResponse.CompanyFound(newData) })
 }
 

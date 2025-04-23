@@ -8,7 +8,7 @@ import { CompanyResponse } from "../response/company.response.js";
 import { JobResponse } from "../response/job.response.js";
 import { MasterResponse } from "../response/master.response.js";
 import { UserResponse } from "../response/user.response.js";
-import { ERROR_CODE, STATUS } from "../utils/enum.js";
+import { ERROR_CODE, SITE_ENUM, STATUS } from "../utils/enum.js";
 import Answer from "../model/answer.js";
 const getUserList = async (isDestroy) => {
     const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
@@ -17,46 +17,43 @@ const getUserList = async (isDestroy) => {
     return MasterResponse({ data: validUser });
 };
 
-const getUserById = async (id) => {
-    const userRaw = await User.findById(id).lean();
-    if (!userRaw || userRaw.isDestroy) {
-        return MasterResponse({
-            status: STATUS.NOT_FOUND,
-            errCode: ERROR_CODE.BAD_REQUEST,
-            message: "User not found",
-        });
-    }
-
-    const validUser = UserResponse.UserInfo(userRaw);
-
-    const existedCompany = await Company.findOne({
-        recruiterId: userRaw._id,
-    }).lean();
-    if (!existedCompany || existedCompany.isDestroy) {
-        return MasterResponse({
-            data: {
-                ...validUser,
-                company: null,
-                jobs: [],
-            },
-        });
-    }
-
-    const company = CompanyResponse.CompanyFound(existedCompany);
-
-    const jobsOfComp = await Job.find({
-        companyId: existedCompany._id,
+const getUserById = async (id, site, page = 1) => {
+    const limit = 10
+    const skip = (page - 1) * limit
+    const user = await User.findById(id).lean();
+    const company = await Company.findOne({ recruiterId: user._id, isDestroy: false }).lean()
+    const total = await Job.countDocuments({
         isDestroy: false,
-    }).lean();
-    const jobs = jobsOfComp.map((j) => JobResponse.Jobs(j));
-
-    const data = {
-        ...validUser,
-        company,
-        jobs,
-    };
-
-    return MasterResponse({ data });
+        companyId: company._id
+    })
+    const job = await Job.find({ companyId: company._id, isDestroy: false })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+    const paginatedJobs = job.map(j => JobResponse.Jobs(j))
+    switch (site) {
+        case SITE_ENUM.COMPANY:
+            return MasterResponse({
+                data: company.isDestroy === false ? CompanyResponse.CompanyFound(company) : {}
+            })
+        case SITE_ENUM.JOB:
+            return MasterResponse({
+                data: {
+                    paginatedJobs,
+                    currentPage: page,
+                    total,
+                    totalPages: Math.ceil(total / limit)
+                }
+            })
+        case SITE_ENUM.DETAIL:
+            return MasterResponse({
+                data: user?.isDestroy === false ? UserResponse.UserLogin(user) : {}
+            });
+        default:
+            return MasterResponse({
+                data: user?.isDestroy === false ? UserResponse.UserLogin(user) : {}
+            });
+    }
 };
 
 const deleteUserById = async (id) => {
