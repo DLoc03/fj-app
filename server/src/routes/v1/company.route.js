@@ -14,5 +14,6 @@ Router.route('/avatar')
 
 Router.route('/:id')
     .get(companyController.getCompanyById)
+    .put(checkBlackList, verifyToken, authorizeAdmin('admin'), companyController.updateCompany)
 
 export const companyRoute = Router

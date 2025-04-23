@@ -35,7 +35,7 @@ const postApplicant = async (jobId, data) => {
   });
 };
 
-const getApplicantWithResult = async (userId, applicantId) => {
+const getApplicanDetail = async (userId, applicantId) => {
   const company = await Company.findOne({ recruiterId: userId }).lean();
 
   if (!company)
@@ -89,7 +89,49 @@ const getApplicantWithResult = async (userId, applicantId) => {
   });
 };
 
+const getApplicants = async (userId, page = 1) => {
+  const limit = 10;
+  const skip = (page - 1) * limit;
+  const company = await Company.findOne({
+    recruiterId: userId,
+    isDestroy: false,
+  }).lean();
+  if (!company || company.isDestroy === true) {
+    return MasterResponse({
+      status: STATUS.NOT_FOUND,
+      errCode: ERROR_CODE.BAD_REQUEST,
+      message: "Company not found",
+    });
+  }
+  const jobs = await Job.find({ companyId: company._id, isDestroy: false })
+    .select("_id")
+    .lean();
+  const jobIds = jobs.map((j) => j._id);
+  const total = await Applicant.countDocuments({
+    isDestroy: false,
+    jobId: { $in: jobIds },
+  });
+
+  const applicants = await Applicant.find({
+    isDestroy: false,
+    jobId: { $in: jobIds },
+  })
+    .skip(skip)
+    .limit(limit)
+    .lean();
+  const pagedApplicant = applicants.map((a) => ApplicantResponse.Create(a));
+  return MasterResponse({
+    data: {
+      pagedApplicant,
+      currentPage: page,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  });
+};
+
 export const applicantService = {
   postApplicant,
-  getApplicantWithResult,
+  getApplicanDetail,
+  getApplicants,
 };

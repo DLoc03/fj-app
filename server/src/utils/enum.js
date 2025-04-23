@@ -50,3 +50,10 @@ export const REDIS_EVENTS = {
     REDIS_COMMAND_ERROR: "REDIS_COMMAND_ERROR",
     REDIS_TIMEOUT: "REDIS_TIMEOUT"
 };
+
+
+export const SITE_ENUM = {
+    DETAIL: 'detail',
+    COMPANY: 'company',
+    JOB: 'job',
+}

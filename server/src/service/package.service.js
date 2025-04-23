@@ -35,7 +35,7 @@ export const PackageService = {
     recoveryPackage: async (id) => {
         const pkg = await Package.findOne({ _id: id, isDestroy: true }).lean()
         if (!pkg) return MasterResponse({ status: STATUS.NOT_FOUND, errCode: ERROR_CODE.BAD_REQUEST, message: 'Package not found' })
-        const recover = await Package.findByIdAndUpdate(id, { isDestroy: false })
+        const recover = await Package.findByIdAndUpdate(id, { isDestroy: false }, { new: true })
         return MasterResponse({ data: PackageResponse.Client(recover) })
     }
 }
