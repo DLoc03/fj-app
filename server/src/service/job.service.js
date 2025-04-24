@@ -88,10 +88,13 @@ const getJobs = async (isDestroy, page = 1) => {
     .limit(limit)
     .lean();
   const validJobs = jobs.map(j => JobResponse.Jobs(j))
-  const paginatedJobs = validJobs.map(item => ({
-    ...item,
-    avatar: companies.find(c => c._id.toString() === item.companyId.toString())?.avatar || null
-  }))
+  const paginatedJobs = validJobs.map(({ companyId, ...data }) => {
+    const foundCompany = companies.find(c => c._id.toString() === companyId.toString())
+    return {
+      ...data,
+      company: CompanyResponse.Item(foundCompany || {})
+    }
+  })
   return MasterResponse({
     data: {
       paginatedJobs,
