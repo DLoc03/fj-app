@@ -25,5 +25,11 @@ export const CompanyResponse = {
         isDestroy,
         createdAt: DateFormat(createdAt),
         updatedAt: DateFormat(updatedAt)
+    }),
+
+    Item: ({ _id, name, avatar }) => ({
+        id: _id,
+        name,
+        avatar
     })
 }
