@@ -1,14 +1,13 @@
 import Applicant from "../model/applicant.js";
 import Company from "../model/company.js";
 import Job from "../model/job.js";
-import { ApplicantResponse } from "../response/applicant.response.js";
+import User from "../model/user.js";
 import { CompanyResponse } from "../response/company.response.js";
 import { JobResponse } from "../response/job.response.js";
 import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
 const postJob = async (userId, body) => {
-  // const user = await User.findById(userId).lean()
   const company = await Company.findOne({ recruiterId: userId }).lean();
   if (!company)
     return MasterResponse({
@@ -37,14 +36,17 @@ const postJob = async (userId, body) => {
 
 const getJob = async (id) => {
   const job = await Job.findOne({ _id: id }).lean();
+  const { recruiterId } = await Company.findOne({ _id: job.companyId }).lean()
+  const { phone } = await User.findById(recruiterId).lean()
   const validJob = JobResponse.Jobs(job);
-  const total = await Applicant.countDocuments({ jobId: validJob.id })
   const { companyId, ...data } = validJob;
-  const result = {
-    ...data,
-    total
-  };
-  return MasterResponse({ message: "OK", data: result });
+
+  return MasterResponse({
+    data: {
+      ...data,
+      hotline: phone
+    }
+  });
 };
 
 const updateJobById = async (userId, jobId, body) => {
@@ -105,9 +107,39 @@ const getJobs = async (isDestroy, page = 1) => {
   });
 };
 
+const deleteJobDetail = async (userId, id) => {
+  const company = await Company.findOne({ recruiterId: userId }).lean()
+  if (!company) return MasterResponse({
+    status: STATUS.NOT_FOUND,
+    errCode: ERROR_CODE.BAD_REQUEST,
+    message: 'Company not found',
+  })
+  const job = await Job.findOne({ _id: id, companyId: company._id, isDestroy: false }).lean()
+  if (job) {
+    await Applicant.updateMany(
+      {
+        jobId: job._id
+      },
+      {
+        isDestroy: true
+      }
+    )
+    await Job.findOneAndUpdate({ _id: job._id }, { isDestroy: true })
+    return MasterResponse({
+      message: 'Job was deleted'
+    })
+  }
+  return MasterResponse({
+    status: STATUS.NOT_FOUND,
+    errCode: ERROR_CODE.BAD_REQUEST,
+    message: 'Job not found'
+  })
+}
+
 export const jobService = {
   postJob,
   getJob,
   updateJobById,
   getJobs,
+  deleteJobDetail
 };

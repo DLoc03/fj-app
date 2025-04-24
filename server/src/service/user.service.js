@@ -10,6 +10,7 @@ import { MasterResponse } from "../response/master.response.js";
 import { UserResponse } from "../response/user.response.js";
 import { ERROR_CODE, SITE_ENUM, STATUS } from "../utils/enum.js";
 import Answer from "../model/answer.js";
+import { ApplicantResponse } from "../response/applicant.response.js";
 const getUserList = async (isDestroy) => {
     const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
     const list = await User.find(filter).lean();
@@ -21,20 +22,49 @@ const getUserById = async (id, site, page = 1) => {
     const limit = 10
     const skip = (page - 1) * limit
     const user = await User.findById(id).lean();
-    const company = await Company.findOne({ recruiterId: user._id, isDestroy: false }).lean()
+    const company = await Company.findOne({
+        recruiterId: user._id,
+        isDestroy: false
+    })
+        .lean()
     const total = await Job.countDocuments({
         isDestroy: false,
         companyId: company._id
     })
-    const job = await Job.find({ companyId: company._id, isDestroy: false })
+    const job = await Job.find({
+        companyId: company._id,
+        isDestroy: false
+    })
         .skip(skip)
         .limit(limit)
         .lean()
+    const jobIds = await Job.find({
+        companyId: company._id,
+        isDestroy: false
+    })
+        .select('_id')
+        .lean()
+    const applicants = await Applicant.find({
+        jobId: {
+            $in: jobIds
+        },
+        isDestroy: false
+    })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+    const totalApplicant = await Applicant.countDocuments({
+        jobId: {
+            $in: jobIds
+        },
+        isDestroy: false
+    })
+    const paginatedApplicants = applicants.map(a => ApplicantResponse.Create(a))
     const paginatedJobs = job.map(j => JobResponse.Jobs(j))
     switch (site) {
         case SITE_ENUM.COMPANY:
             return MasterResponse({
-                data: company.isDestroy === false ? CompanyResponse.CompanyFound(company) : {}
+                data: company ? CompanyResponse.CompanyFound(company) : {}
             })
         case SITE_ENUM.JOB:
             return MasterResponse({
@@ -45,13 +75,19 @@ const getUserById = async (id, site, page = 1) => {
                     totalPages: Math.ceil(total / limit)
                 }
             })
-        case SITE_ENUM.DETAIL:
+        case SITE_ENUM.APPLICANT:
             return MasterResponse({
-                data: user?.isDestroy === false ? UserResponse.UserLogin(user) : {}
-            });
+                data: {
+                    paginatedApplicants,
+                    currentPage: page,
+                    total: totalApplicant,
+                    totalPages: Math.ceil(totalApplicant / limit)
+                }
+            })
+        case SITE_ENUM.DETAIL:
         default:
             return MasterResponse({
-                data: user?.isDestroy === false ? UserResponse.UserLogin(user) : {}
+                data: user ? UserResponse.UserLogin(user) : {}
             });
     }
 };
