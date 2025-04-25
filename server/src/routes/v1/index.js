@@ -8,15 +8,15 @@ import { applicantRoute } from "./applicant.route.js";
 import { answerRoute } from "./answer.route.js";
 import { packageRoute } from "./package.route.js";
 import { receiptRoute } from "./receipt.route.js";
-const Router = express.Router()
+const Router = express.Router();
 
-Router.use('/auth', authRoutes)
-Router.use('/user', userRoute)
-Router.use('/comp', companyRoute)
-Router.use('/job', jobRoute)
-Router.use('/question', questionRoute)
-Router.use('/applicant', applicantRoute)
-Router.use('/answer', answerRoute)
-Router.use('/package', packageRoute)
-Router.use('/receipt', receiptRoute)
-export const API_ROUTE = Router
+Router.use("/auth", authRoutes);
+Router.use("/user", userRoute);
+Router.use("/comp", companyRoute);
+Router.use("/job", jobRoute);
+Router.use("/question", questionRoute);
+Router.use("/applicant", applicantRoute);
+Router.use("/answer", answerRoute);
+Router.use("/package", packageRoute);
+Router.use("/receipt", receiptRoute);
+export const API_ROUTE = Router;

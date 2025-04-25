@@ -1,6 +1,4 @@
-import express from 'express'
-const Router = express.Router()
+import express from "express";
+const Router = express.Router();
 
-
-
-export const receiptRoute = Router
+export const receiptRoute = Router;

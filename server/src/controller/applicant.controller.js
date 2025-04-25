@@ -22,7 +22,10 @@ const postApplicant = async (req, res) => {
 
 const getApplicanDetail = async (req, res) => {
   try {
-    const result = await applicantService.getApplicanDetail(req.user?.id, req.params?.id);
+    const result = await applicantService.getApplicanDetail(
+      req.user?.id,
+      req.params?.id
+    );
     return res.status(STATUS_CODE.OK).json(result);
   } catch (error) {
     return res.status(500).json(
@@ -37,8 +40,11 @@ const getApplicanDetail = async (req, res) => {
 
 const getApplicants = async (req, res) => {
   try {
-    const result = await applicantService.getApplicants(req.user?.id, req.query?.page)
-    return res.status(STATUS_CODE.OK).json(result)
+    const result = await applicantService.getApplicants(
+      req.user?.id,
+      req.query?.page
+    );
+    return res.status(STATUS_CODE.OK).json(result);
   } catch (error) {
     return res.status(500).json(
       MasterResponse({
@@ -48,9 +54,9 @@ const getApplicants = async (req, res) => {
       })
     );
   }
-}
+};
 export const applicantController = {
   postApplicant,
   getApplicanDetail,
-  getApplicants
+  getApplicants,
 };

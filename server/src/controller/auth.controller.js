@@ -4,8 +4,7 @@ import { MasterResponse } from "../response/master.response.js";
 import redis from "../config/redis.config.js";
 import "dotenv/config";
 import { ERROR_CODE, STATUS, STATUS_CODE } from "../utils/enum.js";
-import jwt from 'jsonwebtoken'
-
+import jwt from "jsonwebtoken";
 
 const registerUser = async (req, res) => {
   const { email, password, name, phone } = req.body;
@@ -14,15 +13,13 @@ const registerUser = async (req, res) => {
     await redis.del("/api/v1/user/:{}");
     return res.status(STATUS_CODE.CREATED).json(result);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
@@ -38,19 +35,19 @@ const loginUser = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       const { refreshToken, ...responseData } = response.result.data;
-      return res.status(STATUS_CODE.OK).json(MasterResponse({ data: responseData }));
+      return res
+        .status(STATUS_CODE.OK)
+        .json(MasterResponse({ data: responseData }));
     }
     return res.status(STATUS_CODE.OK).json(response);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
@@ -60,34 +57,34 @@ export const refreshAccessToken = async (req, res) => {
     const result = await authService.refreshAccessToken(refreshToken);
     return res.status(STATUS_CODE.OK).json(result);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
 export const logout = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
-    return res.status(STATUS_CODE.UNAUTHORIZED).json(MasterResponse({
-      status: STATUS.FAILED,
-      errCode: ERROR_CODE.UNAUTHORIZED,
-      message: 'Token is not provided'
-    }))
+    return res.status(STATUS_CODE.UNAUTHORIZED).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.UNAUTHORIZED,
+        message: "Token is not provided",
+      })
+    );
   }
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const response = await authService.logout(decoded.id);
-    const now = Math.floor(Date.now() / 1000)
-    const ttl = decoded.exp - now
+    const now = Math.floor(Date.now() / 1000);
+    const ttl = decoded.exp - now;
     if (ttl > 0) {
-      await redis.setex(`black_list:${token}`, ttl, "true")
+      await redis.setex(`black_list:${token}`, ttl, "true");
     }
     if (response.result.errCode === ERROR_CODE.DONE) {
       res.clearCookie("refreshToken", {
@@ -99,32 +96,32 @@ export const logout = async (req, res) => {
     }
     return res.status(STATUS_CODE.OK).json(response);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
 export const getMe = async (req, res) => {
   try {
-    const response = await userService.getUserById(req.user.id, req.query?.site, req.query?.page);
+    const response = await userService.getUserById(
+      req.user.id,
+      req.query?.site,
+      req.query?.page
+    );
     return res.status(STATUS_CODE.OK).json(response);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
