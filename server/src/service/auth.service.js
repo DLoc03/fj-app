@@ -6,7 +6,7 @@ import { SALT } from "../utils/constant.js";
 import { UserResponse } from "../response/user.response.js";
 import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
-import redis from '../config/redis.config.js'
+import redis from "../config/redis.config.js";
 const login = async (email, password) => {
   const user = await User.findOne({ email });
   if (!user)

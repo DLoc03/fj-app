@@ -1,6 +1,5 @@
-import express from 'express'
+import express from "express";
 
-const Route = express.Router()
+const Route = express.Router();
 
-
-export const searchRoute = Route
+export const searchRoute = Route;
