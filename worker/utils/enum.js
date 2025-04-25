@@ -1,10 +1,9 @@
 export const QUEUE_NAME = {
-    AUDIT: 'auditlogs',
-    SEARCH: 'searchlogs'
-}
+  AUDIT: "auditlogs",
+  SEARCH: "searchlogs",
+};
 
 export const RABBIT_EVENTS = {
-    ERROR: 'error',
-    CLOSE: 'close',
-
-}
+  ERROR: "error",
+  CLOSE: "close",
+};
