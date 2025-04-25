@@ -20,6 +20,11 @@ function UserCompany() {
     status: "",
     avatar: "",
   });
+
+  const [user, setUser] = useState({
+    name: "",
+    phone: "",
+  });
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState("");
@@ -57,6 +62,21 @@ function UserCompany() {
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    AuthAPI.getCurrentUser((err, result) => {
+      if (result?.data) {
+        setUser({
+          name: result?.data?.name,
+          phone: result?.data?.phone,
+        });
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  console.log("User: ", user);
+  console.log("Company: ", comp);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -229,6 +249,52 @@ function UserCompany() {
                   fontWeight={700}
                 >
                   {comp.address}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                size={{ sx: 12, sm: 4, md: 3 }}
+                display={"flex"}
+                alignItems={"center"}
+              >
+                <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                  Số điện thoại
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                size={{ sx: 12, sm: 8, md: 9 }}
+                display={"flex"}
+                alignItems={"center"}
+              >
+                <Typography
+                  fontSize={{ xs: "12px", md: "16px" }}
+                  fontWeight={700}
+                >
+                  {user.phone}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                size={{ sx: 12, sm: 4, md: 3 }}
+                display={"flex"}
+                alignItems={"center"}
+              >
+                <Typography fontSize={{ xs: "12px", md: "16px" }}>
+                  Đại diện cơ sở
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                size={{ sx: 12, sm: 8, md: 9 }}
+                display={"flex"}
+                alignItems={"center"}
+              >
+                <Typography
+                  fontSize={{ xs: "12px", md: "16px" }}
+                  fontWeight={700}
+                >
+                  {user.name}
                 </Typography>
               </Grid>
               <Grid

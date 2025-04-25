@@ -36,7 +36,9 @@ const postJob = async (userId, body) => {
 
 const getJob = async (id) => {
   const job = await Job.findOne({ _id: id }).lean();
-  const { recruiterId } = await Company.findOne({ _id: job.companyId }).lean();
+  const { recruiterId, name, address, avatar } = await Company.findOne({
+    _id: job.companyId,
+  }).lean();
   const { phone } = await User.findById(recruiterId).lean();
   const validJob = JobResponse.Jobs(job);
   const { companyId, status, ...data } = validJob;
@@ -45,6 +47,9 @@ const getJob = async (id) => {
     data: {
       ...data,
       hotline: phone,
+      compName: name,
+      address: address,
+      avatar: avatar,
     },
   });
 };

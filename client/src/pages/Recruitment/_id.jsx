@@ -50,8 +50,10 @@ function TestDetail() {
         (q) =>
           new Promise((resolve, reject) => {
             QuestionAPI.postQuestion(jobId, q, (err, res) => {
-              if (err) {
-                reject(err);
+              if (err || res?.result?.errCode !== 0) {
+                reject(
+                  err || new Error(res?.result?.message || "Unknown error")
+                );
               } else {
                 resolve(res);
               }
@@ -64,9 +66,10 @@ function TestDetail() {
         setTimeout(() => {
           window.location.href = PATHS.COMPANY_JOBS;
         }, 1000);
+        return;
       })
       .catch((err) => {
-        console.error(err);
+        console.error("Lỗi khi lưu câu hỏi:", err);
         handleShowAlert("Có lỗi xảy ra khi lưu câu hỏi!", "error");
       });
   };

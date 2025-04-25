@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 
 import { useParams } from "react-router-dom";
 
-import { JobsAPI, CompaniesAPI } from "../../services";
+import { JobsAPI } from "../../services";
 
 import HomeIcon from "@mui/icons-material/Home";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
@@ -26,30 +26,16 @@ import SpinningLoader from "../../components/common/SpinningLoading";
 function JobDetail() {
   const { id } = useParams();
   const [job, setJob] = useState();
-  const [comp, setComp] = useState();
-  const compDetail = sessionStorage.getItem("selectedCompany");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     JobsAPI.getJobById(id, (err, result) => {
       if (!err && result?.data) {
-        setJob(result.data);
+        setJob(result?.data);
         setLoading(false);
       }
     });
   }, [id]);
-
-  useEffect(() => {
-    CompaniesAPI.getCompanyById(compDetail, (err, result) => {
-      if (!err && result?.data) {
-        console.log(err);
-        setComp(result?.data);
-        setLoading(false);
-      }
-    });
-  }, [compDetail]);
-
-  console.log(comp);
 
   if (loading) return <SpinningLoader />;
 
@@ -61,7 +47,7 @@ function JobDetail() {
         backgroundPosition: "center",
       }}
     >
-      {compDetail && job ? (
+      {job.compName && job ? (
         <Grid
           container
           spacing={4}
@@ -74,9 +60,7 @@ function JobDetail() {
             <Box
               sx={{
                 boxSizing: "border-box",
-                backgroundImage: `url(${
-                  comp.avatar ? comp.avatar : defaultAvt
-                })`,
+                backgroundImage: `url(${job.avatar ? job.avatar : defaultAvt})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 width: { xs: "100%", md: "100%" },
@@ -102,7 +86,7 @@ function JobDetail() {
                   fontWeight={700}
                   textAlign={{ xs: "center", md: "left" }}
                 >
-                  {job.company}
+                  {job.compName}
                 </Typography>
                 <Typography
                   item
@@ -193,10 +177,10 @@ function JobDetail() {
               <Divider />
             </Typography>
             <Typography fontSize={{ xs: "12px", md: "16px" }} mb={"4px"}>
-              <span>Địa chỉ: {comp.address}</span>
+              <span>Địa chỉ: {job.address}</span>
             </Typography>
             <Typography fontSize={{ xs: "12px", md: "16px" }}>
-              <span>Hotline: {comp.recruiter.phone}</span>
+              <span>Hotline: {job.hotline}</span>
             </Typography>
           </Grid>
           <Grid

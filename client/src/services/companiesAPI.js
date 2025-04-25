@@ -4,14 +4,14 @@ const restRequest = userBaseRestRequest();
 
 export const CompaniesAPI = {
   async getAllCopmanies(cb) {
-    await restRequest.get("/comp", {}, (err, result) => {
+    await restRequest.get("/company", {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
   },
 
   async getCompanyById(compId, cb) {
-    await restRequest.get(`/comp/${compId}`, {}, (err, result) => {
+    await restRequest.get(`/company/${compId}`, {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });

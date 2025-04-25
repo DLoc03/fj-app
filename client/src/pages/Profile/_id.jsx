@@ -60,7 +60,6 @@ function Profile() {
       AuthAPI.getCurrentCompany((err, result) => {
         if (!err && result?.data) {
           setComp(result?.data);
-          setPreviewImage(result.data.avatar);
         }
         setLoading(false);
       });
@@ -69,10 +68,9 @@ function Profile() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      AuthAPI.getCurrentJobList((err, result) => {
+      AuthAPI.getAllJobs((err, result) => {
         if (!err && result?.data) {
-          setJobs(result?.data);
-          setPreviewImage(result.data.avatar);
+          setJobs(result?.data?.paginatedJobs);
         }
         setLoading(false);
       });

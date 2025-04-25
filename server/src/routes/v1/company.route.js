@@ -28,11 +28,6 @@ Router.route("/avatar").post(
 
 Router.route("/:id")
   .get(companyController.getCompanyById)
-  .put(
-    checkBlackList,
-    verifyToken,
-    authorizeAdmin("admin"),
-    companyController.updateCompany
-  );
+  .put(checkBlackList, verifyToken, companyController.updateCompany);
 
 export const companyRoute = Router;

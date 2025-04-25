@@ -3,8 +3,9 @@ import userBaseRestRequest from "../config/rest";
 const restRequest = userBaseRestRequest();
 
 export const JobsAPI = {
-  async getJobs(cb) {
-    await restRequest.get("/job", {}, (err, result) => {
+  async getJobs(page, cb) {
+    console.log("Page received: ", page);
+    restRequest.get(`/job?page=${page}`, {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });

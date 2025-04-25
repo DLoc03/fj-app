@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import CardDetail from "../../components/common/Card";
@@ -8,7 +7,6 @@ import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 
 import Stack from "@mui/material/Stack";
-import { useMediaQuery } from "react-responsive";
 
 import { JobsAPI } from "../../services";
 import bgJob from "../../assets/bgJob.png";
@@ -18,54 +16,41 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import Sidebar from "../../components/ui/Sidebar";
 import SpinningLoader from "../../components/common/SpinningLoading";
+import PaginationButton from "../../components/common/PaginationButton";
 import { Divider } from "@mui/material";
 
 function Job() {
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const itemPerPage = isMobile ? 3 : 8;
-  const [searchParams, setSearchParams] = useSearchParams();
-  const pageParam = parseInt(searchParams.get("page")) || 1;
-  const [currentPage, setCurrentPage] = useState(pageParam);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    JobsAPI.getJobs((err, result) => {
+    JobsAPI.getJobs(currentPage, (err, result) => {
       if (!err && result?.data) {
         const sortedJobs = result.data.paginatedJobs.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
         setJobs(sortedJobs);
+        setTotalPages(result.data.totalPage);
+        setCurrentPage(result.data.currentPage);
         setLoading(false);
       }
     });
-  }, []);
-
-  console.log("Result data: ", jobs);
+  }, [currentPage]);
 
   useEffect(() => {
     setLoading(true);
     const timer = setTimeout(() => {
-      setCurrentPage(pageParam);
+      setCurrentPage(currentPage);
       setLoading(false);
     }, 500);
     return () => clearTimeout(timer);
-  }, [pageParam]);
+  }, [currentPage]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
-
-  const handlePageChange = (event, page) => {
-    setSearchParams({ page: page.toString() });
-  };
-
-  const totalItems = jobs.length;
-  const totalPages = Math.ceil(totalItems / itemPerPage);
-  const startIndex = (currentPage - 1) * itemPerPage;
-  const endIndex = startIndex + itemPerPage;
-  const currentItems = jobs.slice(startIndex, endIndex);
 
   if (loading) return <SpinningLoader />;
 
@@ -89,7 +74,7 @@ function Job() {
           sx={{ position: "relative", zIndex: 2 }}
         >
           <Grid container spacing={4} py={{ xs: 1, md: 4 }}>
-            {currentItems.map((job, jobIndex) => (
+            {jobs.map((job, jobIndex) => (
               <Grid
                 item
                 key={jobIndex}
@@ -101,12 +86,12 @@ function Job() {
               >
                 <CardDetail
                   id={job.id}
-                  compName={job.company.name}
                   jobName={job.jobName}
                   avatar={job.company.avatar}
                   jobDesc={job.jobDescription}
                   quantity={job.quantity}
                   salary={job.salary}
+                  compName={job.company.name}
                   company={job.company.id}
                 />
               </Grid>
@@ -119,29 +104,12 @@ function Job() {
           zIndex={99}
           sx={{ display: "flex", justifyContent: "center" }}
         >
-          <Stack
-            spacing={2}
-            zIndex={99}
-            backgroundColor={"white"}
-            p={1}
-            borderRadius={1}
-            mb={4}
-          >
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              renderItem={(item) => (
-                <PaginationItem
-                  slots={{
-                    previous: ArrowBackIosIcon,
-                    next: ArrowForwardIosIcon,
-                  }}
-                  {...item}
-                />
-              )}
-            />
-          </Stack>
+          <PaginationButton
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            colorText={"white"}
+          />
         </Grid>
       </Grid>
     </Box>

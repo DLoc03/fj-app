@@ -14,9 +14,9 @@ function ApplicantAnswer() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    AuthAPI.getCurrentUser((err, result) => {
+    AuthAPI.getAllJobs((err, result) => {
       if (!err && result.data) {
-        setJobs(result?.data?.jobs);
+        setJobs(result?.data?.paginatedJobs);
         setLoading(false);
         return;
       }

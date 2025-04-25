@@ -9,20 +9,26 @@ import { AuthAPI } from "../../services/authAPI";
 import Authenticated from "../../components/ui/Authenticated";
 import Recruitment from "../../components/ui/Recruitment";
 import SpinningLoader from "../../components/common/SpinningLoading";
+import PaginationButton from "../../components/common/PaginationButton";
 
 function CompanyJobs() {
   const [jobList, setJobList] = useState([]);
   const [company, setCompany] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    AuthAPI.getCurrentJobList((err, result) => {
+    setLoading(true);
+    AuthAPI.getCurrentJobList(currentPage, (err, result) => {
       if (!err && result?.data) {
         setJobList(result.data.paginatedJobs);
+        setTotalPages(result.data.totalPages);
       }
       setLoading(false);
     });
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     AuthAPI.getCurrentCompany((err, result) => {
@@ -32,9 +38,6 @@ function CompanyJobs() {
       setLoading(false);
     });
   }, []);
-
-  console.log("Job list: ", jobList);
-  console.log("Company data: ", company);
 
   if (loading) return <SpinningLoader />;
 
@@ -57,6 +60,12 @@ function CompanyJobs() {
               <Box textAlign="center" mt={2}>
                 <Recruitment />
               </Box>
+              <PaginationButton
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+                colorText={"white"}
+              />
             </Box>
           ) : (
             <Box

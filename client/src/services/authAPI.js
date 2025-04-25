@@ -39,7 +39,14 @@ export const AuthAPI = {
     });
   },
 
-  async getCurrentJobList(page, cb) {
+  async getAllJobs(cb) {
+    await restRequest.get(`/auth/me?site=job`, {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
+
+  async getCurrentJobList(page = 1, cb) {
     await restRequest.get(
       `/auth/me?site=job&page=${page}`,
       {},

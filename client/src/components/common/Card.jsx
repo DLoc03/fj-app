@@ -9,15 +9,7 @@ import { Button } from "@mui/material";
 import PATHS from "../../routes/path";
 import { formatCurrency } from "../../utils/helper";
 
-function CardDetail({
-  id,
-  compName,
-  jobName,
-  quantity,
-  salary,
-  company,
-  avatar,
-}) {
+function CardDetail({ id, compName, jobName, quantity, salary, avatar }) {
   return (
     <Card
       sx={{
@@ -39,7 +31,7 @@ function CardDetail({
         },
       }}
     >
-      {company && (
+      {compName && (
         <CardContent
           sx={{
             backgroundColor: "primary.main",
@@ -99,7 +91,6 @@ function CardDetail({
             color="white"
             onClick={() => {
               window.location.href = PATHS.JOBDETAIL.replace(":id", id);
-              sessionStorage.setItem("selectedCompany", company.id);
             }}
           >
             Chi tiết
