@@ -16,14 +16,25 @@ function CompanyJobs() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    AuthAPI.getCurrentUser((err, result) => {
+    AuthAPI.getCurrentJobList((err, result) => {
       if (!err && result?.data) {
-        setJobList(result.data.jobs);
-        setCompany(result.data.company);
+        setJobList(result.data.paginatedJobs);
       }
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    AuthAPI.getCurrentCompany((err, result) => {
+      if (!err && result?.data) {
+        setCompany(result.data);
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  console.log("Job list: ", jobList);
+  console.log("Company data: ", company);
 
   if (loading) return <SpinningLoader />;
 

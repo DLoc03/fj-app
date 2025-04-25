@@ -9,7 +9,15 @@ import { Button } from "@mui/material";
 import PATHS from "../../routes/path";
 import { formatCurrency } from "../../utils/helper";
 
-function CardDetail({ id, jobName, quantity, salary, company, avatar }) {
+function CardDetail({
+  id,
+  compName,
+  jobName,
+  quantity,
+  salary,
+  company,
+  avatar,
+}) {
   return (
     <Card
       sx={{
@@ -55,7 +63,7 @@ function CardDetail({ id, jobName, quantity, salary, company, avatar }) {
           }}
         >
           <Typography variant="body1" sx={{ textAlign: "center" }}>
-            <span>{company.name}</span>
+            <span>{compName}</span>
           </Typography>
           <Typography variant="body2" sx={{ textAlign: "center" }}>
             <span>Vị trí tuyển:</span> {jobName}

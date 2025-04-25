@@ -48,8 +48,30 @@ function Profile() {
             phone: result.data.phone,
             avatar: result.data.avatar,
           });
-          setComp(result.data.company);
-          setJobs(result.data.jobs);
+          setPreviewImage(result.data.avatar);
+        }
+        setLoading(false);
+      });
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      AuthAPI.getCurrentCompany((err, result) => {
+        if (!err && result?.data) {
+          setComp(result?.data);
+          setPreviewImage(result.data.avatar);
+        }
+        setLoading(false);
+      });
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      AuthAPI.getCurrentJobList((err, result) => {
+        if (!err && result?.data) {
+          setJobs(result?.data);
           setPreviewImage(result.data.avatar);
         }
         setLoading(false);

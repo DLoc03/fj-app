@@ -33,7 +33,6 @@ function Job() {
   useEffect(() => {
     JobsAPI.getJobs((err, result) => {
       if (!err && result?.data) {
-        console.log("Result data: ", result.data.paginatedJobs);
         const sortedJobs = result.data.paginatedJobs.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
@@ -42,6 +41,8 @@ function Job() {
       }
     });
   }, []);
+
+  console.log("Result data: ", jobs);
 
   useEffect(() => {
     setLoading(true);
@@ -100,12 +101,13 @@ function Job() {
               >
                 <CardDetail
                   id={job.id}
+                  compName={job.company.name}
                   jobName={job.jobName}
-                  // avatar={job.company.avatar}
+                  avatar={job.company.avatar}
                   jobDesc={job.jobDescription}
                   quantity={job.quantity}
                   salary={job.salary}
-                  company={job.companyId}
+                  company={job.company.id}
                 />
               </Grid>
             ))}

@@ -18,14 +18,14 @@ export const CompaniesAPI = {
   },
 
   async postCompany(data, cb) {
-    await restRequest.post("/comp", data, (err, result) => {
+    await restRequest.post("/company", data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
   },
 
   async postCompanyAvatar(data, cb) {
-    await restRequest.postFormData("/comp/avatar", data, (err, result) => {
+    await restRequest.postFormData("/company/avatar", data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });

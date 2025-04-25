@@ -17,8 +17,6 @@ function UserCompany() {
     name: "",
     address: "",
     description: "",
-    phone: "",
-    user: "",
     status: "",
     avatar: "",
   });
@@ -46,16 +44,14 @@ function UserCompany() {
   };
 
   useEffect(() => {
-    AuthAPI.getCurrentUser((err, result) => {
+    AuthAPI.getCurrentCompany((err, result) => {
       if (!err && result?.data) {
         setComp({
-          name: result?.data?.company.name,
-          address: result?.data?.company.address,
-          description: result?.data?.company.description,
-          status: result?.data?.company.status,
-          phone: result?.data?.phone,
-          user: result?.data?.name,
-          avatar: result?.data?.company?.avatar,
+          name: result?.data?.name,
+          address: result?.data?.address,
+          description: result?.data?.description,
+          status: result?.data?.status,
+          avatar: result?.data?.avatar,
         });
       }
       setLoading(false);
@@ -237,58 +233,12 @@ function UserCompany() {
               </Grid>
               <Grid
                 item
-                size={{ sx: 12, sm: 4, md: 3 }}
-                display={"flex"}
-                alignItems={"center"}
-              >
-                <Typography fontSize={{ xs: "12px", md: "16px" }}>
-                  Số điện thoại
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                size={{ sx: 12, sm: 8, md: 9 }}
-                display={"flex"}
-                alignItems={"center"}
-              >
-                <Typography
-                  fontSize={{ xs: "12px", md: "16px" }}
-                  fontWeight={700}
-                >
-                  {comp.phone}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                size={{ sx: 12, sm: 4, md: 3 }}
-                display={"flex"}
-                alignItems={"center"}
-              >
-                <Typography fontSize={{ xs: "12px", md: "16px" }}>
-                  Đại diện cơ sở
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                size={{ sx: 12, sm: 8, md: 9 }}
-                display={"flex"}
-                alignItems={"center"}
-              >
-                <Typography
-                  fontSize={{ xs: "12px", md: "16px" }}
-                  fontWeight={700}
-                >
-                  {comp.user}
-                </Typography>
-              </Grid>
-              <Grid
-                item
                 size={{ sx: 12, sm: 4, md: 9 }}
                 display={"flex"}
                 alignItems={"center"}
               >
                 <Typography fontSize={{ xs: "12px", md: "16px" }}>
-                  Slogan
+                  Giới thiệu cơ sở
                 </Typography>
               </Grid>
               <Grid

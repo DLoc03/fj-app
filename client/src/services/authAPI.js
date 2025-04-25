@@ -26,10 +26,28 @@ export const AuthAPI = {
   },
 
   async getCurrentUser(cb) {
-    await restRequest.get("/auth/me", {}, (err, result) => {
+    await restRequest.get("/auth/me?site=detail", {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
+  },
+
+  async getCurrentCompany(cb) {
+    await restRequest.get("/auth/me?site=company", {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
+
+  async getCurrentJobList(page, cb) {
+    await restRequest.get(
+      `/auth/me?site=job&page=${page}`,
+      {},
+      (err, result) => {
+        if (err) return cb(err);
+        if (typeof cb === "function") cb(null, result);
+      }
+    );
   },
 
   async updateUser(id, data, cb) {
