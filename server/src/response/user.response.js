@@ -23,17 +23,7 @@ export const UserResponse = {
     updatedAt: DateFormat(updatedAt),
   }),
 
-  UserInfo: ({
-    _id,
-    email,
-    name,
-    phone,
-    role,
-    avatar,
-    isDestroy,
-    createdAt,
-    updatedAt,
-  }) => ({
+  UserInfo: ({ _id, email, name, phone, isDestroy, createdAt, updatedAt }) => ({
     id: _id,
     email,
     name,

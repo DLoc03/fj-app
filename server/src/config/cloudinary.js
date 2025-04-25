@@ -14,11 +14,11 @@ const imageStorage = (folder) => {
     params: {
       folder: `/${folder}`,
       allowed_formats: ["jpg", "png", "jpeg"],
-      transformation: [{ width: 500, height: 500, crop: "limit" }]
-    }
-  })
-}
+      transformation: [{ width: 500, height: 500, crop: "limit" }],
+    },
+  });
+};
 
-const uploadUserAvatar = multer({ storage: imageStorage('avatars') });
-const uploadCompanyImage = multer({ storage: imageStorage('companies') })
+const uploadUserAvatar = multer({ storage: imageStorage("avatars") });
+const uploadCompanyImage = multer({ storage: imageStorage("companies") });
 export { uploadUserAvatar, uploadCompanyImage, cloudinary };
