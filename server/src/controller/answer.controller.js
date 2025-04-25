@@ -7,15 +7,13 @@ const postAnswer = async (req, res) => {
     const result = await answerService.postAnswer(req.params.id, req.body);
     return res.status(STATUS_CODE.CREATED).json(result);
   } catch (error) {
-    return res
-      .status(500)
-      .json(
-        MasterResponse({
-          status: STATUS.FAILED,
-          errCode: ERROR_CODE.FAILED,
-          message: error.message,
-        })
-      );
+    return res.status(500).json(
+      MasterResponse({
+        status: STATUS.FAILED,
+        errCode: ERROR_CODE.FAILED,
+        message: error.message,
+      })
+    );
   }
 };
 
