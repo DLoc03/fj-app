@@ -56,4 +56,5 @@ export const SITE_ENUM = {
     DETAIL: 'detail',
     COMPANY: 'company',
     JOB: 'job',
+    APPLICANT: 'applicant'
 }

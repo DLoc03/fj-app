@@ -1,6 +1,6 @@
 import { jobService } from "../service/job.service.js"
 import { MasterResponse } from "../response/master.response.js"
-import { STATUS_CODE } from "../utils/enum.js"
+import { STATUS_CODE, ERROR_CODE } from "../utils/enum.js"
 const postJob = async (req, res) => {
     try {
         const response = await jobService.postJob(req.user.id, req.body)
