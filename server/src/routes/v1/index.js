@@ -12,7 +12,7 @@ const Router = express.Router();
 
 Router.use("/auth", authRoutes);
 Router.use("/user", userRoute);
-Router.use("/comp", companyRoute);
+Router.use("/company", companyRoute);
 Router.use("/job", jobRoute);
 Router.use("/question", questionRoute);
 Router.use("/applicant", applicantRoute);
