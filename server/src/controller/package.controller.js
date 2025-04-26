@@ -1,7 +1,7 @@
 import { PackageService } from "../service/package.service.js";
 import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS_CODE } from "../utils/enum.js";
-export const PackageController = {
+export const packageController = {
   createPackage: async (req, res) => {
     try {
       const response = await PackageService.createPackage(req.body);

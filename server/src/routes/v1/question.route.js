@@ -6,13 +6,11 @@ import {
 } from "../../middleware/authToken.js";
 import { questionController } from "../../controller/question.controller.js";
 const Route = express.Router();
-Route.route("/:id")
-  .post(
-    checkBlackList,
-    verifyToken,
-    authorizeAdmin("user"),
-    questionController.postQuestion
-  )
-  .get(questionController.getQuestWithJob);
+Route.route("/:id").post(
+  checkBlackList,
+  verifyToken,
+  authorizeAdmin("user"),
+  questionController.postQuestion
+);
 
 export const questionRoute = Route;
