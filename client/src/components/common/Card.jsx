@@ -16,7 +16,7 @@ function CardDetail({ id, compName, jobName, quantity, salary, avatar }) {
         height: "240px",
         width: "200px",
         zIndex: "9",
-        boxShadow: "shadow.main",
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
         backgroundImage: `url(${avatar ? avatar : logo})`,
         backgroundSize: "cover",
         backgroundPosition: "center",

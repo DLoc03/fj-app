@@ -108,7 +108,7 @@ function Job() {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
-            colorText={"white"}
+            colorText={"secondary.main"}
           />
         </Grid>
       </Grid>

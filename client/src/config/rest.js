@@ -25,7 +25,7 @@ const userBaseRestRequest = () => {
       const response = await fetch(url, config);
       const result = await response.json();
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         cb(null, result.result);
         return;
       }
@@ -43,8 +43,7 @@ const userBaseRestRequest = () => {
 
         const retryResponse = await fetch(url, retryConfig);
         const retryResult = await retryResponse.json();
-
-        if (retryResponse.status === 200) {
+        if (retryResponse.status === 200 || retryResponse.status === 201) {
           cb(null, retryResult.result);
         } else {
           cb(retryResult);

@@ -3,8 +3,8 @@ import userBaseRestRequest from "../config/rest";
 const restRequest = userBaseRestRequest();
 
 export const ApplicantAPI = {
-  async postApplicant(id, data, cb) {
-    await restRequest.post(`/applicant/${id}`, data, (err, result) => {
+  postApplicant(id, data, cb) {
+    restRequest.post(`/applicant/${id}`, data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });

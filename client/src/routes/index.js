@@ -10,6 +10,7 @@ import CompanyJobs from "../pages/Recruitment";
 import TestDetail from "../pages/Recruitment/_id";
 import Answer from "../pages/Jobs/_idAnswer";
 import ApplicantAnswer from "../pages/Recruitment/indexAnswer";
+import CheckoutPage from "../pages/Paid/_id";
 
 export const routes = [
   {
@@ -39,6 +40,10 @@ export const routes = [
   {
     path: PATHS.ANSWER,
     page: Answer,
+  },
+  {
+    path: PATHS.PAYPAL,
+    page: CheckoutPage,
   },
 ];
 

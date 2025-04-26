@@ -50,7 +50,7 @@ function TestDetail() {
         (q) =>
           new Promise((resolve, reject) => {
             QuestionAPI.postQuestion(jobId, q, (err, res) => {
-              if (err || res?.result?.errCode !== 0) {
+              if (err) {
                 reject(
                   err || new Error(res?.result?.message || "Unknown error")
                 );

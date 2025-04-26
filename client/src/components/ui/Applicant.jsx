@@ -58,7 +58,6 @@ function Applicant({ open, onClose, onSubmit, id }) {
         setAlertStatus("error");
         handleShowAlert("Có lỗi xảy ra khi gửi thông tin!");
       } else {
-        console.log("Kết quả đăng ký: ", result);
         setAlertStatus("success");
         handleShowAlert("Hoàn tất!");
         onSubmit(result.data);

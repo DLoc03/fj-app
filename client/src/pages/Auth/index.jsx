@@ -10,7 +10,7 @@ import PopupAlert from "../../components/common/PopUp";
 import { useAuth } from "../../context/auth";
 import { validateEmail, validatePhoneNumber } from "../../utils/helper";
 
-import imgBg from "../../assets/jobBg.jpg";
+import imgBg from "../../assets/bgJob.png";
 import albumFJ from "../../assets/album-1.jpg";
 
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -88,6 +88,7 @@ function Auth() {
       AuthAPI.login(
         { email: form.email, password: form.password },
         (err, res) => {
+          console.log("Res login: ", res.data);
           if (err || res.errCode !== 0) {
             showError("Đăng nhập thất bại! Vui lòng thử lại");
             return;
@@ -113,6 +114,7 @@ function Auth() {
           phone: form.phone,
         },
         (err, res) => {
+          console.log("Res result: ", res);
           if (err || res.errCode !== 0) {
             showError("Đăng ký thất bại! Vui lòng thử lại");
             return;
@@ -137,7 +139,7 @@ function Auth() {
   return (
     <Box
       sx={{
-        backgroundImage: `url(${imgBg})`,
+        background: `white`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         px: 4,
@@ -152,9 +154,13 @@ function Auth() {
       <Grid container spacing={4} py={8}>
         <Grid item size={{ xs: 12, md: 5 }}>
           <Paper
-            sx={{ backgroundColor: "white", p: 2, boxSizing: "border-box" }}
+            sx={{
+              backgroundColor: "white",
+              p: 2,
+              boxSizing: "border-box",
+            }}
           >
-            <Typography variant="h5" textAlign={"center"}>
+            <Typography variant="h6" textAlign={"center"}>
               {isLoginPage
                 ? "Đăng nhập nhà tuyển dụng"
                 : "Đăng ký tài khoản nhà tuyển dụng"}

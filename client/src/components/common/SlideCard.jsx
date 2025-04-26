@@ -128,6 +128,7 @@ function SlideCard() {
                   quantity={job.quantity}
                   salary={job.salary}
                   compName={job.company.name}
+                  avatar={job.company.avatar}
                 />
               </Box>
             ))}

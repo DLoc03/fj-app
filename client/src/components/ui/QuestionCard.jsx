@@ -38,14 +38,22 @@ function QuestionCard({ id, type }) {
   };
 
   useEffect(() => {
-    QuestionAPI.getQuestion(id, (err, result) => {
-      if (!err && result.data.length > 0) setQuestions(result.data);
-    });
+    if (id) {
+      QuestionAPI.getQuestion(id, (err, result) => {
+        if (!err && result.data.length > 0 && result.data !== questions) {
+          setQuestions(result.data);
+          setLoading(false);
+        }
+      });
+    }
+
     const applicantInfo = sessionStorage.getItem("Applicant");
     if (!applicantInfo && type !== USER_TYPE.EMPLOYER) {
       setOpenModal(true);
     }
   }, [id, type]);
+
+  console.log("Question test: ", questions);
 
   const handleAnswerChange = (index, value) => {
     setAnswers((prev) => ({
@@ -61,6 +69,8 @@ function QuestionCard({ id, type }) {
       answer: answers[index] || "",
     }));
     AnswerAPI.postAnswer(id, data, (err, result) => {
+      console.log(data);
+      console.log(result);
       if (err && result?.errCode !== 0) {
         setAlertStatus("error");
         handleShowAlert("Có lỗi khi gửi câu trả lời!");
@@ -80,11 +90,13 @@ function QuestionCard({ id, type }) {
     setOpenModal(false);
   };
 
+  // if (loading) return <SpinningLoader />;
+
   return (
     <Box>
       <Paper sx={{ py: 4, px: { xs: 4, md: 8 } }}>
         <Typography
-          sx={{ textAlign: "center", fontSize: { xs: "18px", md: "28px" } }}
+          sx={{ textAlign: "center", fontSize: { xs: "18px", md: "20px" } }}
         >
           {questions.length > 0
             ? "Câu hỏi phỏng vấn"

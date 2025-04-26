@@ -88,7 +88,7 @@ const updateJobById = async (userId, jobId, body) => {
 };
 
 const getJobs = async (isDestroy, page = 1) => {
-  const limit = 10;
+  const limit = 8;
   const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
   const companies = await Company.find({ isDestroy: false }).lean();
   const total = await Job.countDocuments();
