@@ -17,5 +17,6 @@ const AnswerSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+AnswerSchema.index({ applicantId: 1, questionId: 1 });
 const Answer = mongoose.model("Answer", AnswerSchema);
 export default Answer;

@@ -1,21 +1,19 @@
 import { DateFormat } from "../utils/validation.js";
 
-export const ApplicantResponse = {
-  Create: ({
+export const TestResponse = {
+  Client: ({
     _id,
     jobId,
-    email,
-    name,
-    phone,
+    title,
+    description,
     isDestroy,
     createdAt,
     updatedAt,
   }) => ({
     id: _id,
     jobId,
-    email,
-    name,
-    phone,
+    title,
+    description,
     isDestroy,
     createdAt: DateFormat(createdAt),
     updatedAt: DateFormat(updatedAt),

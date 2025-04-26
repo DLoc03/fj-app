@@ -112,7 +112,33 @@ const getJobs = async (isDestroy, page = 1) => {
 };
 
 const deleteJobDetail = async (userId, id) => {
-  const company = await Company.findOne({ recruiterId: userId }).lean();
+  const user = await User.findById(userId).lean();
+  if (user.role === "admin") {
+    const job = await Job.findById(id).lean();
+    if (job) {
+      await Job.updateOne({ _id: job._id }, { isDestroy: true });
+      await Applicant.updateMany(
+        {
+          jobId: job._id,
+        },
+        {
+          isDestroy: true,
+        }
+      );
+      return MasterResponse({
+        message: "Job was deleted",
+      });
+    }
+    return MasterResponse({
+      status: STATUS.NOT_FOUND,
+      errCode: ERROR_CODE.BAD_REQUEST,
+      message: "Job not found",
+    });
+  }
+  const company = await Company.findOne({
+    recruiterId: userId,
+    isDestroy: false,
+  }).lean();
   if (!company)
     return MasterResponse({
       status: STATUS.NOT_FOUND,
@@ -133,7 +159,7 @@ const deleteJobDetail = async (userId, id) => {
         isDestroy: true,
       }
     );
-    await Job.findOneAndUpdate({ _id: job._id }, { isDestroy: true });
+    await Job.updateOne({ _id: job._id }, { isDestroy: true });
     return MasterResponse({
       message: "Job was deleted",
     });

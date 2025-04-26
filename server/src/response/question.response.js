@@ -1,7 +1,8 @@
 export const QuestionResponse = {
-  Create: ({ _id, jobId, question }) => ({
+  Create: ({ _id, testId, question, isDestroy }) => ({
     id: _id,
-    jobId,
+    testId,
     question,
+    isDestroy,
   }),
 };

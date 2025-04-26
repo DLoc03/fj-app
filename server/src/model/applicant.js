@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const ApplicantSchema = new mongoose.Schema(
   {
-    email: { type: String, required: true, unique: true },
+    email: { type: String, required: true },
     name: { type: String, required: true },
     phone: { type: String, required: true },
     cv: { type: String, required: true },
@@ -11,5 +11,6 @@ const ApplicantSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+ApplicantSchema.index({ email: 1, jobId: 1 }, { unique: true });
 const Applicant = mongoose.model("Applicant", ApplicantSchema);
 export default Applicant;

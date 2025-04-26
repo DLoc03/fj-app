@@ -1,6 +1,7 @@
 import Answer from "../model/answer.js";
 import Applicant from "../model/applicant.js";
 import Question from "../model/question.js";
+import Test from "../model/test.js";
 import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
@@ -13,8 +14,25 @@ const postAnswer = async (applicantId, data) => {
       errCode: ERROR_CODE.NOT_FOUND,
     });
   }
-  const questions = await Question.find({ jobId: applicant.jobId }).lean();
+
+  const test = await Test.findOne({
+    jobId: applicant.jobId,
+    isDestroy: false,
+  }).lean();
+
+  const questions = await Question.find({
+    testId: test._id,
+    isDestroy: false,
+  }).lean();
+  if (questions.length === 0) {
+    return MasterResponse({
+      status: STATUS.FAILED,
+      message: "Questions not found",
+      errCode: ERROR_CODE.NOT_FOUND,
+    });
+  }
   const answers = await Answer.find({
+    applicantId: applicant._id,
     questionId: questions.find((q) => q._id),
   });
 
