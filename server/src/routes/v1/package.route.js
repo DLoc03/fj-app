@@ -4,7 +4,7 @@ import {
   verifyToken,
   checkBlackList,
 } from "../../middleware/authToken.js";
-import { PackageController } from "../../controller/package.controller.js";
+import { packageController } from "../../controller/package.controller.js";
 const Router = express.Router();
 
 Router.route("/")
@@ -12,13 +12,13 @@ Router.route("/")
     checkBlackList,
     verifyToken,
     authorizeAdmin("admin", "user"),
-    PackageController.getPackages
+    packageController.getPackages
   )
   .post(
     checkBlackList,
     verifyToken,
     authorizeAdmin("admin"),
-    PackageController.createPackage
+    packageController.createPackage
   );
 
 Router.route("/:id")
@@ -26,24 +26,24 @@ Router.route("/:id")
     checkBlackList,
     verifyToken,
     authorizeAdmin("admin"),
-    PackageController.updatePackage
+    packageController.updatePackage
   )
   .delete(
     checkBlackList,
     verifyToken,
     authorizeAdmin("admin"),
-    PackageController.deletePackage
+    packageController.deletePackage
   )
   .patch(
     checkBlackList,
     verifyToken,
     authorizeAdmin("admin"),
-    PackageController.recoveryPackage
+    packageController.recoveryPackage
   )
   .get(
     checkBlackList,
     verifyToken,
     authorizeAdmin("admin", "user"),
-    PackageController.getPackage
+    packageController.getPackage
   );
 export const packageRoute = Router;
