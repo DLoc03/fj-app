@@ -6,6 +6,7 @@ import { ERROR_CODE, STATUS } from "../utils/enum.js";
 import Answer from "../model/answer.js";
 import Company from "../model/company.js";
 import { ApplicantResponse } from "../response/applicant.response.js";
+import Test from "../model/test.js";
 const postApplicant = async (jobId, data) => {
   const { email, name, phone, cv } = data;
 
@@ -36,8 +37,10 @@ const postApplicant = async (jobId, data) => {
 };
 
 const getApplicanDetail = async (userId, applicantId) => {
-  const company = await Company.findOne({ recruiterId: userId }).lean();
-
+  const company = await Company.findOne({
+    recruiterId: userId,
+    isDestroy: false,
+  }).lean();
   if (!company)
     return MasterResponse({
       status: STATUS.NOT_FOUND,
@@ -53,6 +56,10 @@ const getApplicanDetail = async (userId, applicantId) => {
       message: "Applicant not found",
       errCode: ERROR_CODE.BAD_REQUEST,
     });
+  const test = await Test.findOne({
+    jobId: applicant.jobId,
+    isDestroy: false,
+  }).lean();
 
   const job = await Job.findOne({
     companyId: company._id,
@@ -66,7 +73,10 @@ const getApplicanDetail = async (userId, applicantId) => {
       errCode: ERROR_CODE.BAD_REQUEST,
     });
 
-  const questions = await Question.find({ jobId: job._id }).lean();
+  const questions = await Question.find({
+    testId: test._id,
+    isDestroy: false,
+  }).lean();
 
   const answers = await Answer.find({ applicantId: applicant._id }).lean();
 

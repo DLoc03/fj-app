@@ -5,53 +5,43 @@ import { MasterResponse } from "../response/master.response.js";
 import { JobResponse } from "../response/job.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
 import { QuestionResponse } from "../response/question.response.js";
-const createQuestion = async (userId, jobId, question) => {
-  const company = await Company.findOne({ recruiterId: userId }).lean();
-  if (!company)
-    return MasterResponse({
-      status: STATUS.NOT_FOUND,
-      message: "Company not found",
-      errCode: ERROR_CODE.BAD_REQUEST,
-    });
-  const job = await Job.findOne({ companyId: company._id, _id: jobId }).lean();
-  if (!job)
-    return MasterResponse({
-      status: STATUS.NOT_FOUND,
-      message: "Job not found",
-      errCode: ERROR_CODE.BAD_REQUEST,
-    });
+import Test from "../model/test.js";
+const createQuestion = async (userId, testId, question) => {
+  const company = await Company.findOne({
+    recruiterId: userId,
+    isDestroy: false,
+  }).lean();
 
-  const newQuestion = new Question({
+  const job = await Job.findOne({
+    companyId: company._id,
+    isDestroy: false,
+  }).lean();
+
+  const test = await Test.findOne({
+    _id: testId,
     jobId: job._id,
-    question: question,
-  });
-  await newQuestion.save();
-  return MasterResponse({
-    status: STATUS.CREATED,
-    message: "Question was created",
-    data: newQuestion,
-  });
-};
+    isDestroy: false,
+  }).lean();
 
-const getQuestWithJob = async (id) => {
-  const existedJob = await Job.findOne({ _id: id }).lean();
-  if (!existedJob)
-    return MasterResponse({
-      status: STATUS.NOT_FOUND,
-      message: "Job not found",
-      errCode: ERROR_CODE.BAD_REQUEST,
+  if (test) {
+    const newQuestion = new Question({
+      testId: test._id,
+      question: question,
     });
-
-  const validJob = JobResponse.Jobs(existedJob);
-  const questions = await Question.find({ jobId: validJob.id }).lean();
-  const validQuestion = questions.map((q) => QuestionResponse.Create(q));
-  const result = validQuestion.map(({ jobId, ...data }) => ({
-    ...data,
-    // job: validJob
-  }));
-  return MasterResponse({ data: result });
+    await newQuestion.save();
+    return MasterResponse({
+      status: STATUS.CREATED,
+      message: "Question was created",
+      data: QuestionResponse.Create(newQuestion),
+    });
+  }
+  return MasterResponse({
+    status: STATUS.NOT_FOUND,
+    message: "Test not found",
+    errCode: ERROR_CODE.BAD_REQUEST,
+  });
 };
+
 export const questionService = {
   createQuestion,
-  getQuestWithJob,
 };

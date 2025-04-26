@@ -6,6 +6,7 @@ const TestSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
       required: true,
+      unique: true,
     },
     title: {
       type: String,
