@@ -1,10 +1,21 @@
 import React from "react";
-import { PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import SpinningLoader from "../common/SpinningLoading";
 
 const PayPal = ({ amount, onSuccess }) => {
+  const [{ isPending, isResolved }] = usePayPalScriptReducer();
+
+  if (isPending || !isResolved) {
+    return <SpinningLoader />;
+  }
+
   return (
     <PayPalButtons
-      style={{ layout: "vertical" }}
+      style={{
+        layout: "vertical",
+        height: 45,
+      }}
+      forceReRender={[amount]}
       createOrder={(data, actions) => {
         return actions.order.create({
           purchase_units: [

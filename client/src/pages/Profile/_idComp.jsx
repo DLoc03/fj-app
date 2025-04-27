@@ -11,6 +11,7 @@ import Authenticated from "../../components/ui/Authenticated";
 import PATHS from "../../routes/path";
 import SpinningLoader from "../../components/common/SpinningLoading";
 import PopupAlert from "../../components/common/PopUp";
+import LoadingOverlay from "../../components/common/LoadingOverlay";
 
 function UserCompany() {
   const [comp, setComp] = useState({
@@ -26,6 +27,7 @@ function UserCompany() {
     phone: "",
   });
   const [loading, setLoading] = useState(true);
+  const [uploading, setUpLoading] = useState(false);
   const fileInputRef = useRef(null);
   const [previewImage, setPreviewImage] = useState("");
   const [alertOpen, setAlertOpen] = useState(false);
@@ -75,9 +77,6 @@ function UserCompany() {
     });
   }, []);
 
-  console.log("User: ", user);
-  console.log("Company: ", comp);
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
 
@@ -90,7 +89,11 @@ function UserCompany() {
     const formData = new FormData();
     formData.append("avatar", file);
 
+    setUpLoading(true);
+
     CompaniesAPI.postCompanyAvatar(formData, (err, result) => {
+      setUpLoading(false);
+
       if (err || !result.data) {
         setAlertStatus("error");
         handleShowAlert("Cập nhật ảnh thất bại!");
@@ -107,8 +110,6 @@ function UserCompany() {
       setPreviewImage(result.data.avatar);
     });
   };
-
-  console.log("Comp data: ", comp);
 
   if (loading) return <SpinningLoader />;
 
@@ -129,6 +130,7 @@ function UserCompany() {
               backgroundColor: "white",
             }}
           >
+            <LoadingOverlay open={uploading} />
             <Grid container spacing={{ xs: 1, md: 4 }}>
               <Grid item size={12}>
                 <Typography

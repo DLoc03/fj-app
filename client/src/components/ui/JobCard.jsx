@@ -6,86 +6,110 @@ import { Button, Divider, Grid, Typography } from "@mui/material";
 import { formatCurrency } from "../../utils/helper";
 import PATHS from "../../routes/path";
 
-import { QuestionAPI } from "../../services";
+import { QuestionAPI, JobsAPI } from "../../services";
 
-function JobCard({ id, jobName, quantity, jobDescription, salary }) {
+function JobCard({ id }) {
+  const navigate = useNavigate();
   const [jobData, setJobData] = useState({
     id: "",
     jobName: "",
     quantity: "",
     jobDescription: "",
     salary: "",
+    testId: "",
   });
-  const [questions, setQuestions] = useState([]);
-  const navigate = useNavigate();
-
-  const defautFetch = "Đang tải...";
-
-  useEffect(() => {
-    setJobData({
-      id: id || "",
-      jobName: jobName || defautFetch,
-      quantity: quantity || defautFetch,
-      jobDescription: jobDescription || defautFetch,
-      salary: salary || defautFetch,
-    });
-  }, [id, jobName, quantity, jobDescription, salary]);
+  const [testData, setTestData] = useState({
+    id: "",
+    title: "",
+    description: "",
+  });
+  const [test, setTest] = useState();
 
   useEffect(() => {
-    QuestionAPI.getQuestion(id, (err, result) => {
-      if (!err && result?.data.length > 0) {
-        setQuestions(result.data);
+    JobsAPI.getJobById(id, (err, result) => {
+      if (!err && result?.data) {
+        const job = result.data;
+        setJobData({
+          id: job.id,
+          jobName: job.jobName,
+          quantity: job.quantity,
+          jobDescription: job.jobDescription,
+          salary: job.salary,
+          testId: job.testId,
+        });
+        return;
       }
     });
   }, [id]);
+
+  useEffect(() => {
+    if (jobData.id && jobData.jobName && jobData.jobDescription) {
+      setTestData({
+        id: jobData.testId?._id || "",
+        title: `Phỏng vấn vị trí: ${jobData.jobName}`,
+        description: `Mô tả: ${jobData.jobDescription}`,
+      });
+    }
+  }, [jobData]);
+
+  useEffect(() => {
+    if (testData.id) {
+      QuestionAPI.getTest(testData.id, (err, result) => {
+        if (!err && result?.data) {
+          setTest(result.data);
+        } else {
+          setTest(null);
+        }
+      });
+    }
+  }, [testData.id]);
+
+  const handleButtonClick = () => {
+    if (test) {
+      navigate(PATHS.COMPANY_TEST.replace(":id", testData.id));
+    } else {
+      QuestionAPI.postTest(id, testData, (err, result) => {
+        if (!err && result?.data?.id) {
+          setTestData((prevState) => ({
+            ...prevState,
+            id: result.data.id,
+          }));
+
+          alert("Tạo bài test phỏng vấn thành công!");
+          navigate(PATHS.COMPANY_TEST.replace(":id", result.data.id));
+        } else {
+          alert("Có lỗi khi tạo bài test. Vui lòng thử lại.");
+        }
+      });
+    }
+  };
 
   return (
     <Paper
       sx={{ padding: "12px 20px", border: "1px solid secondary.main", mb: 2 }}
     >
       <Typography variant="h6" fontWeight={500} color="primary.main">
-        {jobData.jobName !== defautFetch
-          ? `Cần tìm nhân sự cho vị trí ${jobName}`
-          : defautFetch}
+        Tuyển dụng vị trí: {jobData.jobName}
       </Typography>
       <Divider sx={{ my: 1 }} />
       <Grid container spacing={2}>
-        <Grid item size={{ sx: 12, md: 3 }}>
+        <Grid item xs={12} md={3}>
           <Typography>Số lượng: {jobData.quantity}</Typography>
         </Grid>
 
-        <Grid item size={{ sx: 12, md: 9 }}>
+        <Grid item xs={12} md={9}>
           <Typography>
             Mức lương dự kiến: {formatCurrency(jobData.salary)}
           </Typography>
         </Grid>
-        <Grid item size={12}>
+        <Grid item xs={12}>
           <Typography>Mô tả công việc: {jobData.jobDescription}</Typography>
         </Grid>
       </Grid>
-      {questions && questions.length > 0 ? (
-        <Button
-          variant="outlined"
-          sx={{ mt: 2 }}
-          onClick={() => {
-            window.location.href = PATHS.COMPANY_TEST.replace(":id", id);
-          }}
-        >
-          Xem câu hỏi phỏng vấn
-        </Button>
-      ) : (
-        <Button
-          variant="outlined"
-          sx={{ mt: 2 }}
-          onClick={() => {
-            window.location.href = PATHS.COMPANY_TEST.replace(":id", id);
-          }}
-        >
-          {questions.length > 0
-            ? "Xem câu hỏi phỏng vấn"
-            : "Tạo câu hỏi phỏng vấn"}
-        </Button>
-      )}
+
+      <Button variant="outlined" sx={{ mt: 2 }} onClick={handleButtonClick}>
+        {test ? "Xem bài test phỏng vấn" : "Tạo bài test phỏng vấn"}
+      </Button>
     </Paper>
   );
 }

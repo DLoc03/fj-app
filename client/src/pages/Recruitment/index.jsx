@@ -48,14 +48,7 @@ function CompanyJobs() {
           jobList.length > 0 ? (
             <Box m={2}>
               {jobList.map((job) => (
-                <JobCard
-                  key={job.id}
-                  jobName={job.jobName}
-                  id={job.id}
-                  jobDescription={job.jobDescription}
-                  quantity={job.quantity}
-                  salary={job.salary}
-                />
+                <JobCard key={job.id} id={job.id} />
               ))}
               <Box textAlign="center" mt={2}>
                 <Recruitment />

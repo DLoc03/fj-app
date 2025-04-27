@@ -17,6 +17,7 @@ import { Divider, Link } from "@mui/material";
 import { SESSION_DATA } from "../../common/enum/enum";
 import PATHS from "../../routes/path";
 import SpinningLoader from "../../components/common/SpinningLoading";
+import LoadingOverlay from "../../components/common/LoadingOverlay";
 
 function Profile() {
   const { isAuthenticated } = useAuth();
@@ -36,7 +37,9 @@ function Profile() {
   });
   const [comp, setComp] = useState();
   const [jobs, setJobs] = useState();
+  const [applicants, setApplicants] = useState();
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -76,6 +79,19 @@ function Profile() {
       });
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      AuthAPI.getAllApplicant((err, result) => {
+        if (!err && result?.data) {
+          setApplicants(result?.data?.paginatedApplicants);
+        }
+        setLoading(false);
+      });
+    }
+  }, [isAuthenticated]);
+
+  console.log(applicants);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -134,11 +150,14 @@ function Profile() {
 
     const formData = new FormData();
     formData.append("avatar", file);
+    setUploading(true);
 
     const imageUrl = URL.createObjectURL(file);
     setPreviewImage(imageUrl);
 
     AuthAPI.uploadAvatar(formData, (err, result) => {
+      setUploading(false);
+
       if (err || !result.data) {
         setAlertStatus("error");
         handleShowAlert("Cập nhật ảnh thất bại!");
@@ -166,6 +185,7 @@ function Profile() {
         backgroundColor: "white",
       }}
     >
+      <LoadingOverlay open={uploading} />
       <Grid container spacing={4}>
         <Grid item size={12}>
           <Typography
@@ -343,7 +363,9 @@ function Profile() {
                 </Grid>
                 <Grid item size={12}>
                   <Typography>
-                    Đã có 4 ứng viên xin ứng tuyển.{" "}
+                    {applicants.length > 0
+                      ? `Đã có ${applicants.length} ứng viên ứng tuyển.`
+                      : `Hiện chưa có ứng viên nộp hồ sơ!`}{" "}
                     <Link
                       component={RouterLink}
                       to={PATHS.COMPANY_TEST}

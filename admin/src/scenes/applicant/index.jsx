@@ -5,42 +5,31 @@ import { mockDataInvoices } from "../../data/mockData";
 import { GridToolbar } from "@mui/x-data-grid";
 import Header from "../../components/Header";
 
-import { JobAPI } from "../../services";
+import { ApplicantAPI } from "../../services";
 import { formatDate } from "../../utils/helper";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Jobs = () => {
+const Applicant = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
-  const [jobs, setJobs] = useState([]);
+  const [applicants, setApplicants] = useState([]);
 
   useEffect(() => {
-    JobAPI.getAllJob((err, result) => {
+    ApplicantAPI.getApplicantList((err, result) => {
+      console.log("Result dat: ", result.data);
       if (err || !result.data) {
-        setJobs([]);
         return;
       }
-      setJobs(result?.data?.paginatedJobs);
+      setApplicants(result?.data);
     });
   }, []);
 
-  console.log(jobs);
-
   const handleRowClick = (params) => {
     const id = params.row.id;
-    navigate(`/job/${id}`);
-  };
-
-  const handleStatusToggle = (id, newStatus) => {
-    setJobs((prev) =>
-      prev.map((company) =>
-        company.id === id ? { ...company, status: newStatus } : company
-      )
-    );
-    //Call API Here
+    navigate(`/applicant/${id}`);
   };
 
   const columns = [
@@ -73,7 +62,7 @@ const Jobs = () => {
     },
   ];
 
-  const rows = jobs.map((job) => ({
+  const rows = applicants.map((job) => ({
     id: job.id,
     compName: job.company.name,
     jobName: job.jobName,
@@ -85,8 +74,8 @@ const Jobs = () => {
   return (
     <Box m="20px">
       <Header
-        title="Danh sách công việc đăng tuyển"
-        subtitle="Các công việc đang tuyển ở các cơ sở"
+        title="Danh sách hồ sơ"
+        subtitle="Danh sách hồ sơ các ứng viên ứng tuyển"
       />
       <Box
         m="40px 0 0 0"
@@ -128,4 +117,4 @@ const Jobs = () => {
   );
 };
 
-export default Jobs;
+export default Applicant;

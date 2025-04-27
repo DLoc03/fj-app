@@ -41,14 +41,13 @@ const Sidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Trang chủ");
-  const [adminName, setAdminName] = useState("Đang tải...");
 
-  useEffect(() => {
-    AuthAPI.getCurrentUser((err, result) => {
-      if (err || !result.data) return;
-      setAdminName(result.data.name);
-    });
-  }, []);
+  // useEffect(() => {
+  //   AuthAPI.getCurrentUser((err, result) => {
+  //     if (err || !result.data) return;
+  //     setAdminName(result.data.name);
+  //   });
+  // }, []);
 
   return (
     <Box
@@ -103,7 +102,7 @@ const Sidebar = () => {
                   color={colors.grey[100]}
                   fontWeight="bold"
                 >
-                  {adminName}
+                  Admin
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   Quản trị viên FJ
@@ -149,8 +148,8 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <Item
-              title="Danh sách bài test"
-              to="/invoices"
+              title="Danh sách hồ sơ"
+              to="/applicant"
               icon={<QuizIcon />}
               selected={selected}
               setSelected={setSelected}

@@ -39,9 +39,9 @@ function QuestionCard({ id, type }) {
 
   useEffect(() => {
     if (id) {
-      QuestionAPI.getQuestion(id, (err, result) => {
-        if (!err && result.data.length > 0 && result.data !== questions) {
-          setQuestions(result.data);
+      QuestionAPI.getTest(id, (err, result) => {
+        if (!err) {
+          setQuestions(result.data.questions);
           setLoading(false);
         }
       });

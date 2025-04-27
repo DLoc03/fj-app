@@ -34,7 +34,6 @@ const User = () => {
         setLoading(false);
         return;
       }
-
       if (!result.data || result.data.length === 0) {
         setUsers([]);
       } else {

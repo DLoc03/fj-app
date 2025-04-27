@@ -1,6 +1,7 @@
 import Applicant from "../model/applicant.js";
 import Company from "../model/company.js";
 import Job from "../model/job.js";
+import Test from "../model/test.js";
 import User from "../model/user.js";
 import { CompanyResponse } from "../response/company.response.js";
 import { JobResponse } from "../response/job.response.js";
@@ -39,9 +40,10 @@ const getJob = async (id) => {
   const { recruiterId, name, address, avatar } = await Company.findOne({
     _id: job.companyId,
   }).lean();
+  const testId = await Test.findOne({ jobId: job._id }).select("_id").lean();
   const { phone } = await User.findById(recruiterId).lean();
   const validJob = JobResponse.Jobs(job);
-  const { companyId, status, ...data } = validJob;
+  const { companyId, ...data } = validJob;
 
   return MasterResponse({
     data: {
@@ -50,6 +52,7 @@ const getJob = async (id) => {
       compName: name,
       address: address,
       avatar: avatar,
+      testId: testId,
     },
   });
 };

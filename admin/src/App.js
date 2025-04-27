@@ -14,6 +14,7 @@ import CompInfo from "./scenes/company/_id";
 import AuthForm from "./components/auth/authForm";
 import Form from "./scenes/user/_id";
 import JobForm from "./scenes/job/_id";
+import Applicant from "./scenes/applicant";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -45,6 +46,7 @@ function App() {
                         <Route path="/job" element={<Job />} />
                         <Route path="/comp-form" element={<CompInfo />} />
                         <Route path="job/:id" element={<JobForm />} />
+                        <Route path="applicant" element={<Applicant />} />
                         <Route
                           path="/company/comp-form/:id"
                           element={<CompInfo />}

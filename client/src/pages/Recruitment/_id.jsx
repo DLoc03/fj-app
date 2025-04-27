@@ -23,7 +23,7 @@ import { USER_TYPE } from "../../common/enum/enum";
 import SpinningLoader from "../../components/common/SpinningLoading";
 
 function TestDetail() {
-  const { id: jobId } = useParams();
+  const { id } = useParams();
   const [questions, setQuestions] = useState([{ question: "" }]);
   const [questionList, setQuestionList] = useState([]);
   const [deleteIndex, setDeleteIndex] = useState(null);
@@ -44,12 +44,14 @@ function TestDetail() {
     setQuestions([...questions, { question: "" }]);
   };
 
+  console.log("ID received: ", id);
+
   const handleSaveQuestions = () => {
     Promise.all(
       questions.map(
         (q) =>
           new Promise((resolve, reject) => {
-            QuestionAPI.postQuestion(jobId, q, (err, res) => {
+            QuestionAPI.postQuestion(id, q, (err, res) => {
               if (err) {
                 reject(
                   err || new Error(res?.result?.message || "Unknown error")
@@ -97,13 +99,13 @@ function TestDetail() {
   };
 
   useEffect(() => {
-    QuestionAPI.getQuestion(jobId, (err, result) => {
-      if (!err && result?.data.length > 0) {
-        setQuestionList(result.data);
+    QuestionAPI.getTest(id, (err, result) => {
+      if (!err && result?.data) {
+        setQuestionList(result.data.questions);
       }
       setLoading(false);
     });
-  }, [jobId]);
+  }, [id]);
 
   if (loading) return <SpinningLoader />;
 
@@ -117,7 +119,7 @@ function TestDetail() {
       />
 
       {questionList.length > 0 ? (
-        <QuestionCard id={jobId} type={USER_TYPE.EMPLOYER} />
+        <QuestionCard id={id} type={USER_TYPE.EMPLOYER} />
       ) : (
         <>
           <Typography variant="h5" mb={2} color="white" fontWeight={500}>

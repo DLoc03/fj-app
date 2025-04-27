@@ -57,6 +57,24 @@ export const AuthAPI = {
     );
   },
 
+  async getAllApplicant(cb) {
+    await restRequest.get(`/auth/me?site=applicant`, {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
+
+  async getApplicantList(page = 1, cb) {
+    await restRequest.get(
+      `/auth/me?site=applicant&page=${page}`,
+      {},
+      (err, result) => {
+        if (err) return cb(err);
+        if (typeof cb === "function") cb(null, result);
+      }
+    );
+  },
+
   async updateUser(id, data, cb) {
     await restRequest.put(`/user/avatar`, data, (err, result) => {
       if (err) return cb(err);

@@ -18,7 +18,7 @@ export const AuthAPI = {
     });
   },
   async getCurrentUser(cb) {
-    await restRequest.get("/auth/me", {}, (err, result) => {
+    await restRequest.get("/auth/me?site=detail", {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
