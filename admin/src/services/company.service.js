@@ -15,4 +15,11 @@ export const CompanyAPI = {
       if (typeof cb === "function") cb(null, result);
     });
   },
+  async updateCompanyByID(id, data, cb) {
+    console.log("Datat status: ", data);
+    await restRequest.put(`/company/${id}`, data, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
 };

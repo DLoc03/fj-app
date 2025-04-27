@@ -15,6 +15,9 @@ import AuthForm from "./components/auth/authForm";
 import Form from "./scenes/user/_id";
 import JobForm from "./scenes/job/_id";
 import Applicant from "./scenes/applicant";
+import Package from "./scenes/package";
+import PackageForm from "./scenes/package/_id";
+import PackageUpdate from "./scenes/package/_idUpdate";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -47,6 +50,15 @@ function App() {
                         <Route path="/comp-form" element={<CompInfo />} />
                         <Route path="job/:id" element={<JobForm />} />
                         <Route path="applicant" element={<Applicant />} />
+                        <Route path="package" element={<Package />} />
+                        <Route
+                          path="/package/package-form"
+                          element={<PackageForm />}
+                        />
+                        <Route
+                          path="/package/package-form/:id"
+                          element={<PackageUpdate />}
+                        />
                         <Route
                           path="/company/comp-form/:id"
                           element={<CompInfo />}

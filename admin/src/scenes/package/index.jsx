@@ -15,57 +15,49 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserAPI } from "../../services/index";
+import { PackageAPI } from "../../services/index";
 
-const User = () => {
+const Package = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const [users, setUsers] = useState([]);
+  const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    UserAPI.getAllUsers((err, result) => {
-      if (err) {
-        setError("Có lỗi xảy ra khi tải danh sách người dùng.");
-        setLoading(false);
-        return;
-      }
-      if (!result.data || result.data.length === 0) {
-        setUsers([]);
+    PackageAPI.getAllPackage((err, result) => {
+      console.log("Package data: ", result.data);
+      if (!err && result?.data) {
+        setPackages(result.data);
       } else {
-        const filteredUsers = result.data.filter(
-          (user) => user.role === "user"
-        );
-        setUsers(filteredUsers);
+        setError("Lỗi tải gói dịch vụ");
       }
-
       setLoading(false);
     });
   }, []);
 
   const handleOpenDialog = (id) => {
-    setSelectedUserId(id);
+    setSelected(id);
     setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    setSelectedUserId(null);
+    setSelected(null);
   };
 
   const handleRowClick = (params) => {
     const id = params.row.id;
-    if (id) navigate(`form/${id}`);
+    if (id) navigate(`package-form/${id}`);
   };
 
   const columns = [
-    { field: "name", headerName: "Tên người dùng", flex: 2 },
-    { field: "phone", headerName: "Hotline ban tuyển dụng", flex: 2 },
-    { field: "email", headerName: "Email", flex: 2 },
+    { field: "name", headerName: "Tên gói", flex: 2 },
+    { field: "price", headerName: "Đơn giá", flex: 2 },
+    { field: "description", headerName: "Mô tả", flex: 2 },
     {
       field: "view",
       headerName: "Chi tiết",
@@ -79,22 +71,35 @@ const User = () => {
         </Typography>
       ),
     },
+    {
+      field: "del",
+      headerName: "Xóa",
+      flex: 1,
+      renderCell: (params) => (
+        <IconButton
+          color="error"
+          onClick={() => handleOpenDialog(params.row.id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
     <Box m="20px">
-      <Typography variant="h4">Danh sách người dùng</Typography>
+      <Typography variant="h4">Danh sách gói dịch vụ</Typography>
 
       <Box m="40px 0 0 0" height="75vh">
         {loading ? (
           <CircularProgress />
         ) : error ? (
           <Typography color="error">{error}</Typography>
-        ) : users.length === 0 ? (
-          <Typography>Hiện chưa có người dùng nào.</Typography>
+        ) : packages.length === 0 ? (
+          <Typography>Hiện chưa có gói dịch vụ nào.</Typography>
         ) : (
           <DataGrid
-            rows={users}
+            rows={packages}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
             getRowId={(row) => row.id}
@@ -122,4 +127,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Package;

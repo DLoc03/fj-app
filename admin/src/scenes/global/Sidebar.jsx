@@ -13,6 +13,7 @@ import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import QuizIcon from "@mui/icons-material/Quiz";
 import StoreIcon from "@mui/icons-material/Store";
+import AddCardIcon from "@mui/icons-material/AddCard";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -151,6 +152,27 @@ const Sidebar = () => {
               title="Danh sách hồ sơ"
               to="/applicant"
               icon={<QuizIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Các gói dịch vụ"
+              to="/package"
+              icon={<AddCardIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              Quản lý gói
+            </Typography>
+            <Item
+              title="Tạo gói dịch vụ"
+              to="/package/package-form"
+              icon={<AddCardIcon />}
               selected={selected}
               setSelected={setSelected}
             />

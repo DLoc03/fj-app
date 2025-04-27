@@ -44,6 +44,8 @@ const Company = () => {
     });
   }, []);
 
+  console.log(companies);
+
   const handleRowClick = (params) => {
     const id = params.row.id;
     navigate(`comp-form/${id}`);
@@ -65,21 +67,33 @@ const Company = () => {
         company.id === id ? { ...company, status: newStatus } : company
       )
     );
-    //Call API Here
+    CompanyAPI.updateCompanyByID(id, { status: newStatus }, (err, result) => {
+      if (err) {
+        console.error("Lỗi khi cập nhật trạng thái xác thực", err);
+        return;
+      }
+      alert("Cập nhật trạng thái thành công");
+    });
   };
 
-  // const handleDeleteConfirm = async () => {
-  //   if (!selectedCompany) return;
-  //   try {
-  //     await deleteCompanyById(selectedCompany);
-  //     setCompanies((prevUsers) =>
-  //       prevUsers.filter((user) => user.id !== selectedCompany)
-  //     );
-  //     handleCloseDialog();
-  //   } catch (error) {
-  //     console.error("Xóa thất bại:", error);
-  //   }
-  // };
+  const handleDestroyToggle = (id, newIsDestroy) => {
+    setCompanies((prev) =>
+      prev.map((company) =>
+        company.id === id ? { ...company, isDestroy: newIsDestroy } : company
+      )
+    );
+    CompanyAPI.updateCompanyByID(
+      id,
+      { isDestroy: newIsDestroy },
+      (err, result) => {
+        if (err) {
+          console.error("Lỗi khi cập nhật trạng thái isDestroy", err);
+          return;
+        }
+        alert("Cập nhật trạng thái thành công");
+      }
+    );
+  };
 
   const columns = [
     { field: "name", headerName: "Tên cơ sở", flex: 1 },
@@ -95,6 +109,12 @@ const Company = () => {
       headerName: "Hotline",
       flex: 1,
       valueGetter: (params) => params.row.recruiter?.phone || "Chưa có",
+    },
+    {
+      field: "date",
+      headerName: "Ngày đăng ký",
+      flex: 1,
+      valueGetter: (params) => formatDate(params.row.createdAt) || "Chưa có",
     },
     {
       field: "status",
@@ -123,10 +143,30 @@ const Company = () => {
       },
     },
     {
-      field: "date",
-      headerName: "Ngày đăng ký",
+      field: "isDestroy",
+      headerName: "Gắn cờ",
       flex: 1,
-      valueGetter: (params) => formatDate(params.row.createdAt) || "Chưa có",
+      renderCell: (params) => {
+        const isDestroyed = params.row.isDestroy;
+
+        return (
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Switch
+              checked={isDestroyed}
+              onChange={(e) =>
+                handleDestroyToggle(
+                  params.row.id,
+                  e.target.checked ? true : false
+                )
+              }
+              inputProps={{ "aria-label": "destroy toggle" }}
+            />
+            <Typography variant="body2">
+              {isDestroyed ? "Đã gắn cờ" : "Chưa gắn cờ"}
+            </Typography>
+          </Stack>
+        );
+      },
     },
     {
       field: "view",
@@ -145,21 +185,7 @@ const Company = () => {
         </p>
       ),
     },
-    {
-      field: "del",
-      headerName: "Xóa",
-      flex: 1,
-      renderCell: (params) => (
-        <IconButton
-          color="error"
-          onClick={() => handleOpenDialog(params.row.id)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      ),
-    },
   ];
-
   return (
     <Box m="20px">
       <Header

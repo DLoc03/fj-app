@@ -4,7 +4,7 @@ export const PackageResponse = {
   Client: ({ _id, name, price, description, createdAt, updatedAt }) => ({
     id: _id,
     name,
-    price: `${price} VND`,
+    price: price,
     description,
     createdAt: DateFormat(createdAt),
     updatedAt: DateFormat(updatedAt),

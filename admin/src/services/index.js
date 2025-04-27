@@ -3,5 +3,6 @@ import { AuthAPI } from "./auth.service";
 import { CompanyAPI } from "./company.service";
 import { JobAPI } from "./job.service";
 import { ApplicantAPI } from "./applicant.service";
+import { PackageAPI } from "./package.service";
 
-export { UserAPI, AuthAPI, CompanyAPI, JobAPI, ApplicantAPI };
+export { UserAPI, AuthAPI, CompanyAPI, JobAPI, ApplicantAPI, PackageAPI };

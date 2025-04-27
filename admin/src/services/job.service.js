@@ -15,4 +15,10 @@ export const JobAPI = {
       if (typeof cb === "function") cb(null, result);
     });
   },
+  async updateJobById(id, data, cb) {
+    await restRequest.put(`/job/${id}`, data, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
 };

@@ -6,7 +6,6 @@ import { MasterResponse } from "../response/master.response.js";
 import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
 const postAnswer = async (applicantId, data) => {
-  console.log("Answer received: ", data);
   const applicant = await Applicant.findById(applicantId).lean();
   if (!applicant) {
     return MasterResponse({
@@ -36,7 +35,6 @@ const postAnswer = async (applicantId, data) => {
     applicantId: applicant._id,
     questionId: questions.find((q) => q._id),
   });
-  console.log("Answer data edit: ", answers);
 
   if (answers.length === 0) {
     const saveAnswer = await Answer.insertMany(
