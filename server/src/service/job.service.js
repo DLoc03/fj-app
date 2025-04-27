@@ -1,6 +1,7 @@
 import Applicant from "../model/applicant.js";
 import Company from "../model/company.js";
 import Job from "../model/job.js";
+import Test from "../model/test.js";
 import User from "../model/user.js";
 import { CompanyResponse } from "../response/company.response.js";
 import { JobResponse } from "../response/job.response.js";
@@ -40,11 +41,14 @@ const getJob = async (id) => {
   const { phone } = await User.findById(recruiterId).lean();
   const validJob = JobResponse.Jobs(job);
   const { companyId, ...data } = validJob;
-
+  const testId = await Test.findOne({ jobId: validJob.id })
+    .select("_id")
+    .lean();
   return MasterResponse({
     data: {
       ...data,
       hotline: phone,
+      testId: testId,
     },
   });
 };
