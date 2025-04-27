@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import Paper from "@mui/material/Paper";
 import { Button, Divider, Grid, Typography } from "@mui/material";
 
@@ -7,9 +8,9 @@ import { formatCurrency } from "../../utils/helper";
 import PATHS from "../../routes/path";
 
 import { QuestionAPI, JobsAPI } from "../../services";
+import PopupAlert from "../common/PopUp";
 
 function JobCard({ id }) {
-  const navigate = useNavigate();
   const [jobData, setJobData] = useState({
     id: "",
     jobName: "",
@@ -24,6 +25,7 @@ function JobCard({ id }) {
     description: "",
   });
   const [test, setTest] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     JobsAPI.getJobById(id, (err, result) => {
@@ -66,7 +68,9 @@ function JobCard({ id }) {
 
   const handleButtonClick = () => {
     if (test) {
-      navigate(PATHS.COMPANY_TEST.replace(":id", testData.id));
+      navigate(PATHS.COMPANY_TEST.replace(":id", testData.id), {
+        state: { title: testData.title },
+      });
     } else {
       QuestionAPI.postTest(id, testData, (err, result) => {
         if (!err && result?.data?.id) {
@@ -75,10 +79,11 @@ function JobCard({ id }) {
             id: result.data.id,
           }));
 
-          alert("Tạo bài test phỏng vấn thành công!");
-          navigate(PATHS.COMPANY_TEST.replace(":id", result.data.id));
-        } else {
-          alert("Có lỗi khi tạo bài test. Vui lòng thử lại.");
+          setTimeout(() => {
+            navigate(PATHS.COMPANY_TEST.replace(":id", result.data.id), {
+              state: { title: testData.title },
+            });
+          }, 1000);
         }
       });
     }

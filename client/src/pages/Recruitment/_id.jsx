@@ -12,7 +12,7 @@ import {
   DialogTitle,
   Fade,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { QuestionAPI } from "../../services";
 import PopupAlert from "../../components/common/PopUp";
 import QuestionCard from "../../components/ui/QuestionCard";
@@ -24,6 +24,7 @@ import SpinningLoader from "../../components/common/SpinningLoading";
 
 function TestDetail() {
   const { id } = useParams();
+  const location = useLocation();
   const [questions, setQuestions] = useState([{ question: "" }]);
   const [questionList, setQuestionList] = useState([]);
   const [deleteIndex, setDeleteIndex] = useState(null);
@@ -34,6 +35,8 @@ function TestDetail() {
   const [alertStatus, setAlertStatus] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const testTitle = location.state?.title || "Bài phỏng vấn vị trí tuyển mới";
+
   const handleQuestionChange = (index, value) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index].question = value;
@@ -43,8 +46,6 @@ function TestDetail() {
   const handleAddQuestion = () => {
     setQuestions([...questions, { question: "" }]);
   };
-
-  console.log("ID received: ", id);
 
   const handleSaveQuestions = () => {
     Promise.all(
@@ -107,10 +108,27 @@ function TestDetail() {
     });
   }, [id]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (questions.some((q) => q.question.trim() === "")) {
+        const message =
+          "Bạn chưa lưu các câu hỏi. Bạn chắc chắn muốn rời khỏi trang?";
+        e.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [questions]);
+
   if (loading) return <SpinningLoader />;
 
   return (
-    <Box p={4}>
+    <Box p={4} sx={{ backgroundColor: "white", height: "100%" }}>
       <PopupAlert
         open={alertOpen}
         message={alertMessage}
@@ -122,8 +140,13 @@ function TestDetail() {
         <QuestionCard id={id} type={USER_TYPE.EMPLOYER} />
       ) : (
         <>
-          <Typography variant="h5" mb={2} color="white" fontWeight={500}>
-            Tạo bộ câu hỏi mới
+          <Typography
+            variant="h5"
+            mb={2}
+            color="secondary.main"
+            fontWeight={500}
+          >
+            {testTitle}
           </Typography>
 
           <TransitionGroup>
