@@ -55,3 +55,11 @@ export const SITE_ENUM = {
   JOB: "job",
   APPLICANT: "applicant",
 };
+
+export const SOCKET_ENUM = {
+  SEND_MESSAGE: "user-message",
+  BOT_MESSAGE: "bot-message",
+  CONNECT: "connection",
+  CLOSE: "close",
+  END: "--END--",
+};

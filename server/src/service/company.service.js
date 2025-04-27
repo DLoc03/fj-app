@@ -5,6 +5,11 @@ import { ERROR_CODE, STATUS } from "../utils/enum.js";
 import User from "../model/user.js";
 import { UserResponse } from "../response/user.response.js";
 import Job from "../model/job.js";
+import Test from "../model/test.js";
+import Applicant from "../model/applicant.js";
+import Answer from "../model/answer.js";
+import mongoose from "mongoose";
+import Question from "../model/question.js";
 const postCompany = async (id, data) => {
   const exitedComp = await Company.findOne({ recruiterId: id }).lean();
   if (exitedComp)
@@ -96,10 +101,107 @@ const uploadAvatar = async (id, avatar) => {
   return MasterResponse({ data: CompanyResponse.CompanyFound(newData) });
 };
 
+const deleteCompany = async (companyId) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  const company = await Company.findById(companyId).session(session).lean();
+  if (!company || company.isDestroy) {
+    await session.abortTransaction();
+    session.endSession();
+    return MasterResponse({
+      status: STATUS.NOT_FOUND,
+      errCode: ERROR_CODE.BAD_REQUEST,
+      message: "Company not found or already deleted",
+    });
+  }
+
+  const companyUpdate = await Company.updateOne(
+    { _id: companyId, isDestroy: false },
+    { $set: { isDestroy: true } },
+    { session }
+  );
+  if (companyUpdate.modifiedCount === 0) {
+    await session.abortTransaction();
+    session.endSession();
+    return MasterResponse({
+      status: STATUS.NOT_FOUND,
+      errCode: ERROR_CODE.BAD_REQUEST,
+      message: "Company not found or already deleted",
+    });
+  }
+
+  const jobs = await Job.find({ companyId, isDestroy: false }, { _id: 1 })
+    .lean()
+    .session(session);
+  const jobIds = jobs.map((j) => j._id);
+
+  if (jobIds.length > 0) {
+    await Job.updateMany(
+      { companyId, isDestroy: false },
+      { $set: { isDestroy: true } },
+      { session }
+    );
+
+    const tests = await Test.find(
+      { jobId: { $in: jobIds }, isDestroy: false },
+      { _id: 1 }
+    )
+      .lean()
+      .session(session);
+    const testIds = tests.map((t) => t._id);
+
+    await Test.updateMany(
+      { jobId: { $in: jobIds }, isDestroy: false },
+      { $set: { isDestroy: true } },
+      { session }
+    );
+
+    // Soft delete Questions
+    await Question.updateMany(
+      { testId: { $in: testIds }, isDestroy: false },
+      { $set: { isDestroy: true } },
+      { session }
+    );
+
+    // Tìm tất cả Applicant của Jobs
+    const applicants = await Applicant.find(
+      { jobId: { $in: jobIds }, isDestroy: false },
+      { _id: 1 }
+    )
+      .lean()
+      .session(session);
+    const applicantIds = applicants.map((a) => a._id);
+
+    // Soft delete Applicants
+    await Applicant.updateMany(
+      { jobId: { $in: jobIds }, isDestroy: false },
+      { $set: { isDestroy: true } },
+      { session }
+    );
+
+    // Soft delete Answers
+    await Answer.updateMany(
+      { applicantId: { $in: applicantIds }, isDestroy: false },
+      { $set: { isDestroy: true } },
+      { session }
+    );
+  }
+
+  // Commit transaction
+  await session.commitTransaction();
+  session.endSession();
+  return MasterResponse({
+    status: STATUS.SUCCESS,
+    message: "Company and related records deleted successfully",
+  });
+};
+
 export const companyService = {
   postCompany,
   getCompany,
   getCompanies,
   updateCompany,
   uploadAvatar,
+  deleteCompany,
 };

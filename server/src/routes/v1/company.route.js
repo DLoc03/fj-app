@@ -28,6 +28,17 @@ Router.route("/avatar").post(
 
 Router.route("/:id")
   .get(companyController.getCompanyById)
-  .put(checkBlackList, verifyToken, companyController.updateCompany);
+  .put(
+    checkBlackList,
+    verifyToken,
+    authorizeAdmin("admin"),
+    companyController.updateCompany
+  )
+  .delete(
+    checkBlackList,
+    verifyToken,
+    authorizeAdmin("admin"),
+    companyController.deleteCompany
+  );
 
 export const companyRoute = Router;

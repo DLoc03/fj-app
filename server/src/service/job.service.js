@@ -44,7 +44,9 @@ const getJob = async (id) => {
   const { phone } = await User.findById(recruiterId).lean();
   const validJob = JobResponse.Jobs(job);
   const { companyId, ...data } = validJob;
-
+  const testId = await Test.findOne({ jobId: validJob.id })
+    .select("_id")
+    .lean();
   return MasterResponse({
     data: {
       ...data,
