@@ -73,10 +73,24 @@ const updateCompany = async (req, res) => {
   }
 };
 
+const deleteCompany = async (req, res) => {
+  try {
+    const response = await companyService.deleteCompany(req.params.id);
+    return res.status(STATUS_CODE.OK).json(response);
+  } catch (error) {
+    return res
+      .status(500)
+      .json(
+        MasterResponse({ errCode: ERROR_CODE.FAILED, message: error.message })
+      );
+  }
+};
+
 export const companyController = {
   postCompany,
   getCompanyById,
   getCompanies,
   uploadAvatar,
   updateCompany,
+  deleteCompany,
 };

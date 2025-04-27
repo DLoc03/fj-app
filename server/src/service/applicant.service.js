@@ -7,6 +7,7 @@ import Answer from "../model/answer.js";
 import Company from "../model/company.js";
 import { ApplicantResponse } from "../response/applicant.response.js";
 import Test from "../model/test.js";
+import User from "../model/user.js";
 const postApplicant = async (jobId, data) => {
   const { email, name, phone, cv } = data;
 
@@ -102,6 +103,25 @@ const getApplicanDetail = async (userId, applicantId) => {
 const getApplicants = async (userId, page = 1) => {
   const limit = 10;
   const skip = (page - 1) * limit;
+  const userRole = await User.findById(userId).select("role").lean();
+  if (userRole === "admin") {
+    const applicants = await Applicant.find({ isDestroy: false })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+    const pagedApplicants = applicants.map((a) => ApplicantResponse.Create(a));
+    const total = await Applicant.countDocuments({
+      isDestroy: false,
+    });
+    return MasterResponse({
+      data: {
+        pagedApplicants,
+        currentPage: page,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  }
   const company = await Company.findOne({
     recruiterId: userId,
     isDestroy: false,
