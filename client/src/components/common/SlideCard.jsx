@@ -31,8 +31,6 @@ function SlideCard() {
     });
   }, [currentPage]);
 
-  console.log("Job list: ", jobList);
-
   const handleNext = () => {
     setStartIndex((prev) =>
       prev + 1 < jobList.length - itemsPerPage + 1 ? prev + 1 : 0

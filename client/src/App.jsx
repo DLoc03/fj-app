@@ -12,8 +12,7 @@ function App() {
     <Router>
       <PayPalScriptProvider
         options={{
-          "client-id":
-            "Acp_rLT1t6OiSIbCYkWhU6GMPwsd8ae4qCY2GhI4KFYkMPIVGq2nlDP2nXBivILdBfx-kF3z8FeKxfS0",
+          "client-id": import.meta.env.CLIENT_ID,
           currency: "USD",
           components: "buttons",
         }}

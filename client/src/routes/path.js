@@ -10,7 +10,8 @@ const PATHS = {
   COMPANY_JOBS: "/company/jobs",
   COMPANY_TEST: "/company/test/:id",
   ANSWER: "/job/detail/candidate/:id",
-  APPLICANT_ANSWER: "/cv",
+  APPLICANT_LIST: "/cv",
+  APPLICANT_RESULT: "/cv/:id",
   PAYPAL: "/paypal",
   NOT_FOUND: "*",
 };

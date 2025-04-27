@@ -9,12 +9,14 @@ import ApplicantAvt from "../../assets/applicant.png";
 import { JobsAPI } from "../../services";
 import { formatDate } from "../../utils/helper";
 import { Button, Divider } from "@mui/material";
+import { SESSION_DATA } from "../../common/enum/enum";
+import PATHS from "../../routes/path";
 
 function ApplicantCard({ jobId, name, email, phone, date }) {
   const [jobName, setJobname] = useState("");
+  const applicant = JSON.parse(sessionStorage.getItem(SESSION_DATA.APPLICANT));
   useEffect(() => {
     JobsAPI.getJobById(jobId, (err, result) => {
-      console.log("Job found: ", result.data);
       if (!err && result?.data) {
         setJobname(result?.data?.jobName);
       }
@@ -79,21 +81,14 @@ function ApplicantCard({ jobId, name, email, phone, date }) {
                   mt: 1,
                   fontSize: "12px",
                 }}
+                onClick={() =>
+                  (window.location.href = PATHS.APPLICANT_RESULT.replace(
+                    ":id",
+                    applicant.id
+                  ))
+                }
               >
                 Kết quả
-              </Button>
-            </Grid>
-            <Grid item size={12}>
-              <Button
-                variant="contained"
-                sx={{
-                  height: "32px",
-                  width: "160px",
-                  mt: 1,
-                  fontSize: "12px",
-                }}
-              >
-                Duyệt hồ sơ
               </Button>
             </Grid>
           </Grid>

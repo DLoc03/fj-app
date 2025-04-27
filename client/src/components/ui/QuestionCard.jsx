@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { QuestionAPI, AnswerAPI, ApplicantAPI } from "../../services";
 import { Button, Divider, TextField } from "@mui/material";
-import { USER_TYPE } from "../../common/enum/enum";
+import { SESSION_DATA, USER_TYPE } from "../../common/enum/enum";
 
 import SpinningLoader from "../common/SpinningLoading";
 import PopupAlert from "../common/PopUp";
@@ -20,7 +20,7 @@ function QuestionCard({ id, type }) {
   const [alertStatus, setAlertStatus] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const applicant = JSON.parse(sessionStorage.getItem("Applicant"));
+  const applicant = JSON.parse(sessionStorage.getItem(SESSION_DATA.APPLICANT));
   const handleAlertClose = () => {
     setAlertOpen(false);
   };
@@ -42,6 +42,10 @@ function QuestionCard({ id, type }) {
       QuestionAPI.getTest(id, (err, result) => {
         if (!err) {
           setQuestions(result.data.questions);
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
+        } else {
           setLoading(false);
         }
       });
@@ -52,8 +56,6 @@ function QuestionCard({ id, type }) {
       setOpenModal(true);
     }
   }, [id, type]);
-
-  console.log("Question test: ", questions);
 
   const handleAnswerChange = (index, value) => {
     setAnswers((prev) => ({
@@ -86,11 +88,11 @@ function QuestionCard({ id, type }) {
   };
 
   const handleApplySubmit = (data) => {
-    sessionStorage.setItem("Applicant", JSON.stringify(data));
+    sessionStorage.setItem(SESSION_DATA.APPLICANT, JSON.stringify(data));
     setOpenModal(false);
   };
 
-  // if (loading) return <SpinningLoader />;
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box>

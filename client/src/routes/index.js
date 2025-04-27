@@ -11,6 +11,7 @@ import TestDetail from "../pages/Recruitment/_id";
 import Answer from "../pages/Jobs/_idAnswer";
 import ApplicantAnswer from "../pages/Recruitment/indexAnswer";
 import CheckoutPage from "../pages/Paid/_id";
+import ApplicantDetail from "../pages/Applicant/_id";
 
 export const routes = [
   {
@@ -65,7 +66,11 @@ export const protectedRoutes = [
     page: TestDetail,
   },
   {
-    path: PATHS.APPLICANT_ANSWER,
+    path: PATHS.APPLICANT_LIST,
     page: ApplicantAnswer,
+  },
+  {
+    path: PATHS.APPLICANT_RESULT,
+    page: ApplicantDetail,
   },
 ];

@@ -368,7 +368,7 @@ function Profile() {
                       : `Hiện chưa có ứng viên nộp hồ sơ!`}{" "}
                     <Link
                       component={RouterLink}
-                      to={PATHS.COMPANY_TEST}
+                      to={PATHS.APPLICANT_LIST}
                       sx={{
                         color: "blue",
                         fontSize: "16px",

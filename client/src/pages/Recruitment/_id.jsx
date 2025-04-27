@@ -11,6 +11,7 @@ import {
   DialogContentText,
   DialogTitle,
   Fade,
+  Divider,
 } from "@mui/material";
 import { useParams, useLocation } from "react-router-dom";
 import { QuestionAPI } from "../../services";
@@ -148,6 +149,8 @@ function TestDetail() {
           >
             {testTitle}
           </Typography>
+
+          <Divider orientation="horizontal" flexItem sx={{ my: 1 }} />
 
           <TransitionGroup>
             {questions.map((q, index) => (

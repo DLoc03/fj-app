@@ -16,4 +16,11 @@ export const ApplicantAPI = {
       if (typeof cb === "function") cb(null, result);
     });
   },
+
+  async getApplicantResult(id, cb) {
+    await restRequest.get(`/applicant/${id}`, {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
 };

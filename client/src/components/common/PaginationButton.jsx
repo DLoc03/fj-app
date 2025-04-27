@@ -41,7 +41,7 @@ const PaginationButton = ({
 
       <Button
         variant="contained"
-        onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
+        onClick={() => onPageChange(+currentPage + 1)}
         disabled={currentPage === totalPages}
         sx={{
           bgcolor: "primary.main",

@@ -8,6 +8,7 @@ import { formatCurrency } from "../../utils/helper";
 import PATHS from "../../routes/path";
 
 import { QuestionAPI, JobsAPI } from "../../services";
+import SpinningLoader from "../common/SpinningLoading";
 import PopupAlert from "../common/PopUp";
 
 function JobCard({ id }) {
@@ -25,6 +26,7 @@ function JobCard({ id }) {
     description: "",
   });
   const [test, setTest] = useState();
+  const [loading, setLoading] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,10 +69,14 @@ function JobCard({ id }) {
   }, [testData.id]);
 
   const handleButtonClick = () => {
+    setLoading(true);
     if (test) {
-      navigate(PATHS.COMPANY_TEST.replace(":id", testData.id), {
-        state: { title: testData.title },
-      });
+      setTimeout(() => {
+        navigate(PATHS.COMPANY_TEST.replace(":id", testData.id), {
+          state: { title: testData.title },
+        });
+        setLoading(false);
+      }, 1000);
     } else {
       QuestionAPI.postTest(id, testData, (err, result) => {
         if (!err && result?.data?.id) {
@@ -83,11 +89,14 @@ function JobCard({ id }) {
             navigate(PATHS.COMPANY_TEST.replace(":id", result.data.id), {
               state: { title: testData.title },
             });
+            setLoading(false);
           }, 1000);
         }
       });
     }
   };
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Paper

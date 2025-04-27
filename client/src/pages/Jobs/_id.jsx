@@ -127,8 +127,8 @@ function JobDetail() {
               <Grid item size={12}>
                 <Divider />
                 <Typography fontSize={{ xs: "12px", md: "14px" }} mt={1}>
-                  Đã có 4 ứng viên quan tâm! Nộp hồ sơ ứng tuyển ngay để không
-                  bỏ lỡ cơ hội này!
+                  Đang có rất nhiều ứng viên quan tâm! Nộp hồ sơ ứng tuyển ngay
+                  để không bỏ lỡ cơ hội này!
                 </Typography>
               </Grid>
             </Grid>
@@ -150,7 +150,10 @@ function JobDetail() {
                   },
                 }}
                 onClick={() => {
-                  window.location.href = PATHS.ANSWER.replace(":id", id);
+                  window.location.href = PATHS.ANSWER.replace(
+                    ":id",
+                    job.testId._id
+                  );
                 }}
               >
                 Nộp hồ sơ ứng tuyển
