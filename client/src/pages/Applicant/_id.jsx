@@ -23,6 +23,10 @@ function ApplicantDetail() {
   const theme = useTheme();
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
     ApplicantAPI.getApplicantResult(id, (err, result) => {
       if (!err && result?.data) {
         setApplicant(result?.data);

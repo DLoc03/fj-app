@@ -12,6 +12,7 @@ import Answer from "../pages/Jobs/_idAnswer";
 import ApplicantAnswer from "../pages/Recruitment/indexAnswer";
 import CheckoutPage from "../pages/Paid/_id";
 import ApplicantDetail from "../pages/Applicant/_id";
+import PackageList from "../pages/Paid";
 
 export const routes = [
   {
@@ -42,10 +43,6 @@ export const routes = [
     path: PATHS.ANSWER,
     page: Answer,
   },
-  {
-    path: PATHS.PAYPAL,
-    page: CheckoutPage,
-  },
 ];
 
 export const protectedRoutes = [
@@ -72,5 +69,13 @@ export const protectedRoutes = [
   {
     path: PATHS.APPLICANT_RESULT,
     page: ApplicantDetail,
+  },
+  {
+    path: PATHS.PAYPAL,
+    page: CheckoutPage,
+  },
+  {
+    path: PATHS.PACKAGE,
+    page: PackageList,
   },
 ];

@@ -12,9 +12,8 @@ import { Button, Divider } from "@mui/material";
 import { SESSION_DATA } from "../../common/enum/enum";
 import PATHS from "../../routes/path";
 
-function ApplicantCard({ jobId, name, email, phone, date }) {
+function ApplicantCard({ id, jobId, name, email, phone, date }) {
   const [jobName, setJobname] = useState("");
-  const applicant = JSON.parse(sessionStorage.getItem(SESSION_DATA.APPLICANT));
   useEffect(() => {
     JobsAPI.getJobById(jobId, (err, result) => {
       if (!err && result?.data) {
@@ -24,7 +23,7 @@ function ApplicantCard({ jobId, name, email, phone, date }) {
   }, [jobId]);
   return (
     <Paper>
-      <Grid container p={2}>
+      <Grid container p={2} my={2}>
         <Grid item size={{ xs: 12, md: 1.5 }}>
           <img
             src={ApplicantAvt}
@@ -84,7 +83,7 @@ function ApplicantCard({ jobId, name, email, phone, date }) {
                 onClick={() =>
                   (window.location.href = PATHS.APPLICANT_RESULT.replace(
                     ":id",
-                    applicant.id
+                    id
                   ))
                 }
               >

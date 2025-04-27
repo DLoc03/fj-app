@@ -8,7 +8,14 @@ const PaginationButton = ({
   colorText,
 }) => {
   return (
-    <Box display="flex" justifyContent="center" my={2} gap={2}>
+    <Box
+      display="flex"
+      justifyContent="center"
+      my={2}
+      gap={2}
+      maxWidth={"400px"}
+      mx={"auto"}
+    >
       <Button
         variant="contained"
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
@@ -32,16 +39,20 @@ const PaginationButton = ({
       <Typography
         variant="body1"
         mt={1.2}
-        fontSize={{ xs: "16px", md: "20px" }}
+        fontSize={{ xs: "14px", md: "16px" }}
         color={`${colorText}`}
         fontWeight={500}
+        textAlign={"center"}
+        m={"auto"}
       >
         Trang {currentPage} / {totalPages}
       </Typography>
 
       <Button
         variant="contained"
-        onClick={() => onPageChange(+currentPage + 1)}
+        onClick={() =>
+          currentPage < totalPages && onPageChange(+currentPage + 1)
+        }
         disabled={currentPage === totalPages}
         sx={{
           bgcolor: "primary.main",

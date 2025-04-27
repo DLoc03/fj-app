@@ -34,8 +34,8 @@ function Job() {
         setJobs(sortedJobs);
         setTotalPages(result.data.totalPage);
         setCurrentPage(result.data.currentPage);
-        setLoading(false);
       }
+      setLoading(false);
     });
   }, [currentPage]);
 
@@ -48,17 +48,12 @@ function Job() {
     return () => clearTimeout(timer);
   }, [currentPage]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
-
-  if (loading) return <SpinningLoader />;
+  // if (loading) return <SpinningLoader />;
 
   return (
     <Box>
       <Grid
         container
-        spacing={10}
         sx={{
           backgroundImage: `url(${bgJob})`,
           backgroundSize: "cover",
@@ -67,18 +62,29 @@ function Job() {
           minHeight: "100vh",
         }}
       >
-        <Sidebar />
+        <Grid item size={{ xs: 12, sm: 12, md: 2.5 }}>
+          <Sidebar />
+        </Grid>
         <Grid
           item
-          size={{ xs: 12, md: 9 }}
-          sx={{ position: "relative", zIndex: 2 }}
+          size={{ xs: 12, sm: 12, md: 9.5 }}
+          sx={{
+            position: "relative",
+            zIndex: 2,
+          }}
         >
-          <Grid container spacing={4} py={{ xs: 1, md: 4 }}>
+          <Grid
+            container
+            spacing={4}
+            py={{ xs: 1, md: 4 }}
+            display={"flex"}
+            justifyContent={"center"}
+          >
             {jobs.map((job, jobIndex) => (
               <Grid
                 item
                 key={jobIndex}
-                size={{ xs: 12, md: 3 }}
+                size={{ xs: 6, sm: 4, md: 3 }}
                 sx={{
                   display: { xs: "flex", md: "flex" },
                   justifyContent: { xs: "center", md: "none" },

@@ -1,4 +1,3 @@
-import { useMediaQuery } from "react-responsive";
 import { Box, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
@@ -9,12 +8,15 @@ import { Sidebar as ProSidebar, Menu } from "react-pro-sidebar";
 import SearchIcon from "@mui/icons-material/Search";
 
 const Sidebar = ({ posType }) => {
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const width = isMobile ? "100vw" : "260px";
-
   return (
-    <Box>
-      <ProSidebar width={width}>
+    <Box
+      sx={{
+        width: { xs: "100vw", sm: "100vw", md: "260px" },
+        height: "100%",
+        background: "black",
+      }}
+    >
+      <ProSidebar style={{ width: "100%", height: "100%" }}>
         <Menu iconShape="square">
           <Box
             display="flex"

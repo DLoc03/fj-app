@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -12,7 +13,7 @@ import Applicant from "./Applicant";
 import Authenticated from "./Authenticated";
 import SlideCard from "../common/SlideCard";
 
-function QuestionCard({ id, type }) {
+function QuestionCard({ id, jobId, type }) {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -36,7 +37,6 @@ function QuestionCard({ id, type }) {
       return () => clearTimeout(timer);
     }
   };
-
   useEffect(() => {
     if (id) {
       QuestionAPI.getTest(id, (err, result) => {
@@ -65,20 +65,31 @@ function QuestionCard({ id, type }) {
   };
 
   const handleSubmit = () => {
+    const isAllAnswered = questions.every(
+      (question, index) => answers[index]?.trim() !== ""
+    );
+
+    if (!isAllAnswered) {
+      setAlertStatus("error");
+      handleShowAlert("Vui lòng trả lời tất cả các câu hỏi trước khi gửi!");
+      return;
+    }
+
     const id = applicant.id;
     const data = questions.map((question, index) => ({
       questionId: question.id,
       answer: answers[index] || "",
     }));
+
     AnswerAPI.postAnswer(id, data, (err, result) => {
       console.log(data);
       console.log(result);
       if (err && result?.errCode !== 0) {
         setAlertStatus("error");
         handleShowAlert("Có lỗi khi gửi câu trả lời!");
-
         return;
       }
+
       setAlertStatus("success");
       handleShowAlert("Hoàn tất!");
       setTimeout(() => {
@@ -86,6 +97,26 @@ function QuestionCard({ id, type }) {
       }, 1500);
     });
   };
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const isAllAnswered = questions.every(
+        (question, index) => answers[index]?.trim() !== ""
+      );
+      if (!isAllAnswered) {
+        const message =
+          "Bạn có chắc chắn muốn rời trang? Tất cả câu trả lời chưa được gửi!";
+        e.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [answers, questions]);
 
   const handleApplySubmit = (data) => {
     sessionStorage.setItem(SESSION_DATA.APPLICANT, JSON.stringify(data));
@@ -203,7 +234,7 @@ function QuestionCard({ id, type }) {
           open={openModal}
           onClose={() => setOpenModal(false)}
           onSubmit={handleApplySubmit}
-          id={id}
+          id={jobId}
         />
       </Paper>
       {questions.length === 0 && <SlideCard />}

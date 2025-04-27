@@ -88,7 +88,6 @@ function Auth() {
       AuthAPI.login(
         { email: form.email, password: form.password },
         (err, res) => {
-          console.log("Res login: ", res.data);
           if (err || res.errCode !== 0) {
             showError("Đăng nhập thất bại! Vui lòng thử lại");
             return;

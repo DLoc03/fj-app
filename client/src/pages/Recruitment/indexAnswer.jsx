@@ -9,6 +9,7 @@ import ApplicantCard from "../../components/ui/ApplicantCard";
 import ResultCard from "../../components/ui/ResultCard";
 import SpinningLoader from "../../components/common/SpinningLoading";
 import PaginationButton from "../../components/common/PaginationButton";
+import { Typography } from "@mui/material";
 
 function ApplicantAnswer() {
   const [applicants, setApplicants] = useState([]);
@@ -48,12 +49,19 @@ function ApplicantAnswer() {
   if (loading) return <SpinningLoader />;
 
   return (
-    <Box sx={{ height: "100%", width: "100%", backgroundColor: "white" }}>
-      {applicants ? (
-        <Box sx={{ height: "100%", width: "100%", p: 4 }}>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        backgroundColor: "white",
+      }}
+    >
+      {applicants.length > 0 ? (
+        <Box sx={{ width: "100%", minHeight: "560px", p: 4 }}>
           {applicants.map((applicant) => (
             <ApplicantCard
               key={applicant.id}
+              id={applicant.id}
               jobId={applicant.jobId}
               name={applicant.name}
               email={applicant.email}
@@ -61,15 +69,17 @@ function ApplicantAnswer() {
               date={applicant.createdAt}
             />
           ))}
-          <PaginationButton
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            colorText={"primary.main"}
-          />
         </Box>
       ) : (
         <Authenticated message={"Hiện chưa ứng viên nộp hồ sơ"} />
+      )}
+      {applicants.length > 0 && (
+        <PaginationButton
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          colorText={"primary.main"}
+        />
       )}
     </Box>
   );

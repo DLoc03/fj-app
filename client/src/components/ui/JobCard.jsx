@@ -100,28 +100,48 @@ function JobCard({ id }) {
 
   return (
     <Paper
-      sx={{ padding: "12px 20px", border: "1px solid secondary.main", mb: 2 }}
+      sx={{
+        padding: "12px 20px",
+        border: "1px solid secondary.main",
+        mb: 2,
+        display: { xs: "flex", md: "block" },
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
-      <Typography variant="h6" fontWeight={500} color="primary.main">
+      <Typography
+        fontSize={{ xs: "16px", md: "20px" }}
+        fontWeight={500}
+        color="primary.main"
+      >
         Tuyển dụng vị trí: {jobData.jobName}
       </Typography>
       <Divider sx={{ my: 1 }} />
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>
-          <Typography>Số lượng: {jobData.quantity}</Typography>
+          <Typography fontSize={{ xs: "12px", md: "14px" }}>
+            Số lượng: {jobData.quantity}
+          </Typography>
         </Grid>
 
         <Grid item xs={12} md={9}>
-          <Typography>
+          <Typography fontSize={{ xs: "12px", md: "14px" }}>
             Mức lương dự kiến: {formatCurrency(jobData.salary)}
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <Typography>Mô tả công việc: {jobData.jobDescription}</Typography>
+          <Typography fontSize={{ xs: "12px", md: "14px" }}>
+            Mô tả công việc: {jobData.jobDescription}
+          </Typography>
         </Grid>
       </Grid>
 
-      <Button variant="outlined" sx={{ mt: 2 }} onClick={handleButtonClick}>
+      <Button
+        variant="outlined"
+        sx={{ mt: 2, fontSize: { xs: "8px", sm: "8px", md: "12px" } }}
+        onClick={handleButtonClick}
+      >
         {test ? "Xem bài test phỏng vấn" : "Tạo bài test phỏng vấn"}
       </Button>
     </Paper>

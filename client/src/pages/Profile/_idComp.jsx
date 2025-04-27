@@ -195,7 +195,7 @@ function UserCompany() {
                   >
                     <Typography fontSize={{ xs: 30, md: 42 }}>+</Typography>
                     <Typography fontSize={{ xs: 12, md: 18 }}>
-                      Cập nhật ảnh đại diện cơ sỏ
+                      Cập nhật ảnh đại diện cơ sở
                     </Typography>
                   </Box>
                   <input

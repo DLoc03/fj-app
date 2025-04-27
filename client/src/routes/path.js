@@ -13,6 +13,7 @@ const PATHS = {
   APPLICANT_LIST: "/cv",
   APPLICANT_RESULT: "/cv/:id",
   PAYPAL: "/paypal",
+  PACKAGE: "/package",
   NOT_FOUND: "*",
 };
 

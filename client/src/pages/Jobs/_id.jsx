@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -27,6 +28,8 @@ function JobDetail() {
   const { id } = useParams();
   const [job, setJob] = useState();
   const [loading, setLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     JobsAPI.getJobById(id, (err, result) => {
@@ -37,7 +40,17 @@ function JobDetail() {
     });
   }, [id]);
 
-  if (loading) return <SpinningLoader />;
+  function handleClickButton() {
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      navigate(PATHS.ANSWER.replace(":id", job.testId._id), {
+        state: { jobId: job.id },
+      });
+    }, 2000);
+  }
+
+  if (loading || isProcessing) return <SpinningLoader />;
 
   return (
     <Box
@@ -149,12 +162,7 @@ function JobDetail() {
                     md: "14px",
                   },
                 }}
-                onClick={() => {
-                  window.location.href = PATHS.ANSWER.replace(
-                    ":id",
-                    job.testId._id
-                  );
-                }}
+                onClick={handleClickButton}
               >
                 Nộp hồ sơ ứng tuyển
               </Button>
