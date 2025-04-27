@@ -105,7 +105,6 @@ const deleteCompany = async (companyId) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
-  // Kiểm tra Company
   const company = await Company.findById(companyId).session(session).lean();
   if (!company || company.isDestroy) {
     await session.abortTransaction();
@@ -117,7 +116,6 @@ const deleteCompany = async (companyId) => {
     });
   }
 
-  // Soft delete Company
   const companyUpdate = await Company.updateOne(
     { _id: companyId, isDestroy: false },
     { $set: { isDestroy: true } },
@@ -133,25 +131,18 @@ const deleteCompany = async (companyId) => {
     });
   }
 
-  // Tìm tất cả Job của Company
-  const jobs = await Job.find(
-    { companyId, isDestroy: false },
-    { _id: 1 } // Chỉ lấy _id để tối ưu
-  )
+  const jobs = await Job.find({ companyId, isDestroy: false }, { _id: 1 })
     .lean()
     .session(session);
   const jobIds = jobs.map((j) => j._id);
 
-  // Soft delete các collection liên quan
   if (jobIds.length > 0) {
-    // Soft delete Jobs
     await Job.updateMany(
       { companyId, isDestroy: false },
       { $set: { isDestroy: true } },
       { session }
     );
 
-    // Tìm tất cả Test của Jobs
     const tests = await Test.find(
       { jobId: { $in: jobIds }, isDestroy: false },
       { _id: 1 }
@@ -160,7 +151,6 @@ const deleteCompany = async (companyId) => {
       .session(session);
     const testIds = tests.map((t) => t._id);
 
-    // Soft delete Tests
     await Test.updateMany(
       { jobId: { $in: jobIds }, isDestroy: false },
       { $set: { isDestroy: true } },

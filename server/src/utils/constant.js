@@ -7,3 +7,5 @@ export const WHITE_LIST = [
 ];
 
 export const SALT = 10;
+
+export const GEMINI_MODEL = "gemini-2.0-flash";
