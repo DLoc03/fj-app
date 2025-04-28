@@ -138,10 +138,10 @@ function ApplicantDetail() {
                         {item.question}
                       </Typography>
                     </Grid>
-                    <Grid item size={0.5}>
+                    <Grid item size={{ xs: 2, sm: 2, md: 0.5 }}>
                       <PlayArrowIcon />
                     </Grid>
-                    <Grid item size={11.5}>
+                    <Grid item size={{ xs: 10, sx: 10, md: 11.5 }}>
                       <Typography
                         fontSize={{ xs: "12px", md: "14px" }}
                         fontWeight={500}

@@ -12,6 +12,7 @@ import PopupAlert from "../common/PopUp";
 import Applicant from "./Applicant";
 import Authenticated from "./Authenticated";
 import SlideCard from "../common/SlideCard";
+import PATHS from "../../routes/path";
 
 function QuestionCard({ id, jobId, type }) {
   const [questions, setQuestions] = useState([]);
@@ -93,7 +94,7 @@ function QuestionCard({ id, jobId, type }) {
       setAlertStatus("success");
       handleShowAlert("Hoàn tất!");
       setTimeout(() => {
-        window.location.reload();
+        window.location.href = PATHS.JOB;
       }, 1500);
     });
   };

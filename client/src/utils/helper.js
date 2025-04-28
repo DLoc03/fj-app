@@ -29,3 +29,7 @@ export const formatDate = (dateString) => {
   }
   return "Không xác định";
 };
+
+export const formatTextChat = (text) => {
+  return text.replace(/[^\w\sÀ-ỹ.,!?%&()-]|--END--/g, "").trim();
+};
