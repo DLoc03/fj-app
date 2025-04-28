@@ -45,7 +45,6 @@ function ResponsiveAppBar() {
   }, []);
 
   useEffect(() => {
-    console.log("Authenticated status: ", isAuthenticated);
     if (isAuthenticated) {
       AuthAPI.getCurrentUser((err, result) => {
         if (!err && result?.data) {
@@ -184,12 +183,33 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          <Box>
+            {isAuthenticated && user && (
+              <Button
+                variant="text"
+                sx={{
+                  borderColor: "white",
+                  color: "white",
+                  textDecoration: "underline",
+                  fontSize: { xs: "8px", md: "12px" },
+                }}
+                onClick={() => (window.location.href = PATHS.PACKAGE)}
+              >
+                Nạp gói dịch vụ
+              </Button>
+            )}
+          </Box>
+
+          <Box sx={{ flexGrow: 0, ml: 2 }}>
             {isAuthenticated && user ? (
               <>
                 <Tooltip title="Hồ sơ cá nhân">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar {...stringAvatar(user.name)} />
+                    <Avatar
+                      {...(!user.avatar
+                        ? stringAvatar(user.name)
+                        : { src: user.avatar })}
+                    />
                   </IconButton>
                 </Tooltip>
                 <Menu

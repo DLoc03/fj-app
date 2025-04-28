@@ -1,6 +1,9 @@
 import Applicant from "../model/applicant.js";
 import Company from "../model/company.js";
 import Job from "../model/job.js";
+import Package from "../model/package.js";
+import Receipt from "../model/receipt.js";
+import Test from "../model/test.js";
 import User from "../model/user.js";
 import { CompanyResponse } from "../response/company.response.js";
 import { JobResponse } from "../response/job.response.js";
@@ -36,15 +39,23 @@ const postJob = async (userId, body) => {
 
 const getJob = async (id) => {
   const job = await Job.findOne({ _id: id }).lean();
-  const { recruiterId } = await Company.findOne({ _id: job.companyId }).lean();
+  const { recruiterId, name, address, avatar } = await Company.findOne({
+    _id: job.companyId,
+  }).lean();
   const { phone } = await User.findById(recruiterId).lean();
   const validJob = JobResponse.Jobs(job);
   const { companyId, ...data } = validJob;
-
+  const testId = await Test.findOne({ jobId: validJob.id })
+    .select("_id")
+    .lean();
   return MasterResponse({
     data: {
       ...data,
       hotline: phone,
+      compName: name,
+      address: address,
+      avatar: avatar,
+      testId: testId,
     },
   });
 };
@@ -83,9 +94,18 @@ const updateJobById = async (userId, jobId, body) => {
 };
 
 const getJobs = async (isDestroy, page = 1) => {
-  const limit = 10;
+  const limit = 8;
   const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
   const companies = await Company.find({ isDestroy: false }).lean();
+  const users = await User.find({
+    _id: { $in: companies.map((c) => c.recruiterId) },
+    isDestroy: false,
+  });
+  const pakages = await Package.find({ isDestroy: false });
+  const receipts = await Receipt.find({
+    isDestroy: false,
+  });
+  console.log("Finding receipts: ", receipts);
   const total = await Job.countDocuments();
   const jobs = await Job.find(filter)
     .skip((page - 1) * limit)
@@ -96,8 +116,23 @@ const getJobs = async (isDestroy, page = 1) => {
     const foundCompany = companies.find(
       (c) => c._id.toString() === companyId.toString()
     );
+    const foundUser = users.find(
+      (u) => u._id.toString() === foundCompany.recruiterId.toString()
+    );
+    const foundReceipt = receipts.find(
+      (r) => r.userId.toString() === foundUser._id.toString()
+    );
+    let code = null;
+    if (foundReceipt) {
+      const foundPackage = pakages.find(
+        (p) => p._id.toString() === foundReceipt.packageId.toString()
+      );
+      code = foundPackage ? foundPackage.code : null;
+    }
+
     return {
       ...data,
+      code: code || null,
       company: CompanyResponse.Item(foundCompany || {}),
     };
   });

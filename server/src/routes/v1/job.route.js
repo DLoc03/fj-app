@@ -10,6 +10,7 @@ const Router = express.Router();
 
 Router.route("/")
   .get(cacheMiddleware, jobController.getJobs)
+
   .post(
     checkBlackList,
     verifyToken,

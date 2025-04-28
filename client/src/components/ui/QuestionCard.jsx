@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
+
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { QuestionAPI, AnswerAPI } from "../../services";
+import { QuestionAPI, AnswerAPI, ApplicantAPI } from "../../services";
 import { Button, Divider, TextField } from "@mui/material";
-import { USER_TYPE } from "../../common/enum/enum";
+import { SESSION_DATA, USER_TYPE } from "../../common/enum/enum";
+
 import SpinningLoader from "../common/SpinningLoading";
 import PopupAlert from "../common/PopUp";
 import Applicant from "./Applicant";
 import Authenticated from "./Authenticated";
 import SlideCard from "../common/SlideCard";
+import PATHS from "../../routes/path";
 
-function QuestionCard({ id, type }) {
+function QuestionCard({ id, jobId, type }) {
   const [questions, setQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState([]);
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState("");
   const [openModal, setOpenModal] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const applicant = JSON.parse(sessionStorage.getItem(SESSION_DATA.APPLICANT));
   const handleAlertClose = () => {
     setAlertOpen(false);
   };
@@ -34,11 +38,19 @@ function QuestionCard({ id, type }) {
       return () => clearTimeout(timer);
     }
   };
-
   useEffect(() => {
-    QuestionAPI.getQuestion(id, (err, result) => {
-      if (!err && result.data.length > 0) setQuestions(result.data);
-    });
+    if (id) {
+      QuestionAPI.getTest(id, (err, result) => {
+        if (!err) {
+          setQuestions(result.data.questions);
+          setTimeout(() => {
+            setLoading(false);
+          }, 2000);
+        } else {
+          setLoading(false);
+        }
+      });
+    }
 
     const applicantInfo = sessionStorage.getItem("Applicant");
     if (!applicantInfo && type !== USER_TYPE.EMPLOYER) {
@@ -54,26 +66,69 @@ function QuestionCard({ id, type }) {
   };
 
   const handleSubmit = () => {
-    AnswerAPI.postAnswer(id, answers, (err, result) => {
-      if (!err && result?.data) {
-        setAlertStatus("success");
-        handleShowAlert("Hoàn tất!");
-      }
+    const isAllAnswered = questions.every(
+      (question, index) => answers[index]?.trim() !== ""
+    );
+
+    if (!isAllAnswered) {
       setAlertStatus("error");
-      handleShowAlert("Có lỗi khi gửi câu trả lời!");
+      handleShowAlert("Vui lòng trả lời tất cả các câu hỏi trước khi gửi!");
+      return;
+    }
+
+    const id = applicant.id;
+    const data = questions.map((question, index) => ({
+      questionId: question.id,
+      answer: answers[index] || "",
+    }));
+
+    AnswerAPI.postAnswer(id, data, (err, result) => {
+      if (err && result?.errCode !== 0) {
+        setAlertStatus("error");
+        handleShowAlert("Có lỗi khi gửi câu trả lời!");
+        return;
+      }
+
+      setAlertStatus("success");
+      handleShowAlert("Hoàn tất!");
+      setTimeout(() => {
+        window.location.href = PATHS.JOB;
+      }, 1500);
     });
   };
 
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const isAllAnswered = questions.every(
+        (question, index) => answers[index]?.trim() !== ""
+      );
+      if (!isAllAnswered) {
+        const message =
+          "Bạn có chắc chắn muốn rời trang? Tất cả câu trả lời chưa được gửi!";
+        e.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [answers, questions]);
+
   const handleApplySubmit = (data) => {
-    sessionStorage.setItem("Applicant", JSON.stringify(data));
+    sessionStorage.setItem(SESSION_DATA.APPLICANT, JSON.stringify(data));
     setOpenModal(false);
   };
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box>
       <Paper sx={{ py: 4, px: { xs: 4, md: 8 } }}>
         <Typography
-          sx={{ textAlign: "center", fontSize: { xs: "18px", md: "28px" } }}
+          sx={{ textAlign: "center", fontSize: { xs: "18px", md: "20px" } }}
         >
           {questions.length > 0
             ? "Câu hỏi phỏng vấn"
@@ -178,7 +233,7 @@ function QuestionCard({ id, type }) {
           open={openModal}
           onClose={() => setOpenModal(false)}
           onSubmit={handleApplySubmit}
-          id={id}
+          id={jobId}
         />
       </Paper>
       {questions.length === 0 && <SlideCard />}

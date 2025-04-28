@@ -9,6 +9,10 @@ import UserCompany from "../pages/Profile/_idComp";
 import CompanyJobs from "../pages/Recruitment";
 import TestDetail from "../pages/Recruitment/_id";
 import Answer from "../pages/Jobs/_idAnswer";
+import ApplicantAnswer from "../pages/Recruitment/indexAnswer";
+import CheckoutPage from "../pages/Paid/_id";
+import ApplicantDetail from "../pages/Applicant/_id";
+import PackageList from "../pages/Paid";
 
 export const routes = [
   {
@@ -57,5 +61,21 @@ export const protectedRoutes = [
   {
     path: PATHS.COMPANY_TEST,
     page: TestDetail,
+  },
+  {
+    path: PATHS.APPLICANT_LIST,
+    page: ApplicantAnswer,
+  },
+  {
+    path: PATHS.APPLICANT_RESULT,
+    page: ApplicantDetail,
+  },
+  {
+    path: PATHS.PAYPAL,
+    page: CheckoutPage,
+  },
+  {
+    path: PATHS.PACKAGE,
+    page: PackageList,
   },
 ];

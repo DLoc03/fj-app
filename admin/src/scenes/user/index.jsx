@@ -15,43 +15,36 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GetUsers, UserDelete } from "../../services/user.service";
+import { UserAPI } from "../../services/index";
 
 const User = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await GetUsers();
-        if (Array.isArray(response?.result?.data)) {
-          const formattedUsers = response.result.data
-            .filter((user) => user.role === "user")
-            .map((user, index) => ({
-              id: user.id || index,
-              name: user.name,
-              phone: user.phone || "Chưa có số",
-              email: user.email,
-            }));
-
-          setUsers(formattedUsers);
-        } else {
-          throw new Error("Dữ liệu trả về không hợp lệ!");
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
+    UserAPI.getAllUsers((err, result) => {
+      if (err) {
+        setError("Có lỗi xảy ra khi tải danh sách người dùng.");
         setLoading(false);
+        return;
       }
-    };
+      if (!result.data || result.data.length === 0) {
+        setUsers([]);
+      } else {
+        const filteredUsers = result.data.filter(
+          (user) => user.role === "user"
+        );
+        setUsers(filteredUsers);
+      }
 
-    fetchUsers();
+      setLoading(false);
+    });
   }, []);
 
   const handleOpenDialog = (id) => {
@@ -62,19 +55,6 @@ const User = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedUserId(null);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!selectedUserId) return;
-    try {
-      await UserDelete(selectedUserId);
-      setUsers((prevUsers) =>
-        prevUsers.filter((user) => user.id !== selectedUserId)
-      );
-      handleCloseDialog();
-    } catch (error) {
-      console.error("Xóa thất bại:", error);
-    }
   };
 
   const handleRowClick = (params) => {
@@ -88,32 +68,15 @@ const User = () => {
     { field: "email", headerName: "Email", flex: 2 },
     {
       field: "view",
-      headerName: "Xem thông tin",
+      headerName: "Chi tiết",
       flex: 1,
       renderCell: (params) => (
-        <p
-          style={{
-            cursor: "pointer",
-            textDecoration: "none",
-            fontWeight: "800",
-          }}
+        <Typography
+          sx={{ cursor: "pointer", fontWeight: 800 }}
           onClick={() => handleRowClick(params)}
         >
-          Xem thông tin
-        </p>
-      ),
-    },
-    {
-      field: "del",
-      headerName: "Xóa",
-      flex: 1,
-      renderCell: (params) => (
-        <IconButton
-          color="error"
-          onClick={() => handleOpenDialog(params.row.id)}
-        >
-          <DeleteIcon />
-        </IconButton>
+          Chi tiết
+        </Typography>
       ),
     },
   ];
@@ -127,11 +90,14 @@ const User = () => {
           <CircularProgress />
         ) : error ? (
           <Typography color="error">{error}</Typography>
+        ) : users.length === 0 ? (
+          <Typography>Hiện chưa có người dùng nào.</Typography>
         ) : (
           <DataGrid
             rows={users}
             columns={columns}
             components={{ Toolbar: GridToolbar }}
+            getRowId={(row) => row.id}
           />
         )}
       </Box>
@@ -147,7 +113,7 @@ const User = () => {
           <Button onClick={handleCloseDialog} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+          <Button color="error" autoFocus>
             Xóa
           </Button>
         </DialogActions>

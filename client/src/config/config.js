@@ -4,19 +4,20 @@ export const SERVICE_DOMAIN = import.meta.env.VITE_API_URL;
 export const SERVICE_URL = `${SERVICE_DOMAIN}/api/v1`;
 export const SOCKET_URL = `${SERVICE_DOMAIN}/socket`;
 
-export const getHeaderConfig = () => {
+export const getHeaderConfig = (isFormData = false) => {
   const accessToken = sessionStorage.getItem(SESSION_DATA.ACCESSTOKEN);
 
+  const headers = {};
+
   if (accessToken) {
-    return {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${accessToken}`,
-    };
+    headers.Authorization = `Bearer ${accessToken}`;
   }
 
-  return {
-    "Content-Type": "application/json",
-  };
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  return headers;
 };
 
 export const SOCKET_CONFIG = {

@@ -33,6 +33,12 @@ Router.route("/:id")
     verifyToken,
     authorizeAdmin("admin"),
     companyController.updateCompany
+  )
+  .delete(
+    checkBlackList,
+    verifyToken,
+    authorizeAdmin("admin"),
+    companyController.deleteCompany
   );
 
 export const companyRoute = Router;

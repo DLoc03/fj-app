@@ -24,6 +24,6 @@ const TestSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+TestSchema.index({ jobId: 1, isDestroy: 1 });
 const Test = mongoose.model("Test", TestSchema);
 export default Test;

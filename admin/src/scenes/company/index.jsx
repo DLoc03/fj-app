@@ -15,12 +15,11 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import {
-  deleteCompanyById,
-  getAllCompanies,
-} from "../../services/company.service";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
+
+import { CompanyAPI } from "../../services";
+import { formatDate } from "../../utils/helper";
 
 const Company = () => {
   const theme = useTheme();
@@ -34,34 +33,15 @@ const Company = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getAllCompanies();
-
-        if (!Array.isArray(response?.result?.data)) {
-          throw new Error("Dữ liệu trả về không hợp lệ!");
-        }
-        const formattedCompanies = response.result.data.map(
-          (company, index) => ({
-            id: company.id || index,
-            name: company.name || "Đang cập nhật...",
-            address: company.address || "Đang cập nhật...",
-            username: company.recruiter?.name || "Đang cập nhật...",
-            phone: company.recruiter?.phone || "Đang cập nhật...",
-            status: company.status || "Đang cập nhật...",
-            position: company.position || "Đang cập nhật...",
-          })
-        );
-
-        setCompanies(formattedCompanies);
-      } catch (err) {
-        setError(err.message);
-      } finally {
+    CompanyAPI.getAllCompany((err, result) => {
+      if (err || !result?.data) {
+        setCompanies(["Không có dữ liệu"]);
         setLoading(false);
+        return;
       }
-    };
-
-    fetchData();
+      setCompanies(result?.data);
+      setLoading(false);
+    });
   }, []);
 
   const handleRowClick = (params) => {
@@ -85,31 +65,59 @@ const Company = () => {
         company.id === id ? { ...company, status: newStatus } : company
       )
     );
-    //Call API Here
+    CompanyAPI.updateCompanyByID(id, { status: newStatus }, (err, result) => {
+      if (err) {
+        console.error("Lỗi khi cập nhật trạng thái xác thực", err);
+        return;
+      }
+      alert("Cập nhật trạng thái thành công");
+    });
   };
 
-  const handleDeleteConfirm = async () => {
-    if (!selectedCompany) return;
-    try {
-      await deleteCompanyById(selectedCompany);
-      setCompanies((prevUsers) =>
-        prevUsers.filter((user) => user.id !== selectedCompany)
-      );
-      handleCloseDialog();
-    } catch (error) {
-      console.error("Xóa thất bại:", error);
-    }
+  const handleDestroyToggle = (id, newIsDestroy) => {
+    setCompanies((prev) =>
+      prev.map((company) =>
+        company.id === id ? { ...company, isDestroy: newIsDestroy } : company
+      )
+    );
+    CompanyAPI.updateCompanyByID(
+      id,
+      { isDestroy: newIsDestroy },
+      (err, result) => {
+        if (err) {
+          console.error("Lỗi khi cập nhật trạng thái isDestroy", err);
+          return;
+        }
+        alert("Cập nhật trạng thái thành công");
+      }
+    );
   };
 
   const columns = [
     { field: "name", headerName: "Tên cơ sở", flex: 1 },
     { field: "address", headerName: "Địa chỉ", flex: 1 },
-    { field: "username", headerName: "Đại diện cơ sở", flex: 1 },
-    { field: "phone", headerName: "Hotline", flex: 1 },
+    {
+      field: "username",
+      headerName: "Đại diện cơ sở",
+      flex: 1,
+      valueGetter: (params) => params.row.recruiter?.name || "Chưa có",
+    },
+    {
+      field: "phone",
+      headerName: "Hotline",
+      flex: 1,
+      valueGetter: (params) => params.row.recruiter?.phone || "Chưa có",
+    },
+    {
+      field: "date",
+      headerName: "Ngày đăng ký",
+      flex: 1,
+      valueGetter: (params) => formatDate(params.row.createdAt) || "Chưa có",
+    },
     {
       field: "status",
       headerName: "Trạng thái xác thực",
-      flex: 1,
+      flex: 2,
       renderCell: (params) => {
         const isActive = params.row.status === "Authenticated";
 
@@ -133,8 +141,34 @@ const Company = () => {
       },
     },
     {
+      field: "isDestroy",
+      headerName: "Gắn cờ",
+      flex: 1,
+      renderCell: (params) => {
+        const isDestroyed = params.row.isDestroy;
+
+        return (
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Switch
+              checked={isDestroyed}
+              onChange={(e) =>
+                handleDestroyToggle(
+                  params.row.id,
+                  e.target.checked ? true : false
+                )
+              }
+              inputProps={{ "aria-label": "destroy toggle" }}
+            />
+            <Typography variant="body2">
+              {isDestroyed ? "Đã gắn cờ" : "Chưa gắn cờ"}
+            </Typography>
+          </Stack>
+        );
+      },
+    },
+    {
       field: "view",
-      headerName: "Xem thông tin",
+      headerName: "Chi tiết",
       flex: 1,
       renderCell: (params) => (
         <p
@@ -145,30 +179,16 @@ const Company = () => {
           }}
           onClick={() => handleRowClick(params)}
         >
-          Xem thông tin
+          Chi tiết
         </p>
       ),
     },
-    {
-      field: "del",
-      headerName: "Xóa",
-      flex: 1,
-      renderCell: (params) => (
-        <IconButton
-          color="error"
-          onClick={() => handleOpenDialog(params.row.id)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      ),
-    },
   ];
-
   return (
     <Box m="20px">
       <Header
         title="Danh sách cơ sở"
-        subtitle="Quản lý danh sách cơ sở tuyển dụng"
+        subtitle="Danh sách cơ sở tuyển dụng đã đăng ký"
       />
 
       <Box m="40px 0 0 0" height="75vh">
@@ -208,7 +228,7 @@ const Company = () => {
           <Button onClick={handleCloseDialog} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+          <Button color="error" autoFocus>
             Xóa
           </Button>
         </DialogActions>

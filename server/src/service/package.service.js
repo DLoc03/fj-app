@@ -5,7 +5,7 @@ import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
 export const PackageService = {
   createPackage: async (data) => {
-    const { name, price, description } = data;
+    const { name, price, code, description } = data;
     const existingName = await Package.findOne({ name: name }).lean();
     if (existingName) {
       return MasterResponse({
@@ -14,15 +14,16 @@ export const PackageService = {
         message: "Name was existed",
       });
     }
-    await Package.create({
+    const pkg = await Package.create({
       name: name,
       price: price,
       description: description,
+      code: code,
     });
-    return MasterResponse({ data: data });
+    return MasterResponse({ data: PackageResponse.Client(pkg) });
   },
   updatePackage: async (id, data) => {
-    const { name, price, description } = data;
+    const { name, price, code, description } = data;
     const pkg = await Package.findById(id).lean();
     if (!pkg)
       return MasterResponse({
@@ -32,7 +33,7 @@ export const PackageService = {
       });
     const updatedPkg = await Package.findOneAndUpdate(
       { _id: id },
-      { name: name, price: price, description: description },
+      { name: name, price: price, description: description, code: code },
       { new: true }
     );
     return MasterResponse({ data: PackageResponse.Client(updatedPkg) });

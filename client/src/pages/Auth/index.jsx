@@ -10,11 +10,12 @@ import PopupAlert from "../../components/common/PopUp";
 import { useAuth } from "../../context/auth";
 import { validateEmail, validatePhoneNumber } from "../../utils/helper";
 
-import imgBg from "../../assets/jobBg.jpg";
+import imgBg from "../../assets/bgJob.png";
 import albumFJ from "../../assets/album-1.jpg";
 
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import DisabledVisibleIcon from "@mui/icons-material/DisabledVisible";
+import SpinningLoader from "../../components/common/SpinningLoading";
 
 function Auth() {
   const [isDisplay, setIsDisplay] = useState(false);
@@ -29,10 +30,12 @@ function Auth() {
     name: "",
     phone: "",
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const currentPath = window.location.pathname;
     setIsLoginPage(currentPath === "/login");
+    setLoading(false);
   }, []);
 
   const handleChange = (e) => {
@@ -129,10 +132,12 @@ function Auth() {
     handleShowAlert(message);
   };
 
+  if (loading) return <SpinningLoader />;
+
   return (
     <Box
       sx={{
-        backgroundImage: `url(${imgBg})`,
+        background: `white`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         px: 4,
@@ -147,9 +152,13 @@ function Auth() {
       <Grid container spacing={4} py={8}>
         <Grid item size={{ xs: 12, md: 5 }}>
           <Paper
-            sx={{ backgroundColor: "white", p: 2, boxSizing: "border-box" }}
+            sx={{
+              backgroundColor: "white",
+              p: 2,
+              boxSizing: "border-box",
+            }}
           >
-            <Typography variant="h5" textAlign={"center"}>
+            <Typography variant="h6" textAlign={"center"}>
               {isLoginPage
                 ? "Đăng nhập nhà tuyển dụng"
                 : "Đăng ký tài khoản nhà tuyển dụng"}

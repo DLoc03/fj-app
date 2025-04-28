@@ -13,5 +13,23 @@ Router.route("/:id")
     authorizeAdmin("user"),
     testController.createTest
   )
-  .get(testController.getTest);
+  .get(testController.getTest)
+  .put(
+    checkBlackList,
+    verifyToken,
+    authorizeAdmin("user"),
+    testController.updateTest
+  )
+  .delete(
+    checkBlackList,
+    verifyToken,
+    authorizeAdmin("admin", "user"),
+    testController.deleteTest
+  )
+  .patch(
+    checkBlackList,
+    verifyToken,
+    authorizeAdmin("admin", "user"),
+    testController.recoveryTest
+  );
 export const testRoute = Router;
