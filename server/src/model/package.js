@@ -6,8 +6,8 @@ const PackageSchema = new mongoose.Schema(
     price: { type: Number, required: true, default: 0 },
     color: {
       type: String,
-      enum: ["gold", "silver"],
-      default: null,
+      enum: ["gold", "silver", "none"],
+      default: "none",
       required: true,
     },
     description: { type: String, default: null },
