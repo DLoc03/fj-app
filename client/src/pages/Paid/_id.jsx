@@ -39,8 +39,6 @@ const CheckoutPage = () => {
   />;
 
   const handleSuccess = (details) => {
-    console.log("Id package received: ", id);
-    console.log("Thanh toán thành công:", details);
     if (details.status === "COMPLETED") {
       ReceiptAPI.postReceiptById(
         id,

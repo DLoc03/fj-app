@@ -105,6 +105,7 @@ const getJobs = async (isDestroy, page = 1) => {
   const receipts = await Receipt.find({
     isDestroy: false,
   });
+  console.log("Finding receipts: ", receipts);
   const total = await Job.countDocuments();
   const jobs = await Job.find(filter)
     .skip((page - 1) * limit)
@@ -121,9 +122,14 @@ const getJobs = async (isDestroy, page = 1) => {
     const foundReceipt = receipts.find(
       (r) => r.userId.toString() === foundUser._id.toString()
     );
-    const { code } = pakages.find(
-      (p) => p._id.toString() === foundReceipt.packageId.toString()
-    );
+    let code = null;
+    if (foundReceipt) {
+      const foundPackage = pakages.find(
+        (p) => p._id.toString() === foundReceipt.packageId.toString()
+      );
+      code = foundPackage ? foundPackage.code : null;
+    }
+
     return {
       ...data,
       code: code || null,

@@ -21,10 +21,6 @@ const CompForm = () => {
     status: "Pending",
   });
 
-  // const handleFormSubmit = (values) => {
-  //   console.log(values);
-  // };
-
   useEffect(() => {
     CompanyAPI.getCompanyByID(id, (err, result) => {
       if (err || !result.data) {

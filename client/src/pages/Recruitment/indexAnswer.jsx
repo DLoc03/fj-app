@@ -20,7 +20,6 @@ function ApplicantAnswer() {
 
   useEffect(() => {
     AuthAPI.getAllJobs((err, result) => {
-      console.log("Result: ", result);
       if (!err && result.data) {
         setJobs(result?.data?.paginatedJobs);
         setLoading(false);
@@ -43,8 +42,6 @@ function ApplicantAnswer() {
       setLoading(false);
     });
   }, [currentPage]);
-
-  console.log("Total page: ", totalPages);
 
   if (loading) return <SpinningLoader />;
 

@@ -27,8 +27,6 @@ const Jobs = () => {
     });
   }, []);
 
-  console.log(jobs);
-
   const handleRowClick = (params) => {
     const id = params.row.id;
     navigate(`/job/${id}`);

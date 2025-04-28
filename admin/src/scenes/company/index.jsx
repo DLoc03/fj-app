@@ -44,8 +44,6 @@ const Company = () => {
     });
   }, []);
 
-  console.log(companies);
-
   const handleRowClick = (params) => {
     const id = params.row.id;
     navigate(`comp-form/${id}`);

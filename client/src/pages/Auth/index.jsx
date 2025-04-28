@@ -113,7 +113,6 @@ function Auth() {
           phone: form.phone,
         },
         (err, res) => {
-          console.log("Res result: ", res);
           if (err || res.errCode !== 0) {
             showError("Đăng ký thất bại! Vui lòng thử lại");
             return;

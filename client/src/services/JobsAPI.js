@@ -4,7 +4,6 @@ const restRequest = userBaseRestRequest();
 
 export const JobsAPI = {
   async getJobs(page, cb) {
-    console.log("Page received: ", page);
     restRequest.get(`/job?page=${page}`, {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);

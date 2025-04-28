@@ -28,9 +28,20 @@ function Job() {
   useEffect(() => {
     JobsAPI.getJobs(currentPage, (err, result) => {
       if (!err && result?.data) {
-        const sortedJobs = result.data.paginatedJobs.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
+        const sortedJobs = result.data.paginatedJobs.sort((a, b) => {
+          const priority = (job) => {
+            if (job.code === "fj-premium") return 0;
+            if (job.code === "fj-starter") return 1;
+            return 2;
+          };
+
+          if (priority(a) !== priority(b)) {
+            return priority(a) - priority(b);
+          }
+
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+
         setJobs(sortedJobs);
         setTotalPages(result.data.totalPage);
         setCurrentPage(result.data.currentPage);

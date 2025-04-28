@@ -16,7 +16,6 @@ export const PackageAPI = {
     });
   },
   async postPackage(data, cb) {
-    console.log("Data received: ", data);
     await restRequest.post(`/package`, data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);

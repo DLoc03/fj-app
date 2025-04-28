@@ -30,7 +30,6 @@ const Package = () => {
 
   useEffect(() => {
     PackageAPI.getAllPackage((err, result) => {
-      console.log("Package data: ", result.data);
       if (!err && result?.data) {
         setPackages(result.data);
       } else {

@@ -10,7 +10,6 @@ function SideBackground() {
 
   useEffect(() => {
     JobsAPI.getJobs(1, (err, result) => {
-      console.log("job data: ", result);
       if (err) {
         return;
       } else {

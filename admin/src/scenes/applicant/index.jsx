@@ -19,7 +19,6 @@ const Applicant = () => {
 
   useEffect(() => {
     ApplicantAPI.getApplicantList((err, result) => {
-      console.log("Result dat: ", result.data);
       if (err || !result.data) {
         return;
       }

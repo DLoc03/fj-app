@@ -18,6 +18,7 @@ import Applicant from "./scenes/applicant";
 import Package from "./scenes/package";
 import PackageForm from "./scenes/package/_id";
 import PackageUpdate from "./scenes/package/_idUpdate";
+import Receipt from "./scenes/receipt";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -51,6 +52,8 @@ function App() {
                         <Route path="job/:id" element={<JobForm />} />
                         <Route path="applicant" element={<Applicant />} />
                         <Route path="package" element={<Package />} />
+                        <Route path="receipt" element={<Receipt />} />
+
                         <Route
                           path="/package/package-form"
                           element={<PackageForm />}

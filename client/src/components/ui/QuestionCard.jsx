@@ -83,8 +83,6 @@ function QuestionCard({ id, jobId, type }) {
     }));
 
     AnswerAPI.postAnswer(id, data, (err, result) => {
-      console.log(data);
-      console.log(result);
       if (err && result?.errCode !== 0) {
         setAlertStatus("error");
         handleShowAlert("Có lỗi khi gửi câu trả lời!");

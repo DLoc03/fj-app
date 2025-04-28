@@ -91,8 +91,6 @@ function Profile() {
     }
   }, [isAuthenticated]);
 
-  console.log(applicants);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
