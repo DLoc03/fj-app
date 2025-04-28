@@ -5,7 +5,7 @@ import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
 export const PackageService = {
   createPackage: async (data) => {
-    const { name, price, description } = data;
+    const { name, price, color, description } = data;
     const existingName = await Package.findOne({ name: name }).lean();
     if (existingName) {
       return MasterResponse({
@@ -18,11 +18,12 @@ export const PackageService = {
       name: name,
       price: price,
       description: description,
+      color: color,
     });
     return MasterResponse({ data: data });
   },
   updatePackage: async (id, data) => {
-    const { name, price, description } = data;
+    const { name, price, color, description } = data;
     const pkg = await Package.findById(id).lean();
     if (!pkg)
       return MasterResponse({
@@ -32,7 +33,7 @@ export const PackageService = {
       });
     const updatedPkg = await Package.findOneAndUpdate(
       { _id: id },
-      { name: name, price: price, description: description },
+      { name: name, price: price, description: description, color: color },
       { new: true }
     );
     return MasterResponse({ data: PackageResponse.Client(updatedPkg) });
