@@ -1,21 +1,23 @@
 import React from "react";
 import Card from "@mui/material/Card";
+
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import album from "../../assets/album-1.jpg";
+import logo from "../../assets/logo.png";
 import { Button } from "@mui/material";
 
 import PATHS from "../../routes/path";
 import { formatCurrency } from "../../utils/helper";
 
-function CardDetail({ id, jobName, quantity, salary, company }) {
+function CardDetail({ id, compName, jobName, quantity, salary, avatar }) {
   return (
     <Card
       sx={{
         height: "240px",
         width: "200px",
         zIndex: "9",
-        backgroundImage: `url(${album})`,
+        boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+        backgroundImage: `url(${avatar ? avatar : logo})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",
@@ -29,14 +31,15 @@ function CardDetail({ id, jobName, quantity, salary, company }) {
         },
       }}
     >
-      {company && (
+      {compName && (
         <CardContent
           sx={{
-            backgroundColor: "white",
+            backgroundColor: "primary.main",
             display: "flex",
             flexDirection: "column",
             cursor: "pointer",
             p: "6px",
+            color: "white",
             transition:
               "height 0.5s ease-in-out, background-color 0.5s ease-in-out",
             height: "100px",
@@ -44,7 +47,6 @@ function CardDetail({ id, jobName, quantity, salary, company }) {
               height: "200px",
               borderRadius: "20px 20px 0 0",
               backgroundColor: "secondary.main",
-              color: "white",
             },
             overflow: "hidden",
             "&:hover .description": {
@@ -53,7 +55,7 @@ function CardDetail({ id, jobName, quantity, salary, company }) {
           }}
         >
           <Typography variant="body1" sx={{ textAlign: "center" }}>
-            <span>{company.name}</span>
+            <span>{compName}</span>
           </Typography>
           <Typography variant="body2" sx={{ textAlign: "center" }}>
             <span>Vị trí tuyển:</span> {jobName}
@@ -89,7 +91,6 @@ function CardDetail({ id, jobName, quantity, salary, company }) {
             color="white"
             onClick={() => {
               window.location.href = PATHS.JOBDETAIL.replace(":id", id);
-              sessionStorage.setItem("selectedCompany", company.id);
             }}
           >
             Chi tiết

@@ -67,7 +67,7 @@ const getCompanies = async (query) => {
 };
 
 const updateCompany = async (id) => {
-  const company = await Company.findOne({ recruiterId: id }).lean();
+  const company = await Company.findOne({ _id: id }).lean();
   if (!company) {
     return MasterResponse({
       status: STATUS.NOT_FOUND,

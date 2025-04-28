@@ -9,7 +9,10 @@ import { useCustomNavigate } from "../../utils";
 import PATHS from "../../routes/path";
 import { JobsAPI } from "../../services";
 
+import SpinningLoader from "./SpinningLoading";
+
 function SlideCard() {
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useCustomNavigate();
   const itemsPerPage = 4;
 
@@ -17,14 +20,16 @@ function SlideCard() {
   const [startIndex, setStartIndex] = useState(0);
 
   useEffect(() => {
-    JobsAPI.getJobs((err, res) => {
-      if (!err && res?.data) {
-        const allJobs = res.data;
-        const last8Jobs = allJobs.slice(-8);
-        setJobList(last8Jobs);
+    JobsAPI.getJobs(currentPage, (err, result) => {
+      if (!err && result?.data) {
+        const sortedJobs = result.data.paginatedJobs.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setJobList(sortedJobs);
+        setCurrentPage(result.data.currentPage);
       }
     });
-  }, []);
+  }, [currentPage]);
 
   const handleNext = () => {
     setStartIndex((prev) =>
@@ -46,6 +51,8 @@ function SlideCard() {
     const interval = setInterval(handleNext, 3000);
     return () => clearInterval(interval);
   }, [startIndex, jobList]);
+
+  // if (loading) return <SpinningLoader />;
 
   return (
     <Box
@@ -113,12 +120,13 @@ function SlideCard() {
                 }}
               >
                 <CardDetail
-                  id={job._id}
-                  jobName={job.jobName}
+                  id={job.id}
+                  jobName={job.name}
                   jobDesc={job.jobDescription}
                   quantity={job.quantity}
                   salary={job.salary}
-                  company={job.company}
+                  compName={job.company.name}
+                  avatar={job.company.avatar}
                 />
               </Box>
             ))}

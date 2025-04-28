@@ -11,8 +11,9 @@ import {
   DialogContentText,
   DialogTitle,
   Fade,
+  Divider,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { QuestionAPI } from "../../services";
 import PopupAlert from "../../components/common/PopUp";
 import QuestionCard from "../../components/ui/QuestionCard";
@@ -20,8 +21,11 @@ import PATHS from "../../routes/path";
 import { TransitionGroup } from "react-transition-group";
 import { USER_TYPE } from "../../common/enum/enum";
 
+import SpinningLoader from "../../components/common/SpinningLoading";
+
 function TestDetail() {
-  const { id: jobId } = useParams();
+  const { id } = useParams();
+  const location = useLocation();
   const [questions, setQuestions] = useState([{ question: "" }]);
   const [questionList, setQuestionList] = useState([]);
   const [deleteIndex, setDeleteIndex] = useState(null);
@@ -30,6 +34,9 @@ function TestDetail() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [alertStatus, setAlertStatus] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const testTitle = location.state?.title || "Bài phỏng vấn vị trí tuyển mới";
 
   const handleQuestionChange = (index, value) => {
     const updatedQuestions = [...questions];
@@ -46,9 +53,11 @@ function TestDetail() {
       questions.map(
         (q) =>
           new Promise((resolve, reject) => {
-            QuestionAPI.postQuestion(jobId, q, (err, res) => {
+            QuestionAPI.postQuestion(id, q, (err, res) => {
               if (err) {
-                reject(err);
+                reject(
+                  err || new Error(res?.result?.message || "Unknown error")
+                );
               } else {
                 resolve(res);
               }
@@ -61,9 +70,10 @@ function TestDetail() {
         setTimeout(() => {
           window.location.href = PATHS.COMPANY_JOBS;
         }, 1000);
+        return;
       })
       .catch((err) => {
-        console.error(err);
+        console.error("Lỗi khi lưu câu hỏi:", err);
         handleShowAlert("Có lỗi xảy ra khi lưu câu hỏi!", "error");
       });
   };
@@ -91,15 +101,35 @@ function TestDetail() {
   };
 
   useEffect(() => {
-    QuestionAPI.getQuestion(jobId, (err, result) => {
-      if (!err && result?.data.length > 0) {
-        setQuestionList(result.data);
+    QuestionAPI.getTest(id, (err, result) => {
+      if (!err && result?.data) {
+        setQuestionList(result.data.questions);
       }
+      setLoading(false);
     });
-  }, [jobId]);
+  }, [id]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (questions.some((q) => q.question.trim() === "")) {
+        const message =
+          "Bạn chưa lưu các câu hỏi. Bạn chắc chắn muốn rời khỏi trang?";
+        e.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [questions]);
+
+  if (loading) return <SpinningLoader />;
 
   return (
-    <Box p={4}>
+    <Box p={4} sx={{ backgroundColor: "white", height: "100%" }}>
       <PopupAlert
         open={alertOpen}
         message={alertMessage}
@@ -108,12 +138,19 @@ function TestDetail() {
       />
 
       {questionList.length > 0 ? (
-        <QuestionCard id={jobId} type={USER_TYPE.EMPLOYER} />
+        <QuestionCard id={id} type={USER_TYPE.EMPLOYER} />
       ) : (
         <>
-          <Typography variant="h5" mb={2} color="white" fontWeight={500}>
-            Tạo bộ câu hỏi mới
+          <Typography
+            variant="h5"
+            mb={2}
+            color="secondary.main"
+            fontWeight={500}
+          >
+            {testTitle}
           </Typography>
+
+          <Divider orientation="horizontal" flexItem sx={{ my: 1 }} />
 
           <TransitionGroup>
             {questions.map((q, index) => (

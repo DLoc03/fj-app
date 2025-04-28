@@ -5,102 +5,111 @@ import CardDetail from "../../components/common/Card";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
-import Stack from "@mui/material/Stack";
-import { useMediaQuery } from "react-responsive";
 
-import { JobsAPI, CompaniesAPI } from "../../services";
+import Stack from "@mui/material/Stack";
+
+import { JobsAPI } from "../../services";
+import bgJob from "../../assets/bgJob.png";
 
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
-import jobBg from "../../assets/jobBg.jpg";
 import Sidebar from "../../components/ui/Sidebar";
+import SpinningLoader from "../../components/common/SpinningLoading";
+import PaginationButton from "../../components/common/PaginationButton";
 import { Divider } from "@mui/material";
 
 function Job() {
-  const isMobile = useMediaQuery({ maxWidth: 767 });
-  const itemPerPage = isMobile ? 3 : 8;
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    JobsAPI.getJobs((err, result) => {
+    JobsAPI.getJobs(currentPage, (err, result) => {
       if (!err && result?.data) {
-        setJobs(result.data);
+        const sortedJobs = result.data.paginatedJobs.sort((a, b) => {
+          const priority = (job) => {
+            if (job.code === "fj-premium") return 0;
+            if (job.code === "fj-starter") return 1;
+            return 2;
+          };
+
+          if (priority(a) !== priority(b)) {
+            return priority(a) - priority(b);
+          }
+
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+
+        setJobs(sortedJobs);
+        setTotalPages(result.data.totalPage);
+        setCurrentPage(result.data.currentPage);
       }
+      setLoading(false);
     });
-  }, []);
+  }, [currentPage]);
 
-  console.log(jobs);
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setCurrentPage(currentPage);
+      setLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [currentPage]);
 
-  const handlePageChange = (event, page) => {
-    setCurrentPage(page);
-  };
-
-  const totalItems = jobs.length;
-  const totalPages = Math.ceil(totalItems / itemPerPage);
-  const startIndex = (currentPage - 1) * itemPerPage;
-  const endIndex = startIndex + itemPerPage;
-  const currentItems = jobs.slice(startIndex, endIndex);
+  // if (loading) return <SpinningLoader />;
 
   return (
     <Box>
       <Grid
         container
-        spacing={10}
         sx={{
-          backgroundImage: `url(${jobBg})`,
+          backgroundImage: `url(${bgJob})`,
           backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
           position: "relative",
           minHeight: "100vh",
         }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            zIndex: 1,
-          }}
-        />
-        <Sidebar />
+        <Grid item size={{ xs: 12, sm: 12, md: 2.5 }}>
+          <Sidebar />
+        </Grid>
         <Grid
           item
-          size={{ xs: 12, md: 9 }}
-          sx={{ position: "relative", zIndex: 2 }}
+          size={{ xs: 12, sm: 12, md: 9.5 }}
+          sx={{
+            position: "relative",
+            zIndex: 2,
+          }}
         >
-          <Grid container spacing={4} py={{ xs: 1, md: 4 }}>
-            <Grid item size={12}>
-              <Typography
-                fontWeight={"700"}
-                color="white"
-                textAlign={"center"}
-                sx={{ fontSize: { xs: "28px", md: "32px" } }}
-              >
-                Tuyển dụng nhân sự
-              </Typography>
-            </Grid>
-            {currentItems.map((job, jobIndex) => (
+          <Grid
+            container
+            spacing={4}
+            py={{ xs: 1, md: 4 }}
+            display={"flex"}
+            justifyContent={"center"}
+          >
+            {jobs.map((job, jobIndex) => (
               <Grid
                 item
                 key={jobIndex}
-                size={{ xs: 12, md: 3 }}
+                size={{ xs: 6, sm: 4, md: 3 }}
                 sx={{
                   display: { xs: "flex", md: "flex" },
                   justifyContent: { xs: "center", md: "none" },
                 }}
               >
                 <CardDetail
-                  id={job._id}
+                  id={job.id}
                   jobName={job.jobName}
+                  avatar={job.company.avatar}
                   jobDesc={job.jobDescription}
                   quantity={job.quantity}
                   salary={job.salary}
-                  company={job.company}
+                  compName={job.company.name}
+                  company={job.company.id}
                 />
               </Grid>
             ))}
@@ -112,29 +121,12 @@ function Job() {
           zIndex={99}
           sx={{ display: "flex", justifyContent: "center" }}
         >
-          <Stack
-            spacing={2}
-            zIndex={99}
-            backgroundColor={"white"}
-            p={1}
-            borderRadius={1}
-            mb={4}
-          >
-            <Pagination
-              count={totalPages}
-              page={currentPage}
-              onChange={handlePageChange}
-              renderItem={(item) => (
-                <PaginationItem
-                  slots={{
-                    previous: ArrowBackIosIcon,
-                    next: ArrowForwardIosIcon,
-                  }}
-                  {...item}
-                />
-              )}
-            />
-          </Stack>
+          <PaginationButton
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            colorText={"secondary.main"}
+          />
         </Grid>
       </Grid>
     </Box>

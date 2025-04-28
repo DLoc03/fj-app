@@ -16,6 +16,8 @@ import PopupAlert from "../../components/common/PopUp";
 import { Divider, Link } from "@mui/material";
 import { SESSION_DATA } from "../../common/enum/enum";
 import PATHS from "../../routes/path";
+import SpinningLoader from "../../components/common/SpinningLoading";
+import LoadingOverlay from "../../components/common/LoadingOverlay";
 
 function Profile() {
   const { isAuthenticated } = useAuth();
@@ -31,23 +33,60 @@ function Profile() {
     email: "",
     name: "",
     phone: "",
+    avatar: "",
   });
   const [comp, setComp] = useState();
   const [jobs, setJobs] = useState();
+  const [applicants, setApplicants] = useState();
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState();
 
   useEffect(() => {
     if (isAuthenticated) {
       AuthAPI.getCurrentUser((err, result) => {
-        console.log(result.data);
         if (!err && result?.data) {
           setForm({
             email: result.data.email,
             name: result.data.name,
             phone: result.data.phone,
+            avatar: result.data.avatar,
           });
-          setComp(result.data.company);
-          setJobs(result.data.jobs);
+          setPreviewImage(result.data.avatar);
         }
+        setLoading(false);
+      });
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      AuthAPI.getCurrentCompany((err, result) => {
+        if (!err && result?.data) {
+          setComp(result?.data);
+        }
+        setLoading(false);
+      });
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      AuthAPI.getAllJobs((err, result) => {
+        if (!err && result?.data) {
+          setJobs(result?.data?.paginatedJobs);
+        }
+        setLoading(false);
+      });
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      AuthAPI.getAllApplicant((err, result) => {
+        if (!err && result?.data) {
+          setApplicants(result?.data?.paginatedApplicants);
+        }
+        setLoading(false);
       });
     }
   }, [isAuthenticated]);
@@ -75,7 +114,13 @@ function Profile() {
 
   const handleToggleEdit = () => {
     if (isEditing) {
-      AuthAPI.updateUser(userId, form, (err, result) => {
+      const updateData = {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+      };
+
+      AuthAPI.updateUser(userId, updateData, (err, result) => {
         if (err) {
           setAlertStatus("error");
           handleShowAlert("Cập nhật thất bại");
@@ -95,27 +140,36 @@ function Profile() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-
-      const formData = new FormData();
-      formData.append("avatar", file);
-
-      AuthAPI.uploadAvatar(userId, formData, (err, result) => {
-        if (err) {
-          setAlertStatus("error");
-          handleShowAlert("Cập nhật ảnh đại diện thất bại");
-          return;
-        }
-        setAlertStatus("success");
-        handleShowAlert("Cập nhật ảnh đại diện thành công");
-      });
+    if (!file || !file.type.startsWith("image/")) {
+      setAlertStatus("error");
+      handleShowAlert("Vui lòng chọn một ảnh hợp lệ");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+    setUploading(true);
+
+    const imageUrl = URL.createObjectURL(file);
+    setPreviewImage(imageUrl);
+
+    AuthAPI.uploadAvatar(formData, (err, result) => {
+      setUploading(false);
+
+      if (err || !result.data) {
+        setAlertStatus("error");
+        handleShowAlert("Cập nhật ảnh thất bại!");
+        return;
+      }
+
+      setAlertStatus("success");
+      handleShowAlert("Cập nhật ảnh thành công!");
+
+      setForm((prev) => ({ ...prev, avatar: result.data.avatar }));
+    });
   };
+
+  if (loading) return <SpinningLoader />;
 
   return (
     <Box
@@ -129,6 +183,7 @@ function Profile() {
         backgroundColor: "white",
       }}
     >
+      <LoadingOverlay open={uploading} />
       <Grid container spacing={4}>
         <Grid item size={12}>
           <Typography
@@ -306,10 +361,12 @@ function Profile() {
                 </Grid>
                 <Grid item size={12}>
                   <Typography>
-                    Đã có 4 ứng viên xin ứng tuyển.{" "}
+                    {applicants.length > 0
+                      ? `Đã có ${applicants.length} ứng viên ứng tuyển.`
+                      : `Hiện chưa có ứng viên nộp hồ sơ!`}{" "}
                     <Link
                       component={RouterLink}
-                      to={PATHS.COMPANY_TEST}
+                      to={PATHS.APPLICANT_LIST}
                       sx={{
                         color: "blue",
                         fontSize: "16px",
@@ -337,8 +394,16 @@ function Profile() {
               justifyContent={"center"}
               alignItems={"center"}
               sx={{ height: "100%", width: "100%" }}
+              flexDirection={"column"}
             >
               <Typography>Hiện chưa có thông tin cơ sở</Typography>
+              <Button
+                variant="outlined"
+                sx={{ mt: 1 }}
+                onClick={() => (window.location.href = PATHS.COMPANY_INFO)}
+              >
+                Đăng ký thông tin cơ sở ngay
+              </Button>
             </Box>
           )}
         </Grid>

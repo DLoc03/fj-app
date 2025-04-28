@@ -6,6 +6,7 @@ import { ERROR_CODE, STATUS } from "../utils/enum.js";
 
 export const receiptService = {
   createReceipt: async (userId, packageId) => {
+    console.log("Package id received: ", packageId);
     const pkg = await Package.findById(packageId).select("_id price").lean();
     const newReceipt = new Receipt({
       userId: userId,

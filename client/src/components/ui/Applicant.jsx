@@ -9,7 +9,7 @@ function Applicant({ open, onClose, onSubmit, id }) {
     name: "",
     email: "",
     phone: "",
-    cv: null,
+    cv: "", // Đổi từ null thành string để lưu link CV
   });
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -38,16 +38,8 @@ function Applicant({ open, onClose, onSubmit, id }) {
     }));
   };
 
-  const handleFileChange = (e) => {
-    // const file = e.target.files[0];
-    setFormData((prev) => ({
-      ...prev,
-      cv: "test",
-    }));
-  };
-
   const handleSubmit = () => {
-    if (!formData.name || !formData.email || !formData.phone) {
+    if (!formData.name || !formData.email || !formData.phone || !formData.cv) {
       setAlertStatus("error");
       handleShowAlert("Vui lòng nhập đầy đủ thông tin!");
       return;
@@ -55,20 +47,18 @@ function Applicant({ open, onClose, onSubmit, id }) {
 
     ApplicantAPI.postApplicant(id, formData, (err, result) => {
       if (err) {
-        console.log("Có lỗi xảy ra khi gửi thông tin!", err);
         setAlertStatus("error");
         handleShowAlert("Có lỗi xảy ra khi gửi thông tin!");
       } else {
-        console.log("Kết quả đăng ký: ", result);
         setAlertStatus("success");
         handleShowAlert("Hoàn tất!");
-        onSubmit(formData);
+        onSubmit(result.data);
       }
     });
   };
 
   const handleClose = () => {
-    if (!formData.name || !formData.email || !formData.phone) {
+    if (!formData.name || !formData.email || !formData.phone || !formData.cv) {
       setAlertStatus("error");
       handleShowAlert("Vui lòng nhập đầy đủ thông tin!");
       return;
@@ -80,7 +70,9 @@ function Applicant({ open, onClose, onSubmit, id }) {
     <ReuseableModal
       open={open}
       onClose={handleClose}
-      disableClose={!formData.name || !formData.email || !formData.phone}
+      disableClose={
+        !formData.name || !formData.email || !formData.phone || !formData.cv
+      }
       title="Thông tin ứng viên"
     >
       <PopupAlert
@@ -109,18 +101,15 @@ function Applicant({ open, onClose, onSubmit, id }) {
           onChange={(e) => handleChange("phone", e.target.value)}
           fullWidth
         />
-        <Button variant="outlined" component="label">
-          Nộp CV
-          <input
-            type="file"
-            hidden
-            accept=".pdf,.doc,.docx"
-            onChange={handleFileChange}
-          />
-        </Button>
+        <TextField
+          label="Link CV (Google Drive, Dropbox, etc.)"
+          value={formData.cv}
+          onChange={(e) => handleChange("cv", e.target.value)}
+          fullWidth
+        />
         {formData.cv && (
           <Typography variant="body2" color="text.secondary">
-            Đã chọn: {formData.cv.name}
+            Đã dán link: {formData.cv}
           </Typography>
         )}
 

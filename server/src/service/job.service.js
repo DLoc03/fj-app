@@ -39,7 +39,9 @@ const postJob = async (userId, body) => {
 
 const getJob = async (id) => {
   const job = await Job.findOne({ _id: id }).lean();
-  const { recruiterId } = await Company.findOne({ _id: job.companyId }).lean();
+  const { recruiterId, name, address, avatar } = await Company.findOne({
+    _id: job.companyId,
+  }).lean();
   const { phone } = await User.findById(recruiterId).lean();
   const validJob = JobResponse.Jobs(job);
   const { companyId, ...data } = validJob;
@@ -50,6 +52,9 @@ const getJob = async (id) => {
     data: {
       ...data,
       hotline: phone,
+      compName: name,
+      address: address,
+      avatar: avatar,
       testId: testId,
     },
   });
@@ -89,7 +94,7 @@ const updateJobById = async (userId, jobId, body) => {
 };
 
 const getJobs = async (isDestroy, page = 1) => {
-  const limit = 10;
+  const limit = 8;
   const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
   const companies = await Company.find({ isDestroy: false }).lean();
   const users = await User.find({
@@ -100,6 +105,7 @@ const getJobs = async (isDestroy, page = 1) => {
   const receipts = await Receipt.find({
     isDestroy: false,
   });
+  console.log("Finding receipts: ", receipts);
   const total = await Job.countDocuments();
   const jobs = await Job.find(filter)
     .skip((page - 1) * limit)
@@ -116,9 +122,14 @@ const getJobs = async (isDestroy, page = 1) => {
     const foundReceipt = receipts.find(
       (r) => r.userId.toString() === foundUser._id.toString()
     );
-    const { code } = pakages.find(
-      (p) => p._id.toString() === foundReceipt.packageId.toString()
-    );
+    let code = null;
+    if (foundReceipt) {
+      const foundPackage = pakages.find(
+        (p) => p._id.toString() === foundReceipt.packageId.toString()
+      );
+      code = foundPackage ? foundPackage.code : null;
+    }
+
     return {
       ...data,
       code: code || null,

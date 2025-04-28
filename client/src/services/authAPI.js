@@ -26,14 +26,57 @@ export const AuthAPI = {
   },
 
   async getCurrentUser(cb) {
-    await restRequest.get("/auth/me", {}, (err, result) => {
+    await restRequest.get("/auth/me?site=detail", {}, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
   },
 
+  async getCurrentCompany(cb) {
+    await restRequest.get("/auth/me?site=company", {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
+
+  async getAllJobs(cb) {
+    await restRequest.get(`/auth/me?site=job`, {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
+
+  async getCurrentJobList(page = 1, cb) {
+    await restRequest.get(
+      `/auth/me?site=job&page=${page}`,
+      {},
+      (err, result) => {
+        if (err) return cb(err);
+        if (typeof cb === "function") cb(null, result);
+      }
+    );
+  },
+
+  async getAllApplicant(cb) {
+    await restRequest.get(`/auth/me?site=applicant`, {}, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
+  },
+
+  async getApplicantList(page = 1, cb) {
+    await restRequest.get(
+      `/auth/me?site=applicant&page=${page}`,
+      {},
+      (err, result) => {
+        if (err) return cb(err);
+        if (typeof cb === "function") cb(null, result);
+      }
+    );
+  },
+
   async updateUser(id, data, cb) {
-    await restRequest.put(`/user/${id}`, data, (err, result) => {
+    await restRequest.put(`/user/avatar`, data, (err, result) => {
       if (err) return cb(err);
       if (typeof cb === "function") cb(null, result);
     });
@@ -52,14 +95,11 @@ export const AuthAPI = {
       if (typeof cb === "function") cb(null, result);
     });
   },
-  async uploadAvatar(id, formData, cb) {
-    await restRequest.postFormData(
-      `/user/${id}/avatar`,
-      formData,
-      (err, result) => {
-        if (err) return cb(err);
-        if (typeof cb === "function") cb(null, result);
-      }
-    );
+
+  async uploadAvatar(data, cb) {
+    await restRequest.postFormData(`/user/avatar`, data, (err, result) => {
+      if (err) return cb(err);
+      if (typeof cb === "function") cb(null, result);
+    });
   },
 };

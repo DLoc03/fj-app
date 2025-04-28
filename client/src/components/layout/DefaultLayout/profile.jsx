@@ -7,6 +7,7 @@ import BannerAbout from "../../common/Banner";
 import ProfileBar from "../../ui/ProfileBar";
 
 import jobBg from "../../../assets/jobBg.jpg";
+import Chatbot from "../../ui/Chatbot";
 
 function DefaultProfile({ children }) {
   return (
@@ -29,6 +30,7 @@ function DefaultProfile({ children }) {
         </Grid>
       </Grid>
       <Footer />
+      <Chatbot />
     </div>
   );
 }
