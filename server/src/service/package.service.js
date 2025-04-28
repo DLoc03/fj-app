@@ -14,13 +14,13 @@ export const PackageService = {
         message: "Name was existed",
       });
     }
-    await Package.create({
+    const pkg = await Package.create({
       name: name,
       price: price,
       description: description,
       code: code,
     });
-    return MasterResponse({ data: data });
+    return MasterResponse({ data: PackageResponse.Client(pkg) });
   },
   updatePackage: async (id, data) => {
     const { name, price, code, description } = data;

@@ -7,6 +7,7 @@ const PackageSchema = new mongoose.Schema(
     code: {
       type: String,
       required: true,
+      default: "none",
     },
     description: { type: String, default: null },
     isDestroy: { type: Boolean, default: false },
