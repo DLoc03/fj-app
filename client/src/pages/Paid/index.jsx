@@ -14,12 +14,21 @@ function PackageList() {
   const [loading, setLoading] = useState(true);
 
   const colors = [
-    "#FF6347",
-    "#8A2BE2",
-    "#3CB371",
-    "#FFD700",
-    "#20B2AA",
-    "#FF1493",
+    "#FF6347", // Tomato
+    "#8A2BE2", // Blue Violet
+    "#FFD700", // Gold
+    "#FF4500", // Orange Red
+    "#DC143C", // Crimson
+    "#00008B", // Dark Blue
+    "#228B22", // Forest Green
+    "#FF1493", // Deep Pink
+    "#32CD32", // Lime Green
+    "#FF8C00", // Dark Orange
+    "#A52A2A", // Brown
+    "#FF0000", // Red
+    "#8B0000", // Dark Red
+    "#800080", // Purple
+    "#C71585", // Medium Violet Red
   ];
 
   const getRandomColor = () => {

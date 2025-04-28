@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import { PackageAPI } from "../../services";
-import { formatCurrency } from "../../utils/helper"; // Nếu cần format giá
+import { formatCurrency } from "../../utils/helper";
 
 const PackageUpdate = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
@@ -18,6 +18,7 @@ const PackageUpdate = () => {
     name: "",
     description: "",
     price: "",
+    code: "",
   });
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const PackageUpdate = () => {
         name: result.data.name || "",
         description: result.data.description || "",
         price: result.data.price ?? "",
+        code: result.data.code || "",
       });
     });
   }, [id]);
@@ -50,6 +52,7 @@ const PackageUpdate = () => {
     name: yup.string().required("Vui lòng nhập tên gói"),
     description: yup.string().required("Vui lòng nhập mô tả"),
     price: yup.number().required("Vui lòng nhập giá"),
+    code: yup.string().required("Vui lòng nhập mã gói"),
   });
 
   return (
@@ -63,6 +66,7 @@ const PackageUpdate = () => {
           name: packageData.name,
           description: packageData.description,
           price: packageData.price !== "" ? Number(packageData.price) : "",
+          code: packageData.code, // Thêm code vào initialValues
         }}
         enableReinitialize
         validationSchema={packageSchema}
@@ -124,6 +128,20 @@ const PackageUpdate = () => {
                 name="price"
                 error={!!touched.price && !!errors.price}
                 helperText={touched.price && errors.price}
+                sx={{ gridColumn: "span 4" }}
+              />
+
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Mã gói"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.code}
+                name="code"
+                error={!!touched.code && !!errors.code}
+                helperText={touched.code && errors.code}
                 sx={{ gridColumn: "span 4" }}
               />
             </Box>

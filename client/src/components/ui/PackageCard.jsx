@@ -11,7 +11,7 @@ import {
 import PATHS from "../../routes/path";
 import { Navigate } from "react-router-dom";
 
-function PackageCard({ name, price, description, color }) {
+function PackageCard({ id, name, price, description, color }) {
   const navigate = useNavigate();
   const cardStyle = {
     cursor: "pointer",
@@ -53,7 +53,7 @@ function PackageCard({ name, price, description, color }) {
 
   const handleButtonClick = () => {
     navigate(PATHS.PAYPAL, {
-      state: { price, name },
+      state: { price, name, id },
     });
   };
 
@@ -71,6 +71,7 @@ function PackageCard({ name, price, description, color }) {
             fontWeight={500}
             textAlign={"center"}
             color="white"
+            sx={{ textShadow: "0 10px 30px rgba(0, 0, 0, 0.3)" }}
           >
             Gói {name}
           </Typography>

@@ -5,7 +5,6 @@ import Header from "../../components/Header";
 import * as yup from "yup";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
 import { PackageAPI } from "../../services";
 import { formatDate } from "../../utils/helper";
 
@@ -18,24 +17,68 @@ const PackageForm = () => {
     name: "",
     description: "",
     price: 0,
+    code: "",
   });
 
   const handleFormSubmit = (values) => {
-    PackageAPI.postPackage(values, (err, result) => {
-      if (err) {
-        console.error("Lỗi khi tạo gói:", err);
-        return;
-      }
-      navigate("/package");
-    });
+    if (id) {
+      PackageAPI.updatePackage(id, values, (err, result) => {
+        if (err) {
+          console.error("Lỗi khi cập nhật gói:", err);
+          return;
+        }
+        navigate("/package");
+      });
+    } else {
+      PackageAPI.postPackage(values, (err, result) => {
+        if (err) {
+          console.error("Lỗi khi tạo gói:", err);
+          return;
+        }
+        navigate("/package");
+      });
+    }
   };
+
+  useEffect(() => {
+    if (id) {
+      PackageAPI.getPackageById(id, (err, result) => {
+        if (err) {
+          console.error("Lỗi khi lấy thông tin gói:", err);
+          return;
+        }
+        setInitialValues({
+          name: result.name,
+          description: result.description,
+          price: result.price,
+          code: result.code,
+        });
+      });
+    }
+  }, [id]);
+
+  const validationSchema = yup.object({
+    name: yup.string().required("Tên gói là bắt buộc"),
+    description: yup.string().required("Mô tả là bắt buộc"),
+    price: yup
+      .number()
+      .required("Giá là bắt buộc")
+      .min(0, "Giá phải lớn hơn 0"),
+    code: yup.string().required("Mã gói là bắt buộc"), // Đảm bảo mã gói không trống
+  });
 
   return (
     <Box m="20px">
-      <Header title="Tạo Gói Dịch Vụ" subtitle="Điền thông tin gói dịch vụ" />
+      <Header
+        title={id ? "Chỉnh Sửa Gói Dịch Vụ" : "Tạo Gói Dịch Vụ"}
+        subtitle={
+          id ? "Chỉnh sửa thông tin gói dịch vụ" : "Điền thông tin gói dịch vụ"
+        }
+      />
       <Formik
-        onSubmit={handleFormSubmit}
         initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleFormSubmit}
         enableReinitialize
       >
         {({
@@ -94,11 +137,24 @@ const PackageForm = () => {
                 helperText={touched.price && errors.price}
                 sx={{ gridColumn: "span 2" }}
               />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Mã gói"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.code}
+                name="code"
+                error={!!touched.code && !!errors.code}
+                helperText={touched.code && errors.code}
+                sx={{ gridColumn: "span 2" }}
+              />
             </Box>
 
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
-                Tạo
+                {id ? "Cập nhật" : "Tạo"}
               </Button>
             </Box>
           </form>

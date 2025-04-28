@@ -26,6 +26,7 @@ const Package = () => {
   const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [selectedPackage, setSelectedPackage] = useState(null);
 
   useEffect(() => {
     PackageAPI.getAllPackage((err, result) => {
@@ -40,13 +41,16 @@ const Package = () => {
   }, []);
 
   const handleOpenDialog = (id) => {
+    const packageToDelete = packages.find((pkg) => pkg.id === id);
     setSelected(id);
+    setSelectedPackage(packageToDelete);
     setOpenDialog(true);
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelected(null);
+    setSelectedPackage(null);
   };
 
   const handleRowClick = (params) => {
@@ -58,6 +62,7 @@ const Package = () => {
     { field: "name", headerName: "Tên gói", flex: 2 },
     { field: "price", headerName: "Đơn giá", flex: 2 },
     { field: "description", headerName: "Mô tả", flex: 2 },
+    { field: "code", headerName: "Mã gói", flex: 2 },
     {
       field: "view",
       headerName: "Chi tiết",
@@ -69,19 +74,6 @@ const Package = () => {
         >
           Chi tiết
         </Typography>
-      ),
-    },
-    {
-      field: "del",
-      headerName: "Xóa",
-      flex: 1,
-      renderCell: (params) => (
-        <IconButton
-          color="error"
-          onClick={() => handleOpenDialog(params.row.id)}
-        >
-          <DeleteIcon />
-        </IconButton>
       ),
     },
   ];
@@ -106,23 +98,6 @@ const Package = () => {
           />
         )}
       </Box>
-
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Xác nhận xóa</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Bạn có chắc chắn muốn xóa người dùng này không?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Hủy
-          </Button>
-          <Button color="error" autoFocus>
-            Xóa
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };
