@@ -4,11 +4,10 @@ const PackageSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true, default: 0 },
-    color: {
+    code: {
       type: String,
-      enum: ["gold", "silver", "none"],
-      default: "none",
       required: true,
+      default: "none",
     },
     description: { type: String, default: null },
     isDestroy: { type: Boolean, default: false },

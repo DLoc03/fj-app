@@ -1,6 +1,8 @@
 import Applicant from "../model/applicant.js";
 import Company from "../model/company.js";
 import Job from "../model/job.js";
+import Package from "../model/package.js";
+import Receipt from "../model/receipt.js";
 import Test from "../model/test.js";
 import User from "../model/user.js";
 import { CompanyResponse } from "../response/company.response.js";
@@ -90,6 +92,14 @@ const getJobs = async (isDestroy, page = 1) => {
   const limit = 10;
   const filter = isDestroy === null ? { isDestroy: false } : { isDestroy };
   const companies = await Company.find({ isDestroy: false }).lean();
+  const users = await User.find({
+    _id: { $in: companies.map((c) => c.recruiterId) },
+    isDestroy: false,
+  });
+  const pakages = await Package.find({ isDestroy: false });
+  const receipts = await Receipt.find({
+    isDestroy: false,
+  });
   const total = await Job.countDocuments();
   const jobs = await Job.find(filter)
     .skip((page - 1) * limit)
@@ -100,8 +110,18 @@ const getJobs = async (isDestroy, page = 1) => {
     const foundCompany = companies.find(
       (c) => c._id.toString() === companyId.toString()
     );
+    const foundUser = users.find(
+      (u) => u._id.toString() === foundCompany.recruiterId.toString()
+    );
+    const foundReceipt = receipts.find(
+      (r) => r.userId.toString() === foundUser._id.toString()
+    );
+    const { code } = pakages.find(
+      (p) => p._id.toString() === foundReceipt.packageId.toString()
+    );
     return {
       ...data,
+      code: code || null,
       company: CompanyResponse.Item(foundCompany || {}),
     };
   });
